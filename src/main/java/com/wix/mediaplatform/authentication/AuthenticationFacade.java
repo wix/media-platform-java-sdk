@@ -5,19 +5,23 @@ import com.google.common.cache.Cache;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 import com.wix.mediaplatform.configuration.Configuration;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.nio.client.HttpAsyncClient;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.cache.CacheBuilder.newBuilder;
-import static com.wix.mediaplatform.http.Constants.AUTHORIZATION_HEADER;
-import static com.wix.mediaplatform.http.Constants.DO_NOT_CACHE;
+import static com.wix.mediaplatform.http.Constants.ACCEPT_JSON;
+import static com.wix.mediaplatform.jwt.Constants.*;
+import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 public class AuthenticationFacade {
 
@@ -26,7 +30,7 @@ public class AuthenticationFacade {
 
     private final Configuration configuration;
     private final Gson gson;
-    private final OkHttpClient client;
+    private final HttpAsyncClient httpClient;
     private final JWTSigner signer; //TODO: move to bootstrap, seems to be thread safe
 
     private final SecureRandom random = new SecureRandom();
@@ -34,14 +38,14 @@ public class AuthenticationFacade {
     private final String authUrl;
 
     /**
-     * @param configuration The Media Platform client config
-     * @param httpClient The global http client
+     * @param configuration The Media Platform httpClient config
+     * @param httpClient The global http httpClient
      * @param gson The JSON serializer
      */
-    public AuthenticationFacade(Configuration configuration, OkHttpClient httpClient, Gson gson) {
+    public AuthenticationFacade(Configuration configuration, HttpAsyncClient httpClient, Gson gson) {
 
         this.configuration = configuration;
-        this.client = httpClient;
+        this.httpClient = httpClient;
         this.gson = gson;
 
         this.signer = new JWTSigner(configuration.getSharedSecret());
@@ -93,25 +97,28 @@ public class AuthenticationFacade {
         byte[] nonce = new byte[6];
         random.nextBytes(nonce);
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("sub", "user:" + userId);
-        claims.put("iss", "app:" + this.configuration.getAppId());
-        claims.put("exp", now + 60);
-        claims.put("iat", now);
-        claims.put("jti", BaseEncoding.base16().encode(nonce));
+        claims.put(SUBJECT, "user:" + userId);
+        claims.put(ISSUER, "app:" + this.configuration.getAppId());
+        claims.put(EXPIRATION, now + 60);
+        claims.put(ISSUED_AT, now);
+        claims.put(IDENTIFIER, BaseEncoding.base16().encode(nonce));
         String authHeader = "APP " + signer.sign(claims);
 
-        Request request = new Request.Builder()
-                .cacheControl(DO_NOT_CACHE)
-                .url(this.authUrl)
-                .addHeader(AUTHORIZATION_HEADER, authHeader)
-                .build();
+        HttpGet request = new HttpGet(authUrl);
+        request.addHeader(AUTHORIZATION, authHeader);
+        request.addHeader(ACCEPT_JSON);
+        HttpResponse response;
+        try {
+            response = httpClient.execute(request, null).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IOException(e);
+        }
 
-        Response response = client.newCall(request).execute();
-        if (!response.isSuccessful()) {
+        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
             throw new IOException(response.toString());
         }
-        String body = response.body().toString();
-        token = gson.fromJson(body, String.class);
+
+        token = gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), String.class);
 
         if (token != null) {
             this.tokenCache.put(userId, token);

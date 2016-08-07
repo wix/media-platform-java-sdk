@@ -7,7 +7,8 @@ import com.wix.mediaplatform.authentication.AuthenticationFacade;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.fileuploader.FileUploader;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
-import okhttp3.OkHttpClient;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
 
 public class MediaPlatform {
 
@@ -17,8 +18,7 @@ public class MediaPlatform {
     public MediaPlatform(String domain, String appId, String sharedSecret) {
 
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .build();
+        CloseableHttpAsyncClient httpClient = HttpAsyncClients.createMinimal();
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
