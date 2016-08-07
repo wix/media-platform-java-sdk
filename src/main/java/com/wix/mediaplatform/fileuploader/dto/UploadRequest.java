@@ -4,8 +4,6 @@ import java.util.Set;
 
 public class UploadRequest {
 
-    private String fileName;
-
     private Set<String> tags;
 
     private String parentFolderId;
@@ -13,17 +11,9 @@ public class UploadRequest {
     public UploadRequest() {
     }
 
-    public UploadRequest(String fileName, Set<String> tags, String parentFolderId) {
-
-        this.fileName = fileName;
-
+    public UploadRequest(Set<String> tags, String parentFolderId) {
         this.tags = tags;
-
         this.parentFolderId = parentFolderId;
-    }
-
-    public String getFileName() {
-        return fileName;
     }
 
     public Set<String> getTags() {

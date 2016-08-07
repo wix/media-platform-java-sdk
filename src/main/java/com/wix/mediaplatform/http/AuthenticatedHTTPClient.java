@@ -3,15 +3,15 @@ package com.wix.mediaplatform.http;
 import com.google.gson.Gson;
 import com.wix.mediaplatform.authentication.AuthenticationFacade;
 import com.wix.mediaplatform.exception.UnauthorizedException;
-import com.wix.mediaplatform.fileuploader.dto.UploadRequest;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
@@ -36,7 +36,7 @@ public class AuthenticatedHTTPClient {
 
     public <T> T get(String userId, String url, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
 
-        String authHeader = this.authenticationFacade.getHeader(userId);
+        String authHeader = authenticationFacade.getHeader(userId);
         if (authHeader == null) {
             throw new UnauthorizedException();
         }
@@ -51,7 +51,6 @@ public class AuthenticatedHTTPClient {
         request.addHeader(ACCEPT_JSON);
         request.addHeader(AUTHORIZATION, authHeader);
 
-
         HttpResponse response;
         try {
             response = httpClient.execute(request, null).get();
@@ -60,7 +59,7 @@ public class AuthenticatedHTTPClient {
         }
 
         if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 404) {
-            this.authenticationFacade.invalidateToken(userId);
+            authenticationFacade.invalidateToken(userId);
             throw new UnauthorizedException();
         }
 
@@ -71,6 +70,23 @@ public class AuthenticatedHTTPClient {
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
-    public void executeMultipart(InputStream source, UploadRequest uploadRequest) {
+    public <T> T executeAnonymousMultipart(String url, HttpEntity form, Type responseType) throws IOException {
+
+        HttpPost request = new HttpPost(url);
+        request.addHeader(ACCEPT_JSON);
+        request.setEntity(form);
+
+        HttpResponse response;
+        try {
+            response = httpClient.execute(request, null).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IOException(e);
+        }
+
+        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+            throw new IOException(response.toString());
+        }
+
+        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 }
