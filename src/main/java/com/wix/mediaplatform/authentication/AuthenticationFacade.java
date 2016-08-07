@@ -5,6 +5,7 @@ import com.google.common.cache.Cache;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.fileuploader.dto.GetAuthTokenResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.nio.client.HttpAsyncClient;
@@ -118,7 +119,9 @@ public class AuthenticationFacade {
             throw new IOException(response.toString());
         }
 
-        token = gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), String.class);
+        token = gson.fromJson(
+                new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), GetAuthTokenResponse.class)
+                .getToken();
 
         if (token != null) {
             this.tokenCache.put(userId, token);

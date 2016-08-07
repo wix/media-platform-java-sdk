@@ -9,6 +9,11 @@ public class GetUploadUrlResponse {
     public GetUploadUrlResponse() {
     }
 
+    public GetUploadUrlResponse(String uploadUrl, String uploadToken) {
+        this.uploadUrl = uploadUrl;
+        this.uploadToken = uploadToken;
+    }
+
     public String getUploadUrl() {
         return uploadUrl;
     }

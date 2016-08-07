@@ -1,7 +1,5 @@
 package com.wix.mediaplatform.fileuploader.dto;
 
-import com.sun.org.apache.xpath.internal.operations.String;
-
 import java.util.Set;
 
 public class UploadRequest {

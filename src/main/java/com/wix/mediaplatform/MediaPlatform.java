@@ -19,6 +19,7 @@ public class MediaPlatform {
 
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
         CloseableHttpAsyncClient httpClient = HttpAsyncClients.createMinimal();
+        httpClient.start();
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
