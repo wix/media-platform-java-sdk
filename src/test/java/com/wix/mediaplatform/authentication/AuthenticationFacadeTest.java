@@ -2,9 +2,6 @@ package com.wix.mediaplatform.authentication;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.configuration.Configuration;
 import org.junit.Before;
@@ -24,9 +21,6 @@ public class AuthenticationFacadeTest extends BaseTest {
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(PORT));
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
-    private Gson gson = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create();
     private AuthenticationFacade authenticationFacade = new AuthenticationFacade(configuration, httpClient, gson);
 
     @Before
@@ -97,5 +91,4 @@ public class AuthenticationFacadeTest extends BaseTest {
     public void invalidateTokenIdempotent() throws Exception {
         authenticationFacade.invalidateToken("moshe");
     }
-
 }

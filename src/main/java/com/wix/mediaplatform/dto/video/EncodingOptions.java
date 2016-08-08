@@ -1,4 +1,4 @@
-package com.wix.mediaplatform.dto.VideoDTO;
+package com.wix.mediaplatform.dto.video;
 
 import com.google.gson.annotations.SerializedName;
 

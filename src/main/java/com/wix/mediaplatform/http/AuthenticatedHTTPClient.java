@@ -5,10 +5,10 @@ import com.wix.mediaplatform.authentication.AuthenticationFacade;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.nio.client.HttpAsyncClient;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -17,7 +17,6 @@ import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static com.wix.mediaplatform.http.Constants.ACCEPT_JSON;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
@@ -25,10 +24,10 @@ import static org.apache.http.HttpHeaders.AUTHORIZATION;
 public class AuthenticatedHTTPClient {
 
     private final AuthenticationFacade authenticationFacade;
-    private final HttpAsyncClient httpClient;
+    private final HttpClient httpClient;
     private final Gson gson;
 
-    public AuthenticatedHTTPClient(AuthenticationFacade authenticationFacade, HttpAsyncClient httpClient, Gson gson) {
+    public AuthenticatedHTTPClient(AuthenticationFacade authenticationFacade, HttpClient httpClient, Gson gson) {
         this.authenticationFacade = authenticationFacade;
         this.httpClient = httpClient;
         this.gson = gson;
@@ -51,14 +50,9 @@ public class AuthenticatedHTTPClient {
         request.addHeader(ACCEPT_JSON);
         request.addHeader(AUTHORIZATION, authHeader);
 
-        HttpResponse response;
-        try {
-            response = httpClient.execute(request, null).get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IOException(e);
-        }
+        HttpResponse response = httpClient.execute(request);
 
-        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 404) {
+        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
             authenticationFacade.invalidateToken(userId);
             throw new UnauthorizedException();
         }
@@ -76,12 +70,7 @@ public class AuthenticatedHTTPClient {
         request.addHeader(ACCEPT_JSON);
         request.setEntity(form);
 
-        HttpResponse response;
-        try {
-            response = httpClient.execute(request, null).get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IOException(e);
-        }
+        HttpResponse response = httpClient.execute(request);
 
         if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
             throw new IOException(response.toString());

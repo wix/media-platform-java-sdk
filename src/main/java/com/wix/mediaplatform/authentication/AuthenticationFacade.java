@@ -8,8 +8,8 @@ import com.wix.mediaplatform.authentication.dto.GetAuthTokenResponse;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.nio.client.HttpAsyncClient;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.cache.CacheBuilder.newBuilder;
@@ -32,7 +31,7 @@ public class AuthenticationFacade {
 
     private final Configuration configuration;
     private final Gson gson;
-    private final HttpAsyncClient httpClient;
+    private final HttpClient httpClient;
     private final JWTSigner signer; //TODO: move to bootstrap, seems to be thread safe
 
     private final SecureRandom random = new SecureRandom();
@@ -44,7 +43,7 @@ public class AuthenticationFacade {
      * @param httpClient The global http httpClient
      * @param gson The JSON serializer
      */
-    public AuthenticationFacade(Configuration configuration, HttpAsyncClient httpClient, Gson gson) {
+    public AuthenticationFacade(Configuration configuration, HttpClient httpClient, Gson gson) {
 
         this.configuration = configuration;
         this.httpClient = httpClient;
@@ -110,11 +109,8 @@ public class AuthenticationFacade {
         request.addHeader(AUTHORIZATION, authHeader);
         request.addHeader(ACCEPT_JSON);
         HttpResponse response;
-        try {
-            response = httpClient.execute(request, null).get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IOException(e);
-        }
+
+        response = httpClient.execute(request);
 
         if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
             throw new UnauthorizedException();

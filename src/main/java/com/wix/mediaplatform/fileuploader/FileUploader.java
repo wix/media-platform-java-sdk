@@ -3,13 +3,13 @@ package com.wix.mediaplatform.fileuploader;
 import com.google.gson.Gson;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.MediaType;
-import com.wix.mediaplatform.dto.VideoDTO.EncodingOptions;
-import com.wix.mediaplatform.dto.VideoDTO.VideoDTO;
 import com.wix.mediaplatform.dto.audio.AudioDTO;
 import com.wix.mediaplatform.dto.document.DocumentDTO;
 import com.wix.mediaplatform.dto.image.ImageDTO;
 import com.wix.mediaplatform.dto.upload.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.upload.UploadRequest;
+import com.wix.mediaplatform.dto.video.EncodingOptions;
+import com.wix.mediaplatform.dto.video.VideoDTO;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.apache.commons.lang3.StringUtils;
@@ -18,13 +18,17 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileUploader {
 
@@ -44,12 +48,27 @@ public class FileUploader {
         return authenticatedHTTPClient.get(userId, uploadUrlEndpoint, null, GetUploadUrlResponse.class);
     }
 
+    public ImageDTO uploadImage(String userId, File image, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
+
+        String fileName = image.getName();
+        String mimeType = Files.probeContentType(image.toPath());
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+        InputStream source = new FileInputStream(image);
+
+        return uploadImage(userId, source, mimeType, fileName, uploadRequest);
+    }
+
     public ImageDTO uploadImage(String userId, InputStream image, String mimeType, String fileName, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return upload(userId, MediaType.IMAGE, mimeType, fileName, image, uploadRequest, null, ImageDTO.class);
+
+        ImageDTO[] images = upload(userId, MediaType.IMAGE, mimeType, fileName, image, uploadRequest, null, ImageDTO[].class);
+
+        return images[0];
     }
 
     public AudioDTO uploadAudio(String userId, InputStream audio, String mimeType, String fileName, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return upload(userId, MediaType.AUDIO, mimeType, fileName, audio, uploadRequest, null, AudioDTO.class);
+        return upload(userId, MediaType.AUDIO, mimeType, fileName, audio, uploadRequest, null, AudioDTO[].class);
     }
 
     public VideoDTO uploadVideo(String userId, InputStream video, String mimeType, String fileName, @Nullable UploadRequest uploadRequest, @Nullable EncodingOptions encodingOptions) throws UnauthorizedException, IOException, URISyntaxException {
@@ -59,11 +78,11 @@ public class FileUploader {
             additionalParams.put("encoding_options", gson.toJson(encodingOptions.toJSON()));
         }
 
-        return upload(userId, MediaType.VIDEO, mimeType, fileName, video, uploadRequest, additionalParams, VideoDTO.class);
+        return upload(userId, MediaType.VIDEO, mimeType, fileName, video, uploadRequest, additionalParams, VideoDTO[].class);
     }
 
     public DocumentDTO uploadDocument(String userId, InputStream document, String mimeType, String fileName, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return upload(userId, MediaType.DOCUMENT, mimeType, fileName, document, uploadRequest, null, DocumentDTO.class);
+        return upload(userId, MediaType.DOCUMENT, mimeType, fileName, document, uploadRequest, null, DocumentDTO[].class);
     }
 
     private <T> T upload(String userId, MediaType mediaType, String mimeType, String fileName, InputStream source, @Nullable UploadRequest uploadRequest, @Nullable Map<String, String> additionalParams, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
@@ -71,6 +90,8 @@ public class FileUploader {
         GetUploadUrlResponse uploadUrlResponse = getUploadUrl(userId);
 
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        multipartEntityBuilder.setLaxMode();
+        multipartEntityBuilder.setCharset(UTF_8);
         multipartEntityBuilder.addBinaryBody("file", source, ContentType.parse(mimeType), fileName);
         multipartEntityBuilder.addTextBody("media_type", mediaType.getMediaType());
         multipartEntityBuilder.addTextBody("upload_token", uploadUrlResponse.getUploadToken());

@@ -2,9 +2,9 @@ package com.wix.mediaplatform;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.ssl.TrustStrategy;
 
@@ -15,14 +15,14 @@ public abstract class BaseTest {
 
     protected int PORT = 8443;
 
-    protected CloseableHttpAsyncClient httpClient;
+    protected HttpClient httpClient;
 
     protected Gson gson = new GsonBuilder().create();
 
     public BaseTest() {
 
         try {
-            this.httpClient = HttpAsyncClients.custom()
+            this.httpClient = HttpClients.custom()
                     .disableAuthCaching()
                     .disableCookieManagement()
                     .disableConnectionState()
@@ -39,7 +39,5 @@ public abstract class BaseTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        this.httpClient.start();
     }
 }
