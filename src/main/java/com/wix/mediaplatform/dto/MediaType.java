@@ -1,4 +1,4 @@
-package com.wix.mediaplatform;
+package com.wix.mediaplatform.dto;
 
 public enum MediaType {
 

@@ -1,5 +1,7 @@
 package com.wix.mediaplatform;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
@@ -14,6 +16,8 @@ public abstract class BaseTest {
     protected int PORT = 8443;
 
     protected CloseableHttpAsyncClient httpClient;
+
+    protected Gson gson = new GsonBuilder().create();
 
     public BaseTest() {
 

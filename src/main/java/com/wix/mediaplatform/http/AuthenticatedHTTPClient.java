@@ -70,7 +70,7 @@ public class AuthenticatedHTTPClient {
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
-    public <T> T executeAnonymousMultipart(String url, HttpEntity form, Type responseType) throws IOException {
+    public <T> T postMultipartAnonymous(String url, HttpEntity form, Type responseType) throws IOException {
 
         HttpPost request = new HttpPost(url);
         request.addHeader(ACCEPT_JSON);

@@ -1,4 +1,4 @@
-package com.wix.mediaplatform.fileuploader.dto;
+package com.wix.mediaplatform.dto.upload;
 
 import java.util.Set;
 

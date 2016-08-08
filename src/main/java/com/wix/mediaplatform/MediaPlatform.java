@@ -1,6 +1,5 @@
 package com.wix.mediaplatform;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wix.mediaplatform.authentication.AuthenticationFacade;
@@ -20,14 +19,12 @@ public class MediaPlatform {
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
         CloseableHttpAsyncClient httpClient = HttpAsyncClients.createMinimal();
         httpClient.start();
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
+        Gson gson = new GsonBuilder().create();
 
         AuthenticationFacade authenticationFacade = new AuthenticationFacade(configuration, httpClient, gson);
         AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticationFacade, httpClient, gson);
 
-        fileUploader = new FileUploader(authenticatedHTTPClient, configuration);
+        fileUploader = new FileUploader(authenticatedHTTPClient, gson, configuration);
     }
 
     public FileUploader fileUploader() {

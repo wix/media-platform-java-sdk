@@ -1,7 +1,8 @@
 package com.wix.mediaplatform.fileuploader;
 
+import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.fileuploader.dto.GetUploadUrlResponse;
+import com.wix.mediaplatform.dto.upload.GetUploadUrlResponse;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Test;
 
@@ -10,11 +11,11 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FileUploaderTest {
+public class FileUploaderTest extends BaseTest {
 
     private AuthenticatedHTTPClient authenticatedHTTPClient = mock(AuthenticatedHTTPClient.class);
     private Configuration configuration = new Configuration("domain.test", "appId", "sharedSecret");
-    private FileUploader fileUploader = new FileUploader(authenticatedHTTPClient, configuration);
+    private FileUploader fileUploader = new FileUploader(authenticatedHTTPClient, gson, configuration);
 
     @Test
     public void getUploadUrl() throws Exception {

@@ -4,8 +4,9 @@ import com.auth0.jwt.JWTSigner;
 import com.google.common.cache.Cache;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
+import com.wix.mediaplatform.authentication.dto.GetAuthTokenResponse;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.fileuploader.dto.GetAuthTokenResponse;
+import com.wix.mediaplatform.exception.UnauthorizedException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.nio.client.HttpAsyncClient;
@@ -64,7 +65,7 @@ public class AuthenticationFacade {
      * @throws IOException If the request failed
      */
     @Nullable
-    public String getHeader(String userId) throws IOException {
+    public String getHeader(String userId) throws IOException, UnauthorizedException {
 
         String token = getToken(userId);
         if (token == null) {
@@ -87,7 +88,7 @@ public class AuthenticationFacade {
      * @throws IOException If the request failed
      */
     @Nullable
-    private String getToken(String userId) throws IOException {
+    private String getToken(String userId) throws IOException, UnauthorizedException {
 
         String token = this.tokenCache.getIfPresent(userId);
         if (token != null) {
@@ -113,6 +114,10 @@ public class AuthenticationFacade {
             response = httpClient.execute(request, null).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new IOException(e);
+        }
+
+        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
+            throw new UnauthorizedException();
         }
 
         if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
