@@ -22,6 +22,14 @@ public class EncodingOptions {
     public EncodingOptions() {
     }
 
+    public EncodingOptions(Set<VideoFormat> videoFormats, boolean skipAudio, boolean extractAudio, AudioFormat audioFormat, ImageFormat imageFormat) {
+        this.videoFormats = videoFormats;
+        this.skipAudio = skipAudio;
+        this.extractAudio = extractAudio;
+        this.audioFormat = audioFormat;
+        this.imageFormat = imageFormat;
+    }
+
     public Set<VideoFormat> getVideoFormats() {
         return videoFormats;
     }

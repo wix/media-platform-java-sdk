@@ -10,8 +10,6 @@ public class VideoDTO extends BaseDTO {
 
     private int width;
 
-    private String iconUrl;
-
     private VideoFile inputFile;
 
     private OutputFiles outputFiles;
@@ -25,10 +23,6 @@ public class VideoDTO extends BaseDTO {
 
     public int getWidth() {
         return width;
-    }
-
-    public String getIconUrl() {
-        return iconUrl;
     }
 
     public VideoFile getInputFile() {

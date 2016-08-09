@@ -49,7 +49,6 @@ public class FileUploader {
     }
 
     public ImageDTO uploadImage(String userId, File image, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
-
         String fileName = image.getName();
         String mimeType = Files.probeContentType(image.toPath());
         if (mimeType == null) {
@@ -61,28 +60,65 @@ public class FileUploader {
     }
 
     public ImageDTO uploadImage(String userId, InputStream image, String mimeType, String fileName, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        ImageDTO[] files = upload(userId, MediaType.IMAGE, mimeType, fileName, image, uploadRequest, null, ImageDTO[].class);
 
-        ImageDTO[] images = upload(userId, MediaType.IMAGE, mimeType, fileName, image, uploadRequest, null, ImageDTO[].class);
+        return files[0];
+    }
 
-        return images[0];
+    public AudioDTO uploadAudio(String userId, File audio, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        String fileName = audio.getName();
+        String mimeType = Files.probeContentType(audio.toPath());
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+        InputStream source = new FileInputStream(audio);
+
+        return uploadAudio(userId, source, mimeType, fileName, uploadRequest);
     }
 
     public AudioDTO uploadAudio(String userId, InputStream audio, String mimeType, String fileName, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return upload(userId, MediaType.AUDIO, mimeType, fileName, audio, uploadRequest, null, AudioDTO[].class);
+        AudioDTO[] files = upload(userId, MediaType.AUDIO, mimeType, fileName, audio, uploadRequest, null, AudioDTO[].class);
+
+        return files[0];
+    }
+
+    public VideoDTO uploadVideo(String userId, File video, @Nullable UploadRequest uploadRequest, @Nullable EncodingOptions encodingOptions) throws UnauthorizedException, IOException, URISyntaxException {
+        String fileName = video.getName();
+        String mimeType = Files.probeContentType(video.toPath());
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+        InputStream source = new FileInputStream(video);
+
+        return uploadVideo(userId, source, mimeType, fileName, uploadRequest, encodingOptions);
     }
 
     public VideoDTO uploadVideo(String userId, InputStream video, String mimeType, String fileName, @Nullable UploadRequest uploadRequest, @Nullable EncodingOptions encodingOptions) throws UnauthorizedException, IOException, URISyntaxException {
-
         Map<String, String> additionalParams = newHashMap();
         if (encodingOptions !=  null) {
             additionalParams.put("encoding_options", gson.toJson(encodingOptions.toJSON()));
         }
 
-        return upload(userId, MediaType.VIDEO, mimeType, fileName, video, uploadRequest, additionalParams, VideoDTO[].class);
+        VideoDTO[] files = upload(userId, MediaType.VIDEO, mimeType, fileName, video, uploadRequest, additionalParams, VideoDTO[].class);
+
+        return files[0];
+    }
+
+    public DocumentDTO uploadDocument(String userId, File document, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        String fileName = document.getName();
+        String mimeType = Files.probeContentType(document.toPath());
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+        InputStream source = new FileInputStream(document);
+
+        return uploadDocument(userId, source, mimeType, fileName, uploadRequest);
     }
 
     public DocumentDTO uploadDocument(String userId, InputStream document, String mimeType, String fileName, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return upload(userId, MediaType.DOCUMENT, mimeType, fileName, document, uploadRequest, null, DocumentDTO[].class);
+        DocumentDTO[] files = upload(userId, MediaType.DOCUMENT, mimeType, fileName, document, uploadRequest, null, DocumentDTO[].class);
+
+        return files[0];
     }
 
     private <T> T upload(String userId, MediaType mediaType, String mimeType, String fileName, InputStream source, @Nullable UploadRequest uploadRequest, @Nullable Map<String, String> additionalParams, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
