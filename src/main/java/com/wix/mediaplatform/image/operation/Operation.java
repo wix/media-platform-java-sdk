@@ -9,11 +9,19 @@ import java.util.SortedSet;
 
 import static com.google.common.collect.Sets.newTreeSet;
 
-public abstract class Operation {
+abstract class Operation {
 
     private static final String API_VERSION = "v1";
 
     private static final String FORWARD_SLASH = "/";
+
+    private static final String KEY_WIDTH = "w";
+
+    private static final String KEY_HEIGHT = "h";
+
+    static final String SEPARATOR = "_";
+
+    static final String COMMA = ",";
 
     private static final Comparator<Option> OPTION_COMPARATOR = new Comparator<Option>() {
         @Override
@@ -30,15 +38,21 @@ public abstract class Operation {
 
     private String fileName;
 
+    private int width;
+
+    private int height;
+
     private OriginalData originalData;
 
     private SortedSet<Option> options = newTreeSet(OPTION_COMPARATOR);
 
-    public Operation(String name, String baseUrl, String fileId, String fileName, @Nullable OriginalData originalData) {
+    Operation(String name, String baseUrl, String fileId, String fileName, int width, int height, @Nullable OriginalData originalData) {
         this.name = name;
         this.baseUrl = baseUrl;
         this.fileId = fileId;
         this.fileName = fileName;
+        this.width = width;
+        this.height = height;
         this.originalData = originalData;
     }
 
@@ -66,12 +80,14 @@ public abstract class Operation {
                 .append(name)
                 .append(FORWARD_SLASH);
 
+        sb.append(serialize()).append(COMMA);
+
         int i = options.size();
         for (Option option : options) {
             sb.append(option.serialize());
             i--;
             if (i > 1) {
-                sb.append(",");
+                sb.append(COMMA);
             }
         }
 
@@ -82,5 +98,13 @@ public abstract class Operation {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * @return the partial URL of the mandatory operations params
+     * override to add additional params
+     */
+    protected String serialize() {
+        return KEY_HEIGHT + SEPARATOR + height + COMMA + KEY_WIDTH + SEPARATOR + width;
     }
 }

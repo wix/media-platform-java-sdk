@@ -24,18 +24,18 @@ public class ImageRequest {
     }
 
     public Fit fit(int width, int height) {
-        return new Fit(baseUrl, fileId, fileName, originalData);
+        return new Fit(baseUrl, fileId, fileName, width, height, originalData);
     }
 
     public Fill fill(int width, int height) {
-        return new Fill(baseUrl, fileId, fileName, originalData);
+        return new Fill(baseUrl, fileId, fileName, width, height, originalData);
     }
 
-    public Crop crop(int width, int height) {
-        return new Crop(baseUrl, fileId, fileName, originalData);
+    public Crop crop(int width, int height, int x, int y, float scaleFactor) {
+        return new Crop(baseUrl, fileId, fileName, width, height, originalData, x, y, scaleFactor);
     }
 
     public Canvas canvas(int width, int height) {
-        return new Canvas(baseUrl, fileId, fileName, originalData);
+        return new Canvas(baseUrl, fileId, fileName, width, height, originalData);
     }
 }
