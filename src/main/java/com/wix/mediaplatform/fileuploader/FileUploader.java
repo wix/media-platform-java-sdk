@@ -37,7 +37,6 @@ public class FileUploader {
     private final String uploadUrlEndpoint;
 
     public FileUploader(AuthenticatedHTTPClient authenticatedHTTPClient, Gson gson, Configuration configuration) {
-
         this.authenticatedHTTPClient = authenticatedHTTPClient;
         this.gson = gson;
 
