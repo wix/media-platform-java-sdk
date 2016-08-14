@@ -2,7 +2,11 @@ package com.wix.mediaplatform.image.option.background;
 
 import com.wix.mediaplatform.image.option.Option;
 
+import java.util.regex.Pattern;
+
 public class Background extends Option {
+
+    private static final Pattern hexPattern = Pattern.compile("[0-9a-f]{6}");
 
     private static final String KEY = "c";
 
@@ -10,6 +14,9 @@ public class Background extends Option {
 
     public Background(String color) {
         super(KEY);
+        if (!hexPattern.matcher(color).matches()) {
+            throw new IllegalArgumentException(color + " is not a valid hex color");
+        }
         this.color = color;
     }
 

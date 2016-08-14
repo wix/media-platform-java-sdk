@@ -15,7 +15,7 @@ import com.wix.mediaplatform.image.option.pixelate.PixelateFaces;
 import com.wix.mediaplatform.image.option.redeye.RedeyeRemover;
 import com.wix.mediaplatform.image.option.saturation.Saturation;
 import com.wix.mediaplatform.image.option.sharpen.Sharpen;
-import com.wix.mediaplatform.image.option.unsharp.UnsharpenMask;
+import com.wix.mediaplatform.image.option.unsharp.UnsharpMask;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -136,7 +136,7 @@ public abstract class Operation<T extends Operation<T>> {
     }
 
     public T unsharpMask(float radius, float amount, float threshold) {
-        options.add(new UnsharpenMask(radius, amount, threshold));
+        options.add(new UnsharpMask(radius, amount, threshold));
         return (T) this;
     }
 
