@@ -2,6 +2,20 @@ package com.wix.mediaplatform.image.operation;
 
 import com.wix.mediaplatform.image.OriginalData;
 import com.wix.mediaplatform.image.option.Option;
+import com.wix.mediaplatform.image.option.blur.Blur;
+import com.wix.mediaplatform.image.option.brightness.Brightness;
+import com.wix.mediaplatform.image.option.contrast.Contrast;
+import com.wix.mediaplatform.image.option.encoding.jpeg.Baseline;
+import com.wix.mediaplatform.image.option.encoding.jpeg.Quality;
+import com.wix.mediaplatform.image.option.hue.Hue;
+import com.wix.mediaplatform.image.option.negative.Negative;
+import com.wix.mediaplatform.image.option.oil.Oil;
+import com.wix.mediaplatform.image.option.pixelate.Pixelate;
+import com.wix.mediaplatform.image.option.pixelate.PixelateFaces;
+import com.wix.mediaplatform.image.option.redeye.RedeyeRemover;
+import com.wix.mediaplatform.image.option.saturation.Saturation;
+import com.wix.mediaplatform.image.option.sharpen.Sharpen;
+import com.wix.mediaplatform.image.option.unsharp.UnsharpenMask;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -9,7 +23,7 @@ import java.util.SortedSet;
 
 import static com.google.common.collect.Sets.newTreeSet;
 
-abstract class Operation {
+public abstract class Operation<T extends Operation<T>> {
 
     private static final String API_VERSION = "v1";
 
@@ -44,7 +58,7 @@ abstract class Operation {
 
     private OriginalData originalData;
 
-    private SortedSet<Option> options = newTreeSet(OPTION_COMPARATOR);
+    SortedSet<Option> options = newTreeSet(OPTION_COMPARATOR);
 
     Operation(String name, String baseUrl, String fileId, String fileName, int width, int height, @Nullable OriginalData originalData) {
         this.name = name;
@@ -54,6 +68,86 @@ abstract class Operation {
         this.width = width;
         this.height = height;
         this.originalData = originalData;
+    }
+
+    public T width(int width) {
+        this.width = width;
+        return (T) this;
+    }
+
+    public T height(int height) {
+        this.height = height;
+        return (T) this;
+    }
+
+    public T brightness(int brightness) {
+        options.add(new Brightness(brightness));
+        return (T) this;
+    }
+
+    public T contrast(int contrast) {
+        options.add(new Contrast(contrast));
+        return (T) this;
+    }
+
+    public T hue(int hue) {
+        options.add(new Hue(hue));
+        return (T) this;
+    }
+
+    public T saturation(int saturation) {
+        options.add(new Saturation(saturation));
+        return (T) this;
+    }
+
+    public T blur(int percentage) {
+        options.add(new Blur(percentage));
+        return (T) this;
+    }
+
+    public T negative() {
+        options.add(new Negative());
+        return (T) this;
+    }
+
+    public T oil() {
+        options.add(new Oil());
+        return (T) this;
+    }
+
+    public T pixelate(int pixels) {
+        options.add(new Pixelate(pixels));
+        return (T) this;
+    }
+
+    public T pixelateFaces(int pixels) {
+        options.add(new PixelateFaces(pixels));
+        return (T) this;
+    }
+
+    public T removeRedeye() {
+        options.add(new RedeyeRemover());
+        return (T) this;
+    }
+
+    public T sharpen(float radius) {
+        options.add(new Sharpen(radius));
+        return (T) this;
+    }
+
+    public T unsharpMask(float radius, float amount, float threshold) {
+        options.add(new UnsharpenMask(radius, amount, threshold));
+        return (T) this;
+    }
+
+    public T baseline() {
+        options.add(new Baseline());
+        return (T) this;
+    }
+
+    public T quality(int quality) {
+        options.add(new Quality(quality));
+        return (T) this;
     }
 
     public String toUrl() {
@@ -80,15 +174,15 @@ abstract class Operation {
                 .append(name)
                 .append(FORWARD_SLASH);
 
-        sb.append(serialize()).append(COMMA);
+        sb.append(serialize());
 
         int i = options.size();
         for (Option option : options) {
-            sb.append(option.serialize());
-            i--;
-            if (i > 1) {
+            if (i > 0) {
                 sb.append(COMMA);
             }
+            sb.append(option.serialize());
+            i--;
         }
 
         sb.append(FORWARD_SLASH).append(fileName);

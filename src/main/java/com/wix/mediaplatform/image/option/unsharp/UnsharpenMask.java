@@ -21,6 +21,6 @@ public class UnsharpenMask extends Option {
 
     @Override
     public String serialize() {
-        return KEY + SEPARATOR + radius + SEPARATOR + amount + SEPARATOR + threshold;
+        return KEY + SEPARATOR + DECIMAL_FORMAT.format(radius) + SEPARATOR + DECIMAL_FORMAT.format(amount) + SEPARATOR + DECIMAL_FORMAT.format(threshold);
     }
 }

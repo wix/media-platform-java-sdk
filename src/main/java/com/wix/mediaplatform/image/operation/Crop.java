@@ -3,7 +3,7 @@ package com.wix.mediaplatform.image.operation;
 import com.wix.mediaplatform.image.OriginalData;
 import org.jetbrains.annotations.Nullable;
 
-public class Crop extends Operation {
+public class Crop extends Operation<Crop> {
 
     private static final String NAME = "crop";
 

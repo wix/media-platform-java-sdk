@@ -1,6 +1,10 @@
 package com.wix.mediaplatform.image.option;
 
+import java.text.DecimalFormat;
+
 public abstract class Option {
+
+    protected static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
     protected static final String SEPARATOR = "_";
 
