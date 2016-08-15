@@ -1,6 +1,7 @@
 package com.wix.mediaplatform.dto;
 
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -45,6 +46,22 @@ public abstract class BaseDTO {
     public BaseDTO() {
     }
 
+    public BaseDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> lables, Set<String> tags, long dateCreated, long dateModified) {
+        this.parentFolderId = parentFolderId;
+        this.hash = hash;
+        this.originalFileName = originalFileName;
+        this.fileName = fileName;
+        this.fileUrl = fileUrl;
+        this.fileSize = fileSize;
+        this.iconUrl = iconUrl;
+        this.mediaType = mediaType;
+        this.mimeType = mimeType;
+        this.lables = lables;
+        this.tags = tags;
+        this.dateCreated = dateCreated;
+        this.dateModified = dateModified;
+    }
+
     public String getParentFolderId() {
         return parentFolderId;
     }
@@ -63,6 +80,21 @@ public abstract class BaseDTO {
 
     public String getFileUrl() {
         return fileUrl;
+    }
+
+    @Nullable
+    public String getBaseUrl() {
+        if (fileUrl != null) {
+            String[] parts = fileUrl.split("/");
+            if (parts.length >= 2) {
+                return parts[0] + "/" + parts[1];
+            }
+            else {
+                return parts[0];
+            }
+        } else {
+            return null;
+        }
     }
 
     public long getFileSize() {

@@ -6,7 +6,13 @@ import static com.google.common.net.UrlEscapers.urlFragmentEscaper;
 
 public class OriginalData {
 
-    private final Escaper escaper = urlFragmentEscaper();
+    private static final Escaper escaper = urlFragmentEscaper();
+
+    static final String WIDTH_KEY = "w";
+
+    static final String HEIGHT_KEY = "h";
+
+    static final String MIME_TYPE_KEY = "mt";
 
     private int width;
 
@@ -14,7 +20,7 @@ public class OriginalData {
 
     private String mimeType;
 
-    public OriginalData(int width, int height, String mimeType) {
+    OriginalData(int width, int height, String mimeType) {
         this.width = width;
         this.height = height;
         this.mimeType = mimeType;
@@ -36,6 +42,15 @@ public class OriginalData {
      * @return the URL fragment (after the #) string representation
      */
     public String serialize() {
-            return "w_" + width + ",h_" + height + ",mt_" + escaper.escape(mimeType);
+            return WIDTH_KEY + "_" + width + "," + HEIGHT_KEY + "_" + height + "," + MIME_TYPE_KEY + "_" + escaper.escape(mimeType);
+    }
+
+    @Override
+    public String toString() {
+        return "OriginalData{" +
+                "width=" + width +
+                ", height=" + height +
+                ", mimeType='" + mimeType + '\'' +
+                '}';
     }
 }

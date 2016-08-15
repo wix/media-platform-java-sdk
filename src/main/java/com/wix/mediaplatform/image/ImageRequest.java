@@ -38,4 +38,14 @@ public class ImageRequest {
     public Canvas canvas(int width, int height) {
         return new Canvas(baseUrl, fileId, fileName, width, height, originalData);
     }
+
+    @Override
+    public String toString() {
+        return "ImageRequest{" +
+                "baseUrl='" + baseUrl + '\'' +
+                ", fileId='" + fileId + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", originalData=" + originalData +
+                '}';
+    }
 }

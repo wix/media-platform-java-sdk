@@ -199,6 +199,6 @@ public abstract class Operation<T extends Operation<T>> {
      * override to add additional params
      */
     protected String serialize() {
-        return KEY_HEIGHT + SEPARATOR + height + COMMA + KEY_WIDTH + SEPARATOR + width;
+        return  KEY_WIDTH + SEPARATOR + width + COMMA + KEY_HEIGHT + SEPARATOR + height;
     }
 }
