@@ -2,6 +2,7 @@ package com.wix.mediaplatform.image;
 
 import com.google.common.collect.Sets;
 import com.wix.mediaplatform.dto.image.ImageDTO;
+import com.wix.mediaplatform.image.operation.Operation;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -48,7 +49,16 @@ public class ParserTest {
     }
 
     @Test
-    public void operationFromUrl() throws Exception {
+    public void fitFromUrl() throws Exception {
+        Operation operation = Parser.operationFromUrl("//domain.com/user/bucket/fileId/v1/fill/w_100,h_100,al_fs,bl,blur_10,br_10,con_10,eye,hue_10,lg,neg,oil,pix_10,pixfs_10,q_10,sat_10,shrp_0.1,usm_10_10_10/fileName#w_500,h_500,mt_image/jpeg");
 
+        assertThat(operation.toUrl(), is("//domain.com/user/bucket/fileId/v1/fill/w_100,h_100,al_fs,bl,blur_10,br_10,con_10,eye,hue_10,lg,neg,oil,pix_10,pixfs_10,q_10,sat_10,shrp_0.1,usm_10_10_10/fileName#w_500,h_500,mt_image/jpeg"));
+    }
+
+    @Test
+    public void cropFromUrl() throws Exception {
+        Operation operation = Parser.operationFromUrl("//domain.com/user/bucket/fileId/v1/crop/w_100,h_100,x_1,y_1,scl_1.0,bl,blur_10,br_10,con_10,eye,hue_10,neg,oil,pix_10,pixfs_10,q_10,sat_10,shrp_0.1,usm_10_10_10/fileName#w_500,h_500,mt_image/jpeg");
+
+        assertThat(operation.toUrl(), is("//domain.com/user/bucket/fileId/v1/crop/w_100,h_100,x_1,y_1,scl_1.0,bl,blur_10,br_10,con_10,eye,hue_10,neg,oil,pix_10,pixfs_10,q_10,sat_10,shrp_0.1,usm_10_10_10/fileName#w_500,h_500,mt_image/jpeg"));
     }
 }

@@ -56,4 +56,14 @@ public enum Alignment {
     public String getValue() {
         return value;
     }
+
+    public static Alignment fromString(String value) {
+        for (Alignment alignment : Alignment.values()) {
+            if (value.equalsIgnoreCase(alignment.value)) {
+                return alignment;
+            }
+        }
+
+        throw new IllegalArgumentException(value + " no corresponding enum constant");
+    }
 }

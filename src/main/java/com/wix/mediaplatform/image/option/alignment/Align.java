@@ -4,9 +4,13 @@ import com.wix.mediaplatform.image.option.Option;
 
 public class Align extends Option {
 
-    private static final String KEY = "al";
+    public static final String KEY = "al";
 
     private Alignment alignment;
+
+    public Align() {
+        super(KEY);
+    }
 
     public Align(Alignment alignment) {
         super(KEY);
@@ -16,5 +20,18 @@ public class Align extends Option {
     @Override
     public String serialize() {
         return KEY + SEPARATOR + alignment.getValue();
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        alignment = Alignment.fromString(params[0]);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Align{" +
+                "alignment=" + alignment +
+                '}';
     }
 }

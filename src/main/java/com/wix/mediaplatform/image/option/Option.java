@@ -19,4 +19,6 @@ public abstract class Option {
     }
 
     public abstract String serialize();
+
+    public abstract Option deserialize(String... params);
 }

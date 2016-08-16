@@ -3,12 +3,17 @@ package com.wix.mediaplatform.image.option.hue;
 import com.wix.mediaplatform.image.option.Option;
 
 import static com.wix.mediaplatform.image.Validation.inRange;
+import static java.lang.Integer.parseInt;
 
 public class Hue extends Option {
 
-    private static final String KEY = "hue";
+    public static final String KEY = "hue";
 
     private int hue;
+
+    public Hue() {
+        super(KEY);
+    }
 
     public Hue(int hue) {
         super(KEY);
@@ -21,5 +26,11 @@ public class Hue extends Option {
     @Override
     public String serialize() {
         return KEY + SEPARATOR + hue;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        hue = parseInt(params[0]);
+        return this;
     }
 }

@@ -4,7 +4,7 @@ import com.wix.mediaplatform.image.option.Option;
 
 public class Oil extends Option {
 
-    private static final String KEY = "oil";
+    public static final String KEY = "oil";
 
     public Oil() {
         super(KEY);
@@ -13,5 +13,10 @@ public class Oil extends Option {
     @Override
     public String serialize() {
         return KEY;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        return this;
     }
 }

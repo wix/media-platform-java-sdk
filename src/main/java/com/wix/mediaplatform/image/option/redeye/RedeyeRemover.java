@@ -4,7 +4,7 @@ import com.wix.mediaplatform.image.option.Option;
 
 public class RedeyeRemover extends Option {
 
-    private static final String KEY = "eye";
+    public static final String KEY = "eye";
 
     public RedeyeRemover() {
         super(KEY);
@@ -13,5 +13,10 @@ public class RedeyeRemover extends Option {
     @Override
     public String serialize() {
         return KEY;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        return this;
     }
 }

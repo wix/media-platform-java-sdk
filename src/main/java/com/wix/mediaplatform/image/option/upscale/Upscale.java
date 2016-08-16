@@ -4,7 +4,7 @@ import com.wix.mediaplatform.image.option.Option;
 
 public class Upscale extends Option {
 
-    private static final String KEY = "lg";
+    public static final String KEY = "lg";
 
     public Upscale() {
         super(KEY);
@@ -13,5 +13,10 @@ public class Upscale extends Option {
     @Override
     public String serialize() {
         return KEY;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        return this;
     }
 }

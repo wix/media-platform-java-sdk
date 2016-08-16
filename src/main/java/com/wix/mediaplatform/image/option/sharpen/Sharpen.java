@@ -3,12 +3,17 @@ package com.wix.mediaplatform.image.option.sharpen;
 import com.wix.mediaplatform.image.option.Option;
 
 import static com.wix.mediaplatform.image.Validation.inRange;
+import static java.lang.Float.parseFloat;
 
 public class Sharpen extends Option {
 
-    private static final String KEY = "shrp";
+    public static final String KEY = "shrp";
 
     private float radius;
+
+    public Sharpen() {
+        super(KEY);
+    }
 
     public Sharpen(float radius) {
         super(KEY);
@@ -21,5 +26,11 @@ public class Sharpen extends Option {
     @Override
     public String serialize() {
         return KEY + SEPARATOR + DECIMAL_FORMAT.format(radius);
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        radius = parseFloat(params[0]);
+        return this;
     }
 }

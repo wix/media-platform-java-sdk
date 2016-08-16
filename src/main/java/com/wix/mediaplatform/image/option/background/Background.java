@@ -8,9 +8,13 @@ public class Background extends Option {
 
     private static final Pattern hexPattern = Pattern.compile("[0-9a-f]{6}");
 
-    private static final String KEY = "c";
+    public static final String KEY = "c";
 
     private String color;
+
+    public Background() {
+        super(KEY);
+    }
 
     public Background(String color) {
         super(KEY);
@@ -23,5 +27,18 @@ public class Background extends Option {
     @Override
     public String serialize() {
         return KEY + SEPARATOR + color;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        color = params[0];
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Background{" +
+                "color='" + color + '\'' +
+                '}';
     }
 }

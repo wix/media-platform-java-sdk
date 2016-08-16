@@ -3,12 +3,17 @@ package com.wix.mediaplatform.image.option.pixelate;
 import com.wix.mediaplatform.image.option.Option;
 
 import static com.wix.mediaplatform.image.Validation.greaterThan;
+import static java.lang.Integer.parseInt;
 
 public class Pixelate extends Option {
 
-    private static final String KEY = "pix";
+    public static final String KEY = "pix";
 
     private int pixels;
+
+    public Pixelate() {
+        super(KEY);
+    }
 
     public Pixelate(int pixels) {
         super(KEY);
@@ -21,5 +26,11 @@ public class Pixelate extends Option {
     @Override
     public String serialize() {
         return KEY + SEPARATOR + pixels;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        pixels = parseInt(params[0]);
+        return this;
     }
 }

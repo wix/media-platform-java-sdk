@@ -3,12 +3,17 @@ package com.wix.mediaplatform.image.option.contrast;
 import com.wix.mediaplatform.image.option.Option;
 
 import static com.wix.mediaplatform.image.Validation.inRange;
+import static java.lang.Integer.parseInt;
 
 public class Contrast extends Option {
 
-    private static final String KEY = "con";
+    public static final String KEY = "con";
 
     private int contrast;
+
+    public Contrast() {
+        super(KEY);
+    }
 
     public Contrast(int contrast) {
         super(KEY);
@@ -21,5 +26,18 @@ public class Contrast extends Option {
     @Override
     public String serialize() {
         return KEY + SEPARATOR + contrast;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        contrast = parseInt(params[0]);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Contrast{" +
+                "contrast=" + contrast +
+                '}';
     }
 }

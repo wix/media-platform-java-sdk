@@ -3,12 +3,17 @@ package com.wix.mediaplatform.image.option.saturation;
 import com.wix.mediaplatform.image.option.Option;
 
 import static com.wix.mediaplatform.image.Validation.inRange;
+import static java.lang.Integer.parseInt;
 
 public class Saturation extends Option {
 
-    private static final String KEY = "sat";
+    public static final String KEY = "sat";
 
     private int saturation;
+
+    public Saturation() {
+        super(KEY);
+    }
 
     public Saturation(int saturation) {
         super(KEY);
@@ -21,5 +26,11 @@ public class Saturation extends Option {
     @Override
     public String serialize() {
         return KEY + SEPARATOR + saturation;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        saturation = parseInt(params[0]);
+        return this;
     }
 }

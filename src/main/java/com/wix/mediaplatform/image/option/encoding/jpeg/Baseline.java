@@ -4,7 +4,7 @@ import com.wix.mediaplatform.image.option.Option;
 
 public class Baseline extends Option {
 
-    private static final String KEY = "bl";
+    public static final String KEY = "bl";
 
     public Baseline() {
         super(KEY);
@@ -13,5 +13,15 @@ public class Baseline extends Option {
     @Override
     public String serialize() {
         return KEY;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Baseline{}";
     }
 }

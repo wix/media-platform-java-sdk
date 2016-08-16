@@ -150,6 +150,10 @@ public abstract class Operation<T extends Operation<T>> {
         return (T) this;
     }
 
+    public void addOption(Option option) {
+        options.add(option);
+    }
+
     public String toUrl() {
 
         StringBuilder sb = new StringBuilder();
@@ -200,5 +204,19 @@ public abstract class Operation<T extends Operation<T>> {
      */
     protected String serialize() {
         return  KEY_WIDTH + SEPARATOR + width + COMMA + KEY_HEIGHT + SEPARATOR + height;
+    }
+
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "name='" + name + '\'' +
+                ", baseUrl='" + baseUrl + '\'' +
+                ", fileId='" + fileId + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", originalData=" + originalData +
+                ", options=" + options +
+                '}';
     }
 }

@@ -3,12 +3,17 @@ package com.wix.mediaplatform.image.option.brightness;
 import com.wix.mediaplatform.image.option.Option;
 
 import static com.wix.mediaplatform.image.Validation.inRange;
+import static java.lang.Integer.parseInt;
 
 public class Brightness extends Option {
 
-    private static final String KEY = "br";
+    public static final String KEY = "br";
 
     private int brightness;
+
+    public Brightness() {
+        super(KEY);
+    }
 
     public Brightness(int brightness) {
         super(KEY);
@@ -21,5 +26,18 @@ public class Brightness extends Option {
     @Override
     public String serialize() {
         return KEY + SEPARATOR + brightness;
+    }
+
+    @Override
+    public Option deserialize(String... params) {
+        brightness = parseInt(params[0]);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Brightness{" +
+                "brightness=" + brightness +
+                '}';
     }
 }
