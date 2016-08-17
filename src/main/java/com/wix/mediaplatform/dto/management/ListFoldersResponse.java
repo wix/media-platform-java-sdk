@@ -5,12 +5,14 @@ import com.wix.mediaplatform.dto.folder.FolderDTO;
 
 import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 public class ListFoldersResponse {
 
     @SerializedName("ts")
     private long timeStamp;
 
-    private Set<FolderDTO> folders;
+    private Set<FolderDTO> folders = newHashSet();
 
     public ListFoldersResponse(long timeStamp, Set<FolderDTO> folders) {
         this.timeStamp = timeStamp;

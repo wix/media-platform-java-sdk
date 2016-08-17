@@ -5,7 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public abstract class BaseDTO {
+import static com.google.common.collect.Sets.newHashSet;
+
+public class FileBaseDTO {
 
     @SerializedName("parent_folder_id")
     private String parentFolderId;
@@ -33,9 +35,9 @@ public abstract class BaseDTO {
     @SerializedName("mime_type")
     private String mimeType;
 
-    private Set<String> lables;
+    private Set<String> labels = newHashSet();
 
-    private Set<String> tags;
+    private Set<String> tags = newHashSet();
 
     @SerializedName("created_ts")
     private long dateCreated;
@@ -43,10 +45,10 @@ public abstract class BaseDTO {
     @SerializedName("modified_ts")
     private long dateModified;
 
-    public BaseDTO() {
+    public FileBaseDTO() {
     }
 
-    public BaseDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> lables, Set<String> tags, long dateCreated, long dateModified) {
+    public FileBaseDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, long dateCreated, long dateModified) {
         this.parentFolderId = parentFolderId;
         this.hash = hash;
         this.originalFileName = originalFileName;
@@ -56,7 +58,7 @@ public abstract class BaseDTO {
         this.iconUrl = iconUrl;
         this.mediaType = mediaType;
         this.mimeType = mimeType;
-        this.lables = lables;
+        this.labels = labels;
         this.tags = tags;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
@@ -113,8 +115,8 @@ public abstract class BaseDTO {
         return mimeType;
     }
 
-    public Set<String> getLables() {
-        return lables;
+    public Set<String> getLabels() {
+        return labels;
     }
 
     public Set<String> getTags() {
@@ -127,6 +129,25 @@ public abstract class BaseDTO {
 
     public long getDateModified() {
         return dateModified;
+    }
+
+    @Override
+    public String toString() {
+        return "FileBaseDTO{" +
+                "parentFolderId='" + parentFolderId + '\'' +
+                ", hash='" + hash + '\'' +
+                ", originalFileName='" + originalFileName + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", fileUrl='" + fileUrl + '\'' +
+                ", fileSize=" + fileSize +
+                ", iconUrl='" + iconUrl + '\'' +
+                ", mediaType='" + mediaType + '\'' +
+                ", mimeType='" + mimeType + '\'' +
+                ", labels=" + labels +
+                ", tags=" + tags +
+                ", dateCreated=" + dateCreated +
+                ", dateModified=" + dateModified +
+                '}';
     }
 }
 

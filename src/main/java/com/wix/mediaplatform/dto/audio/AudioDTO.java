@@ -1,8 +1,8 @@
 package com.wix.mediaplatform.dto.audio;
 
-import com.wix.mediaplatform.dto.BaseDTO;
+import com.wix.mediaplatform.dto.FileBaseDTO;
 
-public class AudioDTO extends BaseDTO {
+public class AudioDTO extends FileBaseDTO {
 
     private AudioFile inputFile;
 
@@ -13,7 +13,7 @@ public class AudioDTO extends BaseDTO {
         return inputFile;
     }
 
-    private class AudioFile {
+    public class AudioFile {
 
         private String format;
 

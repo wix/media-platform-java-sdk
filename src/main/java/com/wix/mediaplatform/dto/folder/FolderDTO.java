@@ -27,6 +27,9 @@ public class FolderDTO {
     @SerializedName("modified_ts")
     private long dateUpdated;
 
+    public FolderDTO() {
+    }
+
     public FolderDTO(String folderId, String parentFolderId, String folderName, MediaType mediaType, Set<String> tags, long dateCreated, long dateUpdated) {
         this.folderId = folderId;
         this.parentFolderId = parentFolderId;

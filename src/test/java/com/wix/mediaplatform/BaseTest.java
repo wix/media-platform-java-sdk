@@ -1,7 +1,6 @@
 package com.wix.mediaplatform;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.HttpClients;
@@ -17,7 +16,7 @@ public abstract class BaseTest {
 
     protected HttpClient httpClient;
 
-    protected Gson gson = new GsonBuilder().create();
+    protected Gson gson = MediaPlatform.getGson();
 
     public BaseTest() {
 

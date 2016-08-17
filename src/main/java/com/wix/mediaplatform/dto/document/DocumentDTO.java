@@ -1,6 +1,7 @@
 package com.wix.mediaplatform.dto.document;
 
-import com.wix.mediaplatform.dto.BaseDTO;
+import com.wix.mediaplatform.dto.FileBaseDTO;
 
-public class DocumentDTO extends BaseDTO {
+public class DocumentDTO extends FileBaseDTO {
+
 }

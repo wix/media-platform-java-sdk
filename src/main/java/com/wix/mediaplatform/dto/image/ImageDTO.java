@@ -1,16 +1,18 @@
 package com.wix.mediaplatform.dto.image;
 
-import com.wix.mediaplatform.dto.BaseDTO;
+import com.wix.mediaplatform.dto.FileBaseDTO;
 
 import java.util.Set;
 
-public class ImageDTO extends BaseDTO {
+import static com.google.common.collect.Sets.newHashSet;
+
+public class ImageDTO extends FileBaseDTO {
 
     private int width;
 
     private int height;
 
-    private Set<Square> faces;
+    private Set<Square> faces = newHashSet();
 
     public ImageDTO() {
     }
@@ -58,5 +60,14 @@ public class ImageDTO extends BaseDTO {
         public int getHeight() {
             return height;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ImageDTO{" +
+                "width=" + width +
+                ", height=" + height +
+                ", faces=" + faces +
+                "} " + super.toString();
     }
 }

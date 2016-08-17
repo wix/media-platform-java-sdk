@@ -2,9 +2,11 @@ package com.wix.mediaplatform.dto.upload;
 
 import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 public class UploadRequest {
 
-    private Set<String> tags;
+    private Set<String> tags = newHashSet();
 
     private String parentFolderId;
 
