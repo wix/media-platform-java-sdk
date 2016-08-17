@@ -8,7 +8,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -19,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.wix.mediaplatform.http.Constants.ACCEPT_JSON;
+import static com.wix.mediaplatform.http.Constants.CONTENT_TYPE_JSON;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 public class AuthenticatedHTTPClient {
@@ -40,26 +43,37 @@ public class AuthenticatedHTTPClient {
             throw new UnauthorizedException();
         }
 
-        URIBuilder builder = new URIBuilder(url);
-        if (params != null) {
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                builder.addParameter(entry.getKey(), entry.getValue());
-            }
-        }
-        HttpGet request = new HttpGet(url);
+        String fullUrl = appendQueryString(url, params);
+        HttpGet request = new HttpGet(fullUrl);
         request.addHeader(ACCEPT_JSON);
         request.addHeader(AUTHORIZATION, authHeader);
 
         HttpResponse response = httpClient.execute(request);
 
-        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
-            authenticationFacade.invalidateToken(userId);
+        assertResponseStatus(userId, response);
+
+        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+    }
+
+    public <T> T put(String userId, String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+
+        String authHeader = authenticationFacade.getHeader(userId);
+        if (authHeader == null) {
             throw new UnauthorizedException();
         }
 
-        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
-            throw new IOException(response.toString());
-        }
+        String fullUrl = appendQueryString(url, params);
+        HttpPut request = new HttpPut(fullUrl);
+        request.addHeader(ACCEPT_JSON);
+        request.addHeader(CONTENT_TYPE_JSON);
+        request.addHeader(AUTHORIZATION, authHeader);
+        String json = gson.toJson(payload);
+        StringEntity entity = new StringEntity(json);
+        request.setEntity(entity);
+
+        HttpResponse response = httpClient.execute(request);
+
+        assertResponseStatus(userId, response);
 
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
@@ -77,5 +91,27 @@ public class AuthenticatedHTTPClient {
         }
 
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+    }
+
+    private void assertResponseStatus(String userId, HttpResponse response) throws UnauthorizedException, IOException {
+        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
+            authenticationFacade.invalidateToken(userId);
+            throw new UnauthorizedException();
+        }
+
+        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+            throw new IOException(response.toString());
+        }
+    }
+
+    private String appendQueryString(String url, @Nullable Map<String, String> params) throws URISyntaxException {
+        URIBuilder builder = new URIBuilder(url);
+        if (params != null) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                builder.addParameter(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return builder.toString();
     }
 }
