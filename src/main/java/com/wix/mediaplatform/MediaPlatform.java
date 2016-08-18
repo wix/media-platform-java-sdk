@@ -45,7 +45,7 @@ public class MediaPlatform {
         return fileManager;
     }
 
-    public static Gson getGson() {
+    protected static Gson getGson() {
         return new GsonBuilder()
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(FileBaseDTO.class, "media_type")
                         .registerSubtype(ImageDTO.class, "picture")
@@ -55,7 +55,7 @@ public class MediaPlatform {
                 .create();
     }
 
-    public static HttpClient getHttpClient() {
+    protected static HttpClient getHttpClient() {
         return HttpClients.createMinimal();
     }
 }

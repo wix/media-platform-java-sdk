@@ -32,6 +32,7 @@ public class FileManager {
         return authenticatedHTTPClient.get(userId, baseUrl + "/files/getpage", params, ListFilesResponse.class);
     }
 
+    @Nullable
     public FileBaseDTO getFile(String userId, String fileId) throws UnauthorizedException, IOException, URISyntaxException {
         return authenticatedHTTPClient.get(userId, baseUrl + "/files/" + fileId, null, FileBaseDTO.class);
     }
