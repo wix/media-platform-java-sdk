@@ -33,12 +33,10 @@ public class FileManager {
     }
 
     public FileBaseDTO getFile(String userId, String fileId) throws UnauthorizedException, IOException, URISyntaxException {
-        //TODO: resolve response to concrete Class
         return authenticatedHTTPClient.get(userId, baseUrl + "/files/" + fileId, null, FileBaseDTO.class);
     }
 
     public FileBaseDTO updateFile(String userId, String fileId, UpdateFileRequest updateFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        //TODO: resolve response to concrete Class
         return authenticatedHTTPClient.put(userId, baseUrl + "/files/" + fileId, updateFileRequest, null, FileBaseDTO.class);
     }
 
@@ -48,7 +46,7 @@ public class FileManager {
 
     public ListFoldersResponse listFolders(String userId, @Nullable String parentFolderId) throws UnauthorizedException, IOException, URISyntaxException {
         String url = baseUrl + "/folders" + (parentFolderId != null ? "/" + parentFolderId : "");
-        return authenticatedHTTPClient.get(userId, url, null, ListFilesResponse.class);
+        return authenticatedHTTPClient.get(userId, url, null, ListFoldersResponse.class);
     }
 
     public FolderDTO newFolder(String userId, NewFolderRequest newFolderRequest) throws UnauthorizedException, IOException, URISyntaxException {

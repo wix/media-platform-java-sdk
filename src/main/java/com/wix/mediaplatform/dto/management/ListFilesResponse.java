@@ -17,6 +17,9 @@ public class ListFilesResponse {
 
     private Set<FileBaseDTO> files;
 
+    public ListFilesResponse() {
+    }
+
     public ListFilesResponse(long timeStamp, int count, String nextPageCursor, Set<FileBaseDTO> files) {
         this.timeStamp = timeStamp;
         this.count = count;

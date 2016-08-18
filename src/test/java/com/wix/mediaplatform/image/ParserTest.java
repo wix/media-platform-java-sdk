@@ -15,7 +15,7 @@ public class ParserTest {
         ImageRequest imageRequest = Parser.fromDto("test.wix.com", new ImageDTO("parentFolderId", "hash", "fish.jpeg",
                 "imageId", "user/bucket/fileId/file.jpg", 1000,
                 "iconUrl", "picture", "image/jpeg", Sets.<String>newHashSet(), Sets.<String>newHashSet(), 100, 100,
-                10, 10, Sets.<ImageDTO.Square>newHashSet()));
+                10, 10, null));
 
         assertThat(imageRequest.fit(100, 100).toUrl(), is("//test.wix.com/user/bucket/imageId/v1/fit/w_100,h_100/fish.jpeg#w_10,h_10,mt_image/jpeg"));
     }

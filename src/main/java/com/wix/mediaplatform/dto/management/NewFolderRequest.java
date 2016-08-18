@@ -14,6 +14,9 @@ public class NewFolderRequest {
     @SerializedName("parent_folder_id")
     private String parentFolderId;
 
+    public NewFolderRequest() {
+    }
+
     public NewFolderRequest(MediaType mediaType, String folderName, String parentFolderId) {
         this.mediaType = mediaType;
         this.folderName = folderName;
@@ -30,5 +33,20 @@ public class NewFolderRequest {
 
     public String getParentFolderId() {
         return parentFolderId;
+    }
+
+    public NewFolderRequest setMediaType(MediaType mediaType) {
+        this.mediaType = mediaType;
+        return this;
+    }
+
+    public NewFolderRequest setFolderName(String folderName) {
+        this.folderName = folderName;
+        return this;
+    }
+
+    public NewFolderRequest setParentFolderId(String parentFolderId) {
+        this.parentFolderId = parentFolderId;
+        return this;
     }
 }

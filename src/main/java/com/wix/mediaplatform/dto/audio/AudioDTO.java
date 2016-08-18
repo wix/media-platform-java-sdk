@@ -1,33 +1,37 @@
 package com.wix.mediaplatform.dto.audio;
 
+import com.google.gson.annotations.SerializedName;
 import com.wix.mediaplatform.dto.FileBaseDTO;
 
 public class AudioDTO extends FileBaseDTO {
 
-    private AudioFile inputFile;
+    @SerializedName("file_input")
+    private Analysis analysis;
 
     public AudioDTO() {
     }
 
-    public AudioFile getInputFile() {
-        return inputFile;
+    public Analysis getAnalysis() {
+        return analysis;
     }
 
-    public class AudioFile {
+    public class Analysis {
 
         private String format;
 
         private int channels;
 
+        @SerializedName("sample_size")
         private int sampleSize;
 
+        @SerializedName("sample_rate")
         private int sampleRate;
 
         private long duration;
 
         private int bitrate;
 
-        public AudioFile() {
+        public Analysis() {
         }
 
         public String getFormat() {
@@ -53,5 +57,24 @@ public class AudioDTO extends FileBaseDTO {
         public int getBitrate() {
             return bitrate;
         }
+
+        @Override
+        public String toString() {
+            return "Analysis{" +
+                    "format='" + format + '\'' +
+                    ", channels=" + channels +
+                    ", sampleSize=" + sampleSize +
+                    ", sampleRate=" + sampleRate +
+                    ", duration=" + duration +
+                    ", bitrate=" + bitrate +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "AudioDTO{" +
+                "analysis=" + analysis +
+                "} " + super.toString();
     }
 }

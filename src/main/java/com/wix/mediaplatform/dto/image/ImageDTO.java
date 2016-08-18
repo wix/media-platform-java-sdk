@@ -1,5 +1,6 @@
 package com.wix.mediaplatform.dto.image;
 
+import com.google.gson.annotations.SerializedName;
 import com.wix.mediaplatform.dto.FileBaseDTO;
 
 import java.util.Set;
@@ -12,16 +13,17 @@ public class ImageDTO extends FileBaseDTO {
 
     private int height;
 
-    private Set<Square> faces = newHashSet();
+    @SerializedName("file_input")
+    private Analysis analysis;
 
     public ImageDTO() {
     }
 
-    public ImageDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> lables, Set<String> tags, long dateCreated, long dateModified, int width, int height, Set<Square> faces) {
-        super(parentFolderId, hash, originalFileName, fileName, fileUrl, fileSize, iconUrl, mediaType, mimeType, lables, tags, dateCreated, dateModified);
+    public ImageDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, long dateCreated, long dateModified, int width, int height, Analysis analysis) {
+        super(parentFolderId, hash, originalFileName, fileName, fileUrl, fileSize, iconUrl, mediaType, mimeType, labels, tags, dateCreated, dateModified);
         this.width = width;
         this.height = height;
-        this.faces = faces;
+        this.analysis = analysis;
     }
 
     public int getWidth() {
@@ -32,8 +34,8 @@ public class ImageDTO extends FileBaseDTO {
         return height;
     }
 
-    public Set<Square> getFaces() {
-        return faces;
+    public Analysis getAnalysis() {
+        return analysis;
     }
 
     public class Square {
@@ -60,6 +62,40 @@ public class ImageDTO extends FileBaseDTO {
         public int getHeight() {
             return height;
         }
+
+        @Override
+        public String toString() {
+            return "Square{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    ", width=" + width +
+                    ", height=" + height +
+                    '}';
+        }
+    }
+
+    public class Analysis {
+
+        @SerializedName("face")
+        private Set<Square> faces = newHashSet();
+
+        public Analysis() {
+        }
+
+        public Analysis(Set<Square> faces) {
+            this.faces = faces;
+        }
+
+        public Set<Square> getFaces() {
+            return faces;
+        }
+
+        @Override
+        public String toString() {
+            return "Analysis{" +
+                    "faces=" + faces +
+                    '}';
+        }
     }
 
     @Override
@@ -67,7 +103,7 @@ public class ImageDTO extends FileBaseDTO {
         return "ImageDTO{" +
                 "width=" + width +
                 ", height=" + height +
-                ", faces=" + faces +
+                ", analysis=" + analysis +
                 "} " + super.toString();
     }
 }

@@ -13,7 +13,7 @@ public class ListFilesRequest {
     @SerializedName("page_size")
     private Integer size;
 
-    private String order;
+    private OrderBy order;
 
     private String orderDirection;
 
@@ -25,7 +25,11 @@ public class ListFilesRequest {
 
     private String tag;
 
-    public ListFilesRequest(String cursor, Integer size, String order, String orderDirection, String parentFolderId, MediaType mediaType, String tag) {
+    public ListFilesRequest() {
+
+    }
+
+    public ListFilesRequest(String cursor, Integer size, OrderBy order, String orderDirection, String parentFolderId, MediaType mediaType, String tag) {
         this.cursor = cursor;
         this.size = size;
         this.order = order;
@@ -33,6 +37,46 @@ public class ListFilesRequest {
         this.parentFolderId = parentFolderId;
         this.mediaType = mediaType;
         this.tag = tag;
+    }
+
+    public ListFilesRequest setCursor(String cursor) {
+        this.cursor = cursor;
+        return this;
+    }
+
+    public ListFilesRequest setSize(Integer size) {
+        this.size = size;
+        return this;
+    }
+
+    public ListFilesRequest setOrder(OrderBy order) {
+        this.order = order;
+        return this;
+    }
+
+    public ListFilesRequest ascending() {
+        this.orderDirection = null;
+        return this;
+    }
+
+    public ListFilesRequest descending() {
+        this.orderDirection = "-";
+        return this;
+    }
+
+    public ListFilesRequest setParentFolderId(String parentFolderId) {
+        this.parentFolderId = parentFolderId;
+        return this;
+    }
+
+    public ListFilesRequest setMediaType(MediaType mediaType) {
+        this.mediaType = mediaType;
+        return this;
+    }
+
+    public ListFilesRequest setTag(String tag) {
+        this.tag = tag;
+        return this;
     }
 
     public String getCursor() {
@@ -43,7 +87,7 @@ public class ListFilesRequest {
         return size;
     }
 
-    public String getOrder() {
+    public OrderBy getOrder() {
         return order;
     }
 
@@ -74,10 +118,10 @@ public class ListFilesRequest {
             b.put("page_size", size.toString());
         }
         if (order != null) {
-            b.put("order", (orderDirection != null ? orderDirection : "") + order);
+            b.put("order", (orderDirection != null ? orderDirection: "") + order.name());
         }
         if (parentFolderId != null) {
-            b.put("parentFolderId", parentFolderId);
+            b.put("parent_folder_id", parentFolderId);
         }
         if (mediaType != null) {
             b.put("media_type", mediaType.getMediaType());
@@ -87,5 +131,10 @@ public class ListFilesRequest {
         }
 
         return b.build();
+    }
+
+    public enum OrderBy {
+        name,
+        date
     }
 }

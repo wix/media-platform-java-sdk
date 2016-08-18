@@ -26,4 +26,12 @@ public class ListFoldersResponse {
     public Set<FolderDTO> getFolders() {
         return folders;
     }
+
+    @Override
+    public String toString() {
+        return "ListFoldersResponse{" +
+                "timeStamp=" + timeStamp +
+                ", folders=" + folders +
+                '}';
+    }
 }
