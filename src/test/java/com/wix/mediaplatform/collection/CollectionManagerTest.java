@@ -110,7 +110,7 @@ public class CollectionManagerTest extends BaseTest {
         stubFor(delete(urlEqualTo("/collections/collectionId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("publish-collection-response.json")));
+                        .withBody("{}")));
 
         collectionManager.deleteCollection("userId", "collectionId");
     }
@@ -121,7 +121,7 @@ public class CollectionManagerTest extends BaseTest {
         stubFor(post(urlEqualTo("/collections/collectionId/items/prepend"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("add-items-response.json")));
+                        .withBodyFile("wrapped-items-response.json")));
 
         ItemDTO[] items = collectionManager.prependItems("userId", "collectionId", new NewItemRequest[]{
                 new NewItemRequest()
@@ -137,7 +137,7 @@ public class CollectionManagerTest extends BaseTest {
         stubFor(post(urlEqualTo("/collections/collectionId/items/append"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("add-items-response.json")));
+                        .withBodyFile("wrapped-items-response.json")));
 
         ItemDTO[] items = collectionManager.appendItems("userId", "collectionId", new NewItemRequest[]{
                 new NewItemRequest()
@@ -153,7 +153,7 @@ public class CollectionManagerTest extends BaseTest {
         stubFor(post(urlEqualTo("/collections/collectionId/items/insert-before/itemId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("add-items-response.json")));
+                        .withBodyFile("wrapped-items-response.json")));
 
         ItemDTO[] items = collectionManager.insertBefore("userId", "collectionId", "itemId", new NewItemRequest[]{
                 new NewItemRequest()
@@ -169,7 +169,7 @@ public class CollectionManagerTest extends BaseTest {
         stubFor(post(urlEqualTo("/collections/collectionId/items/insert-after/itemId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("add-items-response.json")));
+                        .withBodyFile("wrapped-items-response.json")));
 
         ItemDTO[] items = collectionManager.insertAfter("userId", "collectionId", "itemId", new NewItemRequest[]{
                 new NewItemRequest()
@@ -185,7 +185,7 @@ public class CollectionManagerTest extends BaseTest {
         stubFor(put(urlEqualTo("/collections/collectionId/items"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("add-items-response.json")));
+                        .withBodyFile("wrapped-items-response.json")));
 
         ItemDTO[] items = collectionManager.updateItems("userId", "collectionId", new UpdateItemRequest[]{
                 new UpdateItemRequest()
@@ -197,26 +197,64 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void moveToStart() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/move-first"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("wrapped-items-response.json")));
 
+        ItemDTO[] items = collectionManager.moveToStart("userId", "collectionId", new String[]{"itemId"});
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
     public void moveToEnd() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/move-last"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("wrapped-items-response.json")));
 
+        ItemDTO[] items = collectionManager.moveToEnd("userId", "collectionId", new String[]{"itemId"});
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
     public void moveBefore() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/move-before/itemId1"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("wrapped-items-response.json")));
 
+        ItemDTO[] items = collectionManager.moveBefore("userId", "collectionId", "itemId1", new String[]{"itemId2"});
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
     public void moveAfter() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/move-after/itemId1"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("wrapped-items-response.json")));
 
+        ItemDTO[] items = collectionManager.moveAfter("userId", "collectionId", "itemId1", new String[]{"itemId2"});
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
     public void deleteItems() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/delete"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{}")));
 
+        collectionManager.deleteItems("userId", "collectionId", new String[]{"itemId2"});
     }
 }

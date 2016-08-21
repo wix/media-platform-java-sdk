@@ -95,23 +95,31 @@ public class CollectionManager {
     }
 
     public ItemDTO[] moveToStart(String userId, String collectionId, String[] items) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/move-first", items, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/move-first", ImmutableMap.of("item_ids", items), null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public ItemDTO[] moveToEnd(String userId, String collectionId, String[] items) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/move-last", items, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/move-last", ImmutableMap.of("item_ids", items), null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public ItemDTO[] moveBefore(String userId, String collectionId, String itemId, String[] items) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/move-before/" + itemId, items, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/move-before/" + itemId, ImmutableMap.of("item_ids", items), null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public ItemDTO[] moveAfter(String userId, String collectionId, String itemId, String[] items) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/move-after/" + itemId, items, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/move-after/" + itemId, ImmutableMap.of("item_ids", items), null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public void deleteItems(String userId, String collectionId, String[] items) throws UnauthorizedException, IOException, URISyntaxException {
-        authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/delete", items, null, null);
+        authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/delete", ImmutableMap.of("item_ids", items), null, null);
     }
 
     @NotNull

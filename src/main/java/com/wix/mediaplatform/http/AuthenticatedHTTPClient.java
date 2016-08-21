@@ -56,6 +56,7 @@ public class AuthenticatedHTTPClient {
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
+    @Nullable
     public <T> T post(String userId, String url, Object payload, Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
         String authHeader = authenticationFacade.getHeader(userId);
         if (authHeader == null) {
@@ -75,6 +76,9 @@ public class AuthenticatedHTTPClient {
 
         assertResponseStatus(userId, response);
 
+        if (responseType == null) {
+            return null;
+        }
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
