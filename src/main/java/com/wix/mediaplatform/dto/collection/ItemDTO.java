@@ -82,4 +82,19 @@ public class ItemDTO {
     public String getDateUpdated() {
         return dateUpdated;
     }
+
+    @Override
+    public String toString() {
+        return "ItemDTO{" +
+                "id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", title='" + title + '\'' +
+                ", ordinal=" + ordinal +
+                ", tags=" + tags +
+                ", publicProperties=" + publicProperties +
+                ", privateProperties=" + privateProperties +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", dateUpdated='" + dateUpdated + '\'' +
+                '}';
+    }
 }

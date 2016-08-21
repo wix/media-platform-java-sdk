@@ -5,7 +5,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-public class NewCollectionRequest extends UpdateCollectionRequest {
+public class NewCollectionRequest extends UpdateCollectionRequest<NewCollectionRequest> {
 
     private String type;
 

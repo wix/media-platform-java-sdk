@@ -8,7 +8,7 @@ import java.util.Set;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
-public class UpdateCollectionRequest {
+public class UpdateCollectionRequest<T extends UpdateCollectionRequest> {
 
     private String title;
 
@@ -54,43 +54,43 @@ public class UpdateCollectionRequest {
         return privateProperties;
     }
 
-    public UpdateCollectionRequest setTitle(String title) {
+    public T setTitle(String title) {
         this.title = title;
-        return this;
+        return (T) this;
     }
 
-    public UpdateCollectionRequest setTags(Set<String> tags) {
+    public T setTags(Set<String> tags) {
         this.tags = tags;
-        return this;
+        return (T) this;
     }
 
-    public UpdateCollectionRequest addTag(String tag) {
+    public T addTag(String tag) {
         this.tags.add(tag);
-        return this;
+        return (T) this;
     }
 
-    public UpdateCollectionRequest setThumbnailUrl(String thumbnailUrl) {
+    public T setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
-        return this;
+        return (T) this;
     }
 
-    public UpdateCollectionRequest setPublicProperties(Map<String, String> publicProperties) {
+    public T setPublicProperties(Map<String, String> publicProperties) {
         this.publicProperties = publicProperties;
-        return this;
+        return (T) this;
     }
 
-    public UpdateCollectionRequest putPublicProperty(String key, String value) {
+    public T putPublicProperty(String key, String value) {
         this.publicProperties.put(key, value);
-        return this;
+        return (T) this;
     }
 
-    public UpdateCollectionRequest setPrivateProperties(Map<String, String> privateProperties) {
+    public T setPrivateProperties(Map<String, String> privateProperties) {
         this.privateProperties = privateProperties;
-        return this;
+        return (T) this;
     }
 
-    public UpdateCollectionRequest putPrivateProperty(String key, String value) {
+    public T putPrivateProperty(String key, String value) {
         this.privateProperties.put(key, value);
-        return this;
+        return (T) this;
     }
 }

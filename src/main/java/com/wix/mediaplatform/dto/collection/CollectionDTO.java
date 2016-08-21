@@ -89,4 +89,20 @@ public class CollectionDTO {
     public String getDateUpdated() {
         return dateUpdated;
     }
+
+    @Override
+    public String toString() {
+        return "CollectionDTO{" +
+                "id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", title='" + title + '\'' +
+                ", tags=" + tags +
+                ", items=" + items +
+                ", thumbnailUrl='" + thumbnailUrl + '\'' +
+                ", publicProperties=" + publicProperties +
+                ", privateProperties=" + privateProperties +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", dateUpdated='" + dateUpdated + '\'' +
+                '}';
+    }
 }
