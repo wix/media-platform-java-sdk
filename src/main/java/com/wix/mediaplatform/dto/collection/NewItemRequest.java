@@ -8,7 +8,7 @@ import java.util.Set;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
-public class NewItemRequest {
+public class NewItemRequest<T extends NewItemRequest> {
 
     private String type;
 
@@ -53,38 +53,38 @@ public class NewItemRequest {
         return privateProperties;
     }
 
-    public NewItemRequest setType(String type) {
+    public T setType(String type) {
         this.type = type;
-        return this;
+        return (T) this;
     }
 
-    public NewItemRequest setTitle(String title) {
+    public T setTitle(String title) {
         this.title = title;
-        return this;
+        return (T) this;
     }
 
-    public NewItemRequest setTags(Set<String> tags) {
+    public T setTags(Set<String> tags) {
         this.tags = tags;
-        return this;
+        return (T) this;
     }
 
-    public NewItemRequest setPublicProperties(Map<String, String> publicProperties) {
+    public T setPublicProperties(Map<String, String> publicProperties) {
         this.publicProperties = publicProperties;
-        return this;
+        return (T) this;
     }
 
-    public NewItemRequest addPublicProperty(String key, String value) {
+    public T addPublicProperty(String key, String value) {
         this.publicProperties.put(key, value);
-        return this;
+        return (T) this;
     }
 
-    public NewItemRequest setPrivateProperties(Map<String, String> privateProperties) {
+    public T setPrivateProperties(Map<String, String> privateProperties) {
         this.privateProperties = privateProperties;
-        return this;
+        return (T) this;
     }
 
-    public NewItemRequest addPrivateProperty(String key, String value) {
+    public T addPrivateProperty(String key, String value) {
         this.privateProperties.put(key, value);
-        return this;
+        return (T) this;
     }
 }

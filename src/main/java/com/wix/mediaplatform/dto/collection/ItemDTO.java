@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
 public class ItemDTO {
@@ -21,10 +22,10 @@ public class ItemDTO {
     private Set<String> tags = newHashSet();
 
     @SerializedName("public_properties")
-    private Map<String, String> publicProperties;
+    private Map<String, String> publicProperties = newHashMap();
 
     @SerializedName("private_properties")
-    private Map<String, String> privateProperties;
+    private Map<String, String> privateProperties = newHashMap();
 
     @SerializedName("date_created")
     private String dateCreated;

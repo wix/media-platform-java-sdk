@@ -3,6 +3,7 @@ package com.wix.mediaplatform;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wix.mediaplatform.authentication.AuthenticationFacade;
+import com.wix.mediaplatform.collection.CollectionManager;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.FileBaseDTO;
 import com.wix.mediaplatform.dto.audio.AudioDTO;
@@ -24,6 +25,8 @@ public class MediaPlatform {
     @SuppressWarnings("WeakerAccess")
     public final FileManager fileManager;
 
+    public final CollectionManager collectionManager;
+
     public MediaPlatform(String domain, String appId, String sharedSecret) {
 
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
@@ -35,6 +38,7 @@ public class MediaPlatform {
 
         fileUploader = new FileUploader(authenticatedHTTPClient, gson, configuration);
         fileManager = new FileManager(authenticatedHTTPClient, configuration);
+        collectionManager = new CollectionManager(authenticatedHTTPClient, configuration);
     }
 
     public FileUploader fileUploader() {
@@ -43,6 +47,10 @@ public class MediaPlatform {
 
     public FileManager fileManager() {
         return fileManager;
+    }
+
+    public CollectionManager collectionManager() {
+        return collectionManager;
     }
 
     protected static Gson getGson() {

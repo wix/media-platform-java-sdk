@@ -6,11 +6,14 @@ import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.collection.*;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CollectionManager {
 
@@ -62,23 +65,33 @@ public class CollectionManager {
     }
 
     public ItemDTO[] prependItems(String userId, String collectionId, NewItemRequest[] newItems) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/prepend", newItems, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/prepend", newItems, null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public ItemDTO[] appendItems(String userId, String collectionId, NewItemRequest[] newItems) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/append", newItems, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/append", newItems, null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public ItemDTO[] insertBefore(String userId, String collectionId, String itemId, NewItemRequest[] newItems) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/insert-before/" + itemId, newItems, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/insert-before/" + itemId, newItems, null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public ItemDTO[] insertAfter(String userId, String collectionId, String itemId, NewItemRequest[] newItems) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/insert-after/" + itemId, newItems, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/insert-after/" + itemId, newItems, null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public ItemDTO[] updateItems(String userId, String collectionId, UpdateItemRequest[] updatedItems) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.put(userId, baseUrl + "/collections/" + collectionId + "/items", updatedItems, null, ItemDTO[].class);
+        WrappedItemsResponse wrappedItemsResponse = authenticatedHTTPClient.put(userId, baseUrl + "/collections/" + collectionId + "/items", updatedItems, null, WrappedItemsResponse.class);
+
+        return extractItems(wrappedItemsResponse);
     }
 
     public ItemDTO[] moveToStart(String userId, String collectionId, String[] items) throws UnauthorizedException, IOException, URISyntaxException {
@@ -99,5 +112,15 @@ public class CollectionManager {
 
     public void deleteItems(String userId, String collectionId, String[] items) throws UnauthorizedException, IOException, URISyntaxException {
         authenticatedHTTPClient.post(userId, baseUrl + "/collections/" + collectionId + "/items/delete", items, null, null);
+    }
+
+    @NotNull
+    private ItemDTO[] extractItems(WrappedItemsResponse wrappedItemsResponse) {
+        List<ItemDTO> items = new ArrayList<>();
+        for (WrappedItemsResponse.ItemAndResponse itemAndResponse : wrappedItemsResponse.getItems()) {
+            items.add(itemAndResponse.getObject());
+        }
+
+        return items.toArray(new ItemDTO[]{});
     }
 }

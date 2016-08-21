@@ -3,7 +3,7 @@ package com.wix.mediaplatform.dto.collection;
 import java.util.Map;
 import java.util.Set;
 
-public class UpdateItemRequest extends NewItemRequest {
+public class UpdateItemRequest extends NewItemRequest<UpdateItemRequest> {
 
     private String id;
 

@@ -4,9 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.AuthenticationFacade;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.collection.CollectionDTO;
-import com.wix.mediaplatform.dto.collection.NewCollectionRequest;
-import com.wix.mediaplatform.dto.collection.UpdateCollectionRequest;
+import com.wix.mediaplatform.dto.collection.*;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Rule;
 import org.junit.Test;
@@ -119,27 +117,82 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void prependItems() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/prepend"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("add-items-response.json")));
 
+        ItemDTO[] items = collectionManager.prependItems("userId", "collectionId", new NewItemRequest[]{
+                new NewItemRequest()
+                        .setTitle("title")
+        });
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
     public void appendItems() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/append"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("add-items-response.json")));
 
+        ItemDTO[] items = collectionManager.appendItems("userId", "collectionId", new NewItemRequest[]{
+                new NewItemRequest()
+                        .setTitle("title")
+        });
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
     public void insertBefore() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/insert-before/itemId"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("add-items-response.json")));
 
+        ItemDTO[] items = collectionManager.insertBefore("userId", "collectionId", "itemId", new NewItemRequest[]{
+                new NewItemRequest()
+                        .setTitle("title")
+        });
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
     public void insertAfter() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/collections/collectionId/items/insert-after/itemId"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("add-items-response.json")));
 
+        ItemDTO[] items = collectionManager.insertAfter("userId", "collectionId", "itemId", new NewItemRequest[]{
+                new NewItemRequest()
+                        .setTitle("title")
+        });
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
     public void updateItems() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(put(urlEqualTo("/collections/collectionId/items"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("add-items-response.json")));
 
+        ItemDTO[] items = collectionManager.updateItems("userId", "collectionId", new UpdateItemRequest[]{
+                new UpdateItemRequest()
+                        .setTitle("title")
+        });
+
+        assertThat(items[0].getTitle(), is("cat"));
     }
 
     @Test
