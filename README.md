@@ -143,37 +143,32 @@ From the browser GET the URL and POST the form to it, including the token in the
 
 ## Image Consumption
 
-The SDK provides a programmatic facility to generate image URLs 
+The SDK provides a programmatic facility to generate image URLs
 
 ```java
 /**
 * A new image request from the host and ImageDTO (response from server)
 */
-var fromDto = require('media-platform-js-sdk').image.fromDto;
-var imageRequest = fromDto('media.wixapps.net', imageDto);
+ImageRequest imageRequest = Parser.fromDto("test.wix.com", imageDto);
 
 /**
 * A new image request from a previously generated url
 */
-var urlToImageRequest = require('media-platform-js-sdk').image.urlToImageRequest;
-var imageRequest = urlToImageRequest('//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg');
+ImageRequest imageRequest = Parser.fromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
 
 /**
 * A new image request from the base url and the file id
 */
-var ImageRequest = require('media-platform-js-sdk').image.ImageRequest;
-var imageRequest = new ImageRequest('media.wixapps.net/wixmedia-samples/images', '000c45e21f8a433cb3b2483dfbb659d8');
+private ImageRequest imageRequestWithOriginalData = new ImageRequest("media.wixapps.net/wixmedia-samples/images", "000c45e21f8a433cb3b2483dfbb659d8", "image.jpeg", null);
 
-var url = imageRequest.fit(500, 500).negative().saturation(-90).toUrl().url;
+var url = imageRequest.fit(500, 500).negative().saturation(-90).toUrl();
 
 /**
 * A pre-configured operation from a previously generated url
 */
-var fromUrl = require('media-platform-js-sdk').image.fromUrl;
-var imageOperation = fromUrl('//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg');
+Operation operation = Parser.operationFromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
 
-var url = imageOperation.negative().saturation(-90).toUrl().url;
-
+var url = imageOperation.negative().saturation(-90).toUrl();
 ```
 
 ## File Management
