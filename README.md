@@ -159,16 +159,16 @@ ImageRequest imageRequest = Parser.fromUrl("//media.wixapps.net/wixmedia-samples
 /**
 * A new image request from the base url and the file id
 */
-private ImageRequest imageRequestWithOriginalData = new ImageRequest("media.wixapps.net/wixmedia-samples/images", "000c45e21f8a433cb3b2483dfbb659d8", "image.jpeg", null);
+ImageRequest imageRequestWithOriginalData = new ImageRequest("media.wixapps.net/wixmedia-samples/images", "000c45e21f8a433cb3b2483dfbb659d8", "image.jpeg", null);
 
-var url = imageRequest.fit(500, 500).negative().saturation(-90).toUrl();
+String url = imageRequest.fit(500, 500).negative().saturation(-90).toUrl();
 
 /**
 * A pre-configured operation from a previously generated url
 */
 Operation operation = Parser.operationFromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
 
-var url = imageOperation.negative().saturation(-90).toUrl();
+String url = imageOperation.negative().saturation(-90).toUrl();
 ```
 
 ## File Management
@@ -176,23 +176,20 @@ var url = imageOperation.negative().saturation(-90).toUrl();
 Wix Media Platform exposes a comprehensive set of APIs tailored for the management of previously uploaded files.
 
 ```java
-var fileManager = mediaPlatform.fileManager;
+FileManager fileManager = mediaPlatform.fileManager();
 ```
 
 Retrieve a list of uploaded files
 
 ```java
-var ListFilesRequest = require('media-platform-js-sdk').file.ListFilesRequest;
-
-var listFilesRequest = new ListFilesRequest()
-    .ascending()
-    .setCursor('c')
-    .setMediaType(MediaType.IMAGE)
-    .orderBy('date')
+ListFilesResponse response = fileManager.listFiles("userId", new ListFilesRequest()
+    .setOrder(ListFilesRequest.OrderBy.date)
+    .descending()
+    .setCursor("cursor")
     .setSize(10)
-    .setTag('dog')
-    .setParentFolderId('parentFolderId');
-fileManager.listFiles('userId', listFilesRequest, callback)
+    .setMediaType(MediaType.VIDEO)
+    .setParentFolderId("parentFolderId")
+    .setTag("tag"));
 ```
 
 Get an uploaded file metadata 
@@ -200,19 +197,16 @@ Get an uploaded file metadata
 (*does not return the actual file*)
 
 ```java
-fileManager.getFile('fileId', callback)
+ImageDTO file = (ImageDTO) fileManager.getFile("userId", "fileId");
 ```
 
 Update a file metadata
 
 ```java
-var UpdateFileRequest = require('media-platform-js-sdk').file.UpdateFileRequest;
-
-var updateFileRequest = new UpdateFileRequest()
-    .setOriginalFileName('dog.jpeg')
-    .setParentFolderId('folderId')
-    .setTags(['dog', 'Schnauzer']);
-fileManager.updateFile('userId', 'fileId', updateFileRequest, callback);
+AudioDTO file = (AudioDTO) fileManager.updateFile("userId", "fileId", new UpdateFileRequest()
+    .setOriginalFileName("file")
+    .setParentFolderId("parent")
+    .addTag("tag"));
 ```
 
 Delete file
@@ -220,39 +214,33 @@ Delete file
 *Warning: The file will no longer be reachable*
 
 ```java
-fileManager.deleteFile('userId', 'fileId', callback);
+fileManager.deleteFile("userId", "fileId");
 ```
 
 ### Folder Management
 
 Wix Media Platform supports folders
  
-List child folders
+List folders
 
 ```java
-fileManager.listFolders('folderId', callback);
+ListFoldersResponse response = fileManager.listFolders("userId", "folderId" || null);
 ```
 
 Create a new folder
 
 ```java
-var NewFolderRequest = require('media-platform-js-sdk').file.NewFolderRequest;
-
-var newFolderRequest = new NewFolderRequest()
-    .setMediaType(MediaType.IMAGE)
-    .setFolderName('Doberman Pinscher')
-    .setParentFolderId('folderId');
-fileManager.newFolder('userId', newFolderRequest, callback);
+FolderDTO folder = fileManager.newFolder("userId", new NewFolderRequest()
+    .setFolderName("name")
+    .setParentFolderId("parent")
+    .setMediaType(MediaType.DOCUMENT));
 ```
 
 Update a folder
 
 ```java
-var UpdateFolderRequest = require('media-platform-js-sdk').file.UpdateFolderRequest;
-
-var updateFolderRequest = new UpdateFolderRequest()
-    .setFolderName('Doberman Pinscher');
-fileManager.updateFolder('userId', 'folderId', updateFolderRequest, callback);
+FolderDTO folder = fileManager.updateFolder("userId", "folderId", new UpdateFolderRequest()
+    .setFolderName("name"));
 ```
 
 Delete a folder
@@ -260,7 +248,7 @@ Delete a folder
 *this will not delete the folder content*
 
 ```java
-fileManager.deleteFolder('folderId', callback);
+fileManager.deleteFolder("userId", "folderId");
 ```
 
 ## Collection Management
@@ -268,193 +256,124 @@ fileManager.deleteFolder('folderId', callback);
 The collection service enables the creation, management and publishing of item groups such as curated image galleries, audio playlist etc.
 
 ```java
-var collectionManager = mediaPlatform.collectionManager;
+CollectionManager collectionManager = mediaPlatform.collectionManager();
 ```
 
 Create a new collection
 
 ```java
-var NewCollectionRequest = require('media-platform-js-sdk').collection.NewCollectionRequest;
-var NewItemRequest = require('media-platform-js-sdk').collection.NewItemRequest;
-
-var newCollectionRequest = new NewCollectionRequest()
-    .setType('dog')
-    .setPrivateProperties({prop: 'value'})
-    .setPublicProperties({prop: 'value'})
-    .setTags(['Doberman', 'Pinscher'])
-    .setThumbnailUrl('http://this.is.a/collection.jpeg')
-    .setTitle('Dogs Galore')
-    .setItems([
-        new NewItemRequest()
-            .setType(MediaType.AUDIO)
-            .setPrivateProperties({cat: 'fish'})
-            .setPublicProperties({bark: 'loud'})
-            .setTags(['dog', 'bark'])
-            .setTitle('Whof')
-    ]);
-collectionManager.newCollection('userId', newCollectionRequest, callback);
+CollectionDTO collectionDTO = collectionManager.newCollection("userId", new NewCollectionRequest()
+    .setType("type")
+    .setTitle("title")
+    .setThumbnailUrl("thumbnailUrl")
+    .addTag("tag")
+    .putPrivateProperty("priv-key", "priv-value")
+    .putPublicProperty("pub-key", "pub-value"));
 ```
 
 List collections
 
 ```java
-collectionManager.listCollections('userId', 'dog', callback);
+CollectionDTO[] collections = collectionManager.listCollections("userId", "type");
 ```
 
 Get collection
 
 ```java
-collectionManager.getCollection('userId', 'collectionId', callback);
+CollectionDTO collection = collectionManager.getCollection("userId", "collectionId");
 ```
 
 Update collection 
 
 ```java
-var UpdateCollectionRequest = require('media-platform-js-sdk').collection.UpdateCollectionRequest;
-
-var updateCollectionRequest = new UpdateCollectionRequest()
-    .setPrivateProperties({prop: 'value'})
-    .setPublicProperties({prop: 'value'})
-    .setTags(['cats', 'purr'])
-    .setThumbnailUrl('http://this.is.a/collection.jpeg')
-    .setTitle('Cats Galore');
-collectionManager.updateCollection('userId', 'collectionId', updateCollectionRequest, callback);
+CollectionDTO collection = collectionManager.updateCollection("userId", "collectionId", new UpdateCollectionRequest()
+    .addTag("tag")
+    .setTitle("title"));
 ```
 
 Publish collection
 
 ```java
-collectionManager.publishCollection('userId', 'collectionId', callback);
+String pathToCollectionJson = collectionManager.publishCollection("userId", "collectionId");
 ```
 
 Delete collection
 
 ```java
-collectionManager.deleteCollection('userId', 'collectionId', callback);
+collectionManager.deleteCollection("userId", "collectionId");
 ```
 
 Add items at the beginning of a collection
 
 ```java
-var NewItemRequest = require('media-platform-js-sdk').collection.NewItemRequest;
-
-var addItemRequests = [
+ItemDTO[] items = collectionManager.prependItems("userId", "collectionId", new NewItemRequest[]{
     new NewItemRequest()
-        .setType('dog')
-        .setPrivateProperties({prop: 'value'})
-        .setPublicProperties({prop: 'value'})
-        .setTags(['Doberman', 'Pinscher'])
-        .setTitle('Doberman'),
-    new NewItemRequest()
-        .setType('dog')
-        .setPrivateProperties({prop: 'value'})
-        .setPublicProperties({prop: 'value'})
-        .setTags(['Doberman', 'Pinscher'])
-        .setTitle('Pinscher')
-];
-collectionManager.prependItems('userId', 'collectionId', addItemRequests, callback);
+        .setTitle("title")});
 ```
 
 Add items to the end of a collection
 
 ```java
-var NewItemRequest = require('media-platform-js-sdk').collection.NewItemRequest;
-
-var addItemRequests = [
+ItemDTO[] items = collectionManager.appendItems("userId", "collectionId", new NewItemRequest[]{
     new NewItemRequest()
-        .setType('dog')
-        .setPrivateProperties({prop: 'value'})
-        .setPublicProperties({prop: 'value'})
-        .setTags(['Doberman', 'Pinscher'])
-        .setTitle('Doberman')
-];
-collectionManager.appendItems('userId', 'collectionId', addItemRequests, callback);
+        .setTitle("title")});
 ```
 
 Add items *before* an exiting item in a collection
 
 ```java
-var NewItemRequest = require('media-platform-js-sdk').collection.NewItemRequest;
-
-var addItemRequests = [
+ItemDTO[] items = collectionManager.insertBefore("userId", "collectionId", "itemId", new NewItemRequest[]{
     new NewItemRequest()
-        .setType('dog')
-        .setPrivateProperties({prop: 'value'})
-        .setPublicProperties({prop: 'value'})
-        .setTags(['Doberman', 'Pinscher'])
-        .setTitle('Doberman')
-];
-collectionManager.insertBefore('userId', 'collectionId', 'itemId', addItemRequests, callback);
+        .setTitle("title")});
 ```
 
 Add items *after* an exiting item in a collection
 
 ```java
-var NewItemRequest = require('media-platform-js-sdk').collection.NewItemRequest;
-
-var addItemRequests = [
+ItemDTO[] items = collectionManager.insertAfter("userId", "collectionId", "itemId", new NewItemRequest[]{
     new NewItemRequest()
-        .setType('dog')
-        .setPrivateProperties({prop: 'value'})
-        .setPublicProperties({prop: 'value'})
-        .setTags(['Doberman', 'Pinscher'])
-        .setTitle('Doberman')
-];
-collectionManager.insertAfter('userId', 'collectionId', 'itemId', addItemRequests, callback);
+        .setTitle("title")
+});
 ```
 
-Update exiting items in a collection
+Update existing items in a collection
 
 ```java
-var UpdateItemRequest = require('media-platform-js-sdk').collection.UpdateItemRequest;
-
-var updateItemRequests = [
+ItemDTO[] items = collectionManager.updateItems("userId", "collectionId", new UpdateItemRequest[]{
     new UpdateItemRequest()
-        .setId('id1')
-        .setType(MediaType.AUDIO)
-        .setPrivateProperties({prop: 'value'})
-        .setPublicProperties({prop: 'value'})
-        .setTags(['moshe', 'chaim'])
-        .setTitle('olala'),
-    new UpdateItemRequest()
-        .setId('id2')
-        .setType(MediaType.AUDIO)
-        .setPrivateProperties({prop: 'value'})
-        .setPublicProperties({prop: 'value'})
-        .setTags(['moshe', 'chaim'])
-        .setTitle('olala')
-];
-collectionManager.updateItems('userId', 'collectionId', updateItemRequests, callback);
+        .setId("itemId")
+        .setTitle("title")
+});
 ```
 
 Move items to the *start* of the collection
 
 ```java
-collectionManager.moveToStart('userId', 'collectionId', ['id1', 'id2'], callback);
+ItemDTO[] items = collectionManager.moveToStart("userId", "collectionId", new String[]{"itemId"});
 ```
 
 Move items to the *end* of the collection
 
 ```java
-collectionManager.moveToEnd('userId', 'collectionId', ['id1', 'id2'], callback);
+ItemDTO[] items = collectionManager.moveToEnd("userId", "collectionId", new String[]{"itemId"});
 ```
 
 Move items *before* another item
 
 ```java
-collectionManager.moveBefore('userId', 'collectionId', 'itemId', ['id1', 'id2'], callback);
+ItemDTO[] items = collectionManager.moveBefore("userId", "collectionId", "itemId1", new String[]{"itemId2"});
 ```
 
 Move items *after* another item
 
 ```java
-collectionManager.moveAfter('userId', 'collectionId', 'itemId', ['id1', 'id2'], callback);
+ItemDTO[] items = collectionManager.moveAfter("userId", "collectionId", "itemId1", new String[]{"itemId2"});
 ```
 
 Delete items from a collection
 
 ```java
-collectionManager.deleteItems('userId', 'collectionId', ['id1', 'id2'], callback);
+collectionManager.deleteItems("userId", "collectionId", new String[]{"itemId2"});
 ```
 
 ## Reporting Issues

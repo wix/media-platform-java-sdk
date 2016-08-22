@@ -189,6 +189,7 @@ public class CollectionManagerTest extends BaseTest {
 
         ItemDTO[] items = collectionManager.updateItems("userId", "collectionId", new UpdateItemRequest[]{
                 new UpdateItemRequest()
+                        .setId("itemId")
                         .setTitle("title")
         });
 
