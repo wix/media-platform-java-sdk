@@ -35,11 +35,11 @@ The respective JavaScript (for the Browser and Node.js) library can be found [he
 ## Installation
 
 ```xml
-        <dependency>
-            <groupId>com.wix</groupId>
-            <artifactId>media-platform-java-sdk</artifactId>
-            <version>[1.0,1.1)</version>
-        </dependency>
+<dependency>
+    <groupId>com.wix</groupId>
+    <artifactId>media-platform-java-sdk</artifactId>
+    <version>[1.0,1.1)</version>
+</dependency>
 ```
 
 ## Instantiating the Media Platform in the Server
@@ -81,27 +81,25 @@ File upload from the browser is a 2 step operation:
  1. First the signed URL and the upload token is retrieved from the server
  2. Then a multipart/form-data request is made to the URL
 
-In the server expose a route that returns the signed URL and upload token:
+In the server expose a url that returns the signed URL and upload token:
 
 ```java
-app.get('/upload/:mediaType/credentials', function(req, res, next) {
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    mediaPlatform.fileUploader.getUploadUrl('userId', req.params.mediaType,  function (error, urlAndToken) {
-
-        if (error) {
-            res.status(500).send(error.message);
-            return;
-        }
-
-        res.send(urlAndToken);
-    });
+    GetUploadUrlResponse response = fileUploader.getUploadUrl("userId");
+          
+    response.setContentType("application/json");
     
-});
+    PrintWriter out = response.getWriter();
+    out.println(gson.toJson(response));
+}
 ```
 
 From the browser GET the URL and POST the form to it, including the token in the form body 
 
 ```html
+<!-- Based on the JavaScript SDK -->
+
 <form id="upload-form" enctype="multipart/form-data" action="" method="post" target="upload-result">
     <input id="file" name="file" type="file" accept="image/*">
     <input id="media-type" name="media_type" type="text" value="picture" hidden>
