@@ -4,8 +4,39 @@
     <groupId>com.wix</groupId>
     <artifactId>media-platform-java-sdk</artifactId>
     <name>Media Platform SDK</name>
+    <description>A SDK to access Wix Media Platform image manipulation API and upload capabilities</description>
+    <url>https://www.wixmp.com/</url>
     <version>1.0.0-alpha-0</version>
     <packaging>jar</packaging>
+
+    <licenses>
+        <license>
+            <name>BSD-3-Clause</name>
+            <url>https://github.com/wix/media-platform-java-sdk/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Elad Laufer</name>
+            <email>elad@wix.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/wix/media-platform-java-sdk</url>
+        <connection>scm:git:git://github.com/wix/media-platform-java-sdk.git</connection>
+        <developerConnection>scm:git:git@github.com:wix/media-platform-java-sdk.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <url>https://github.com/wix/media-platform-java-sdk/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
 
     <parent>
         <groupId>com.wix</groupId>
@@ -17,16 +48,6 @@
         <java.source.version>1.7</java.source.version>
         <java.target.version>1.7</java.target.version>
     </properties>
-
-    <developers>
-        <developer>
-            <name>Elad Laufer</name>
-            <email>elad@wix.com</email>
-            <roles>
-                <role>owner</role>
-            </roles>
-        </developer>
-    </developers>
 
     <dependencies>
         <dependency>

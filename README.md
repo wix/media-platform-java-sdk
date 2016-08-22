@@ -26,7 +26,7 @@ In addition, Wix Media Platform supports uploading and distribution of documents
 
 # Java SDK
 
-This artifact is aa Java library, compatible with Java 7+.
+This artifact is a Java library, compatible with Java 7+.
 
 ## JavaScript SDK
 
