@@ -156,7 +156,9 @@ public class FileUploaderTest extends BaseTest {
         File file = new File(this.getClass().getClassLoader().getResource("source/video.mp4").getFile());
         VideoDTO videoDTO = fileUploader.uploadVideo("userId", file, null, null);
 
-        assertThat(videoDTO.getFileName(), is("e66d82_ca6c7b4fc81f45c9bcf219d81395d3ec"));
+        System.out.println(videoDTO);
+
+        assertThat(videoDTO.getFileName(), is("2e44912c30e44beca4c623035b4418de"));
     }
 
     @Test
@@ -176,7 +178,7 @@ public class FileUploaderTest extends BaseTest {
         File file = new File(this.getClass().getClassLoader().getResource("source/video.mp4").getFile());
         VideoDTO videoDTO = fileUploader.uploadVideo("userId", file, uploadRequest, null);
 
-        assertThat(videoDTO.getDateCreated(), is(1466344754L));
+        assertThat(videoDTO.getDateCreated(), is(1471955310L));
     }
 
     @Test
@@ -201,7 +203,7 @@ public class FileUploaderTest extends BaseTest {
                         EncodingOptions.AudioFormat.M4A,
                         EncodingOptions.ImageFormat.JPEG));
 
-        assertThat(videoDTO.getDateModified(), is(1466344753L));
+        assertThat(videoDTO.getDateModified(), is(1471955309L));
     }
 
     @Test

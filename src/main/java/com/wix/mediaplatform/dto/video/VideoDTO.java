@@ -1,5 +1,6 @@
 package com.wix.mediaplatform.dto.video;
 
+import com.google.gson.annotations.SerializedName;
 import com.wix.mediaplatform.dto.FileBaseDTO;
 
 import java.util.Set;
@@ -12,8 +13,10 @@ public class VideoDTO extends FileBaseDTO {
 
     private int width;
 
+    @SerializedName("file_input")
     private VideoFile inputFile;
 
+    @SerializedName("file_output")
     private OutputFiles outputFiles;
 
     public VideoDTO() {
@@ -39,18 +42,22 @@ public class VideoDTO extends FileBaseDTO {
 
         private String tag;
 
-        private int fps;
+        private String fps;
 
+        @SerializedName("video_bitrate")
         private int videoBitrate;
 
+        @SerializedName("audio_bitrate")
         private int audioBitrate;
 
         private long duration;
 
         private String quality;
 
+        @SerializedName("display_aspect_ratio")
         private String displayAspectRatio;
 
+        @SerializedName("sample_aspect_ratio")
         private String sampleAspectRatio;
 
         private float rotation;
@@ -64,7 +71,7 @@ public class VideoDTO extends FileBaseDTO {
             return tag;
         }
 
-        public int getFps() {
+        public String getFps() {
             return fps;
         }
 
@@ -99,6 +106,22 @@ public class VideoDTO extends FileBaseDTO {
         public String getType() {
             return type;
         }
+
+        @Override
+        public String toString() {
+            return "VideoFile{" +
+                    "tag='" + tag + '\'' +
+                    ", fps='" + fps + '\'' +
+                    ", videoBitrate=" + videoBitrate +
+                    ", audioBitrate=" + audioBitrate +
+                    ", duration=" + duration +
+                    ", quality='" + quality + '\'' +
+                    ", displayAspectRatio='" + displayAspectRatio + '\'' +
+                    ", sampleAspectRatio='" + sampleAspectRatio + '\'' +
+                    ", rotation=" + rotation +
+                    ", type='" + type + '\'' +
+                    "} " + super.toString();
+        }
     }
 
     private class ImageFile extends BaseFile {
@@ -107,19 +130,29 @@ public class VideoDTO extends FileBaseDTO {
 
     private class OutputFiles {
 
-        private Set<ImageFile> image = newHashSet();
+        @SerializedName("image")
+        private Set<ImageFile> images = newHashSet();
 
-        private Set<VideoFile> video = newHashSet();;
+        @SerializedName("video")
+        private Set<VideoFile> videos = newHashSet();;
 
         public OutputFiles() {
         }
 
-        public Set<ImageFile> getImage() {
-            return image;
+        public Set<ImageFile> getImages() {
+            return images;
         }
 
-        public Set<VideoFile> getVideo() {
-            return video;
+        public Set<VideoFile> getVideos() {
+            return videos;
+        }
+
+        @Override
+        public String toString() {
+            return "OutputFiles{" +
+                    "images=" + images +
+                    ", videos=" + videos +
+                    '}';
         }
     }
 
@@ -163,5 +196,27 @@ public class VideoDTO extends FileBaseDTO {
         public int getHeight() {
             return height;
         }
+
+        @Override
+        public String toString() {
+            return "BaseFile{" +
+                    "status='" + status + '\'' +
+                    ", secure=" + secure +
+                    ", url='" + url + '\'' +
+                    ", format='" + format + '\'' +
+                    ", width=" + width +
+                    ", height=" + height +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "VideoDTO{" +
+                "height=" + height +
+                ", width=" + width +
+                ", inputFile=" + inputFile +
+                ", outputFiles=" + outputFiles +
+                "} " + super.toString();
     }
 }
