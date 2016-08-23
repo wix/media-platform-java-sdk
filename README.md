@@ -38,7 +38,7 @@ The respective JavaScript (for the Browser and Node.js) library can be found [he
 <dependency>
     <groupId>com.wix</groupId>
     <artifactId>media-platform-java-sdk</artifactId>
-    <version>[1.0,1.1)</version>
+    <version>[1.0,2.0)</version>
 </dependency>
 ```
 
@@ -159,7 +159,7 @@ ImageRequest imageRequest = Parser.fromUrl("//media.wixapps.net/wixmedia-samples
 /**
 * A new image request from the base url and the file id
 */
-ImageRequest imageRequestWithOriginalData = new ImageRequest("media.wixapps.net/wixmedia-samples/images", "000c45e21f8a433cb3b2483dfbb659d8", "image.jpeg", null);
+ImageRequest imageRequest = new ImageRequest("media.wixapps.net/wixmedia-samples/images", "000c45e21f8a433cb3b2483dfbb659d8", "image.jpeg", null);
 
 String url = imageRequest.fit(500, 500).negative().saturation(-90).toUrl();
 
