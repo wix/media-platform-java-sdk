@@ -396,4 +396,4 @@ It offers computing, storage and application services for web, mobile and backen
 
 
 [mvn-image]: https://img.shields.io/maven-central/v/wix.com/media-platfrom-java-sdk.svg
-[mvn-url]: https://search.maven.org/#search%7Cga%7C1%7Ca%3A%22media-platfrom-java-sdk%22
+[mvn-url]: https://search.maven.org/#search%7Cga%7C1%7Cmedia-platform-java-sdk
