@@ -395,5 +395,5 @@ Our powerful technology makes it simple for everyone to create a beautiful websi
 It offers computing, storage and application services for web, mobile and backend solutions.
 
 
-[mvn-image]: https://img.shields.io/maven-central/v/wix.com/media-platfrom-java-sdk.svg
+[mvn-image]: https://img.shields.io/maven-central/v/wix.com/media-platform-java-sdk.svg
 [mvn-url]: https://search.maven.org/#search%7Cga%7C1%7Cmedia-platform-java-sdk
