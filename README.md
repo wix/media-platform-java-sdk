@@ -382,7 +382,7 @@ Please use [the issue tracker](https://github.com/wix/media-platform-java-sdk/is
 
 ## License
 
-This library uses the BSD-3-Clause License.
+We use a custom license, see [LICENSE.md](LICENSE.md).
 
 ## About Wix
 
