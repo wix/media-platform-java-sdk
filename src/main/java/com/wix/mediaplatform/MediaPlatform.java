@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.wix.mediaplatform.authentication.AuthenticationFacade;
 import com.wix.mediaplatform.collection.CollectionManager;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.FileBaseDTO;
+import com.wix.mediaplatform.dto.FileDTO;
 import com.wix.mediaplatform.dto.audio.AudioDTO;
 import com.wix.mediaplatform.dto.document.DocumentDTO;
 import com.wix.mediaplatform.dto.image.ImageDTO;
@@ -55,7 +55,7 @@ public class MediaPlatform {
 
     protected static Gson getGson() {
         return new GsonBuilder()
-                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(FileBaseDTO.class, "media_type")
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(FileDTO.class, "media_type")
                         .registerSubtype(ImageDTO.class, "picture")
                         .registerSubtype(VideoDTO.class, "video")
                         .registerSubtype(AudioDTO.class, "music")

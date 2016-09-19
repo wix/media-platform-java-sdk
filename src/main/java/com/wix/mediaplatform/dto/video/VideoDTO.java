@@ -1,13 +1,13 @@
 package com.wix.mediaplatform.dto.video;
 
 import com.google.gson.annotations.SerializedName;
-import com.wix.mediaplatform.dto.FileBaseDTO;
+import com.wix.mediaplatform.dto.FileDTO;
 
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-public class VideoDTO extends FileBaseDTO {
+public class VideoDTO extends FileDTO {
 
     private int height;
 

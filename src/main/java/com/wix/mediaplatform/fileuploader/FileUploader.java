@@ -1,12 +1,16 @@
 package com.wix.mediaplatform.fileuploader;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.dto.FileDTO;
 import com.wix.mediaplatform.dto.MediaType;
 import com.wix.mediaplatform.dto.audio.AudioDTO;
+import com.wix.mediaplatform.dto.collection.ResponseWrapper;
 import com.wix.mediaplatform.dto.document.DocumentDTO;
 import com.wix.mediaplatform.dto.image.ImageDTO;
 import com.wix.mediaplatform.dto.upload.GetUploadUrlResponse;
+import com.wix.mediaplatform.dto.upload.ImportFileRequest;
 import com.wix.mediaplatform.dto.upload.UploadRequest;
 import com.wix.mediaplatform.dto.video.EncodingOptions;
 import com.wix.mediaplatform.dto.video.VideoDTO;
@@ -32,14 +36,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileUploader {
 
+    private final Type fileDTOWrappedResponseType = new TypeToken<ResponseWrapper<FileDTO>>() {}.getType();
+
     private final AuthenticatedHTTPClient authenticatedHTTPClient;
     private final Gson gson;
+    private final String baseUrl;
     private final String uploadUrlEndpoint;
 
     public FileUploader(AuthenticatedHTTPClient authenticatedHTTPClient, Gson gson, Configuration configuration) {
         this.authenticatedHTTPClient = authenticatedHTTPClient;
         this.gson = gson;
 
+        this.baseUrl = "https://" + configuration.getDomain() + "/files/upload";
         this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/files/upload/url";
     }
 
@@ -120,8 +128,14 @@ public class FileUploader {
         return files[0];
     }
 
-    private <T> T upload(String userId, MediaType mediaType, String mimeType, String fileName, InputStream source, @Nullable UploadRequest uploadRequest, @Nullable Map<String, String> additionalParams, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+    public FileDTO importFile(String userId, ImportFileRequest importFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        ResponseWrapper<FileDTO> response = authenticatedHTTPClient.post(userId, baseUrl + "/external/async", importFileRequest, null, fileDTOWrappedResponseType);
 
+        //noinspection ConstantConditions
+        return response.getPayload();
+    }
+
+    private <T> T upload(String userId, MediaType mediaType, String mimeType, String fileName, InputStream source, @Nullable UploadRequest uploadRequest, @Nullable Map<String, String> additionalParams, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
         GetUploadUrlResponse uploadUrlResponse = getUploadUrl(userId);
 
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();

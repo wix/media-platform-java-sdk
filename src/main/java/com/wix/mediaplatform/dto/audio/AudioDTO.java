@@ -1,9 +1,9 @@
 package com.wix.mediaplatform.dto.audio;
 
 import com.google.gson.annotations.SerializedName;
-import com.wix.mediaplatform.dto.FileBaseDTO;
+import com.wix.mediaplatform.dto.FileDTO;
 
-public class AudioDTO extends FileBaseDTO {
+public class AudioDTO extends FileDTO {
 
     @SerializedName("file_input")
     private Analysis analysis;

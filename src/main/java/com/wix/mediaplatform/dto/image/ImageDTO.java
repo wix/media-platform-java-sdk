@@ -1,13 +1,13 @@
 package com.wix.mediaplatform.dto.image;
 
 import com.google.gson.annotations.SerializedName;
-import com.wix.mediaplatform.dto.FileBaseDTO;
+import com.wix.mediaplatform.dto.FileDTO;
 
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-public class ImageDTO extends FileBaseDTO {
+public class ImageDTO extends FileDTO {
 
     private int width;
 
@@ -19,8 +19,8 @@ public class ImageDTO extends FileBaseDTO {
     public ImageDTO() {
     }
 
-    public ImageDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, long dateCreated, long dateModified, int width, int height, Analysis analysis) {
-        super(parentFolderId, hash, originalFileName, fileName, fileUrl, fileSize, iconUrl, mediaType, mimeType, labels, tags, dateCreated, dateModified);
+    public ImageDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, String status, long dateCreated, long dateModified, int width, int height, Analysis analysis) {
+        super(parentFolderId, hash, originalFileName, fileName, fileUrl, fileSize, iconUrl, mediaType, mimeType, labels, tags, status, dateCreated, dateModified);
         this.width = width;
         this.height = height;
         this.analysis = analysis;

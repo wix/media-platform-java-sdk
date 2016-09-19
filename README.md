@@ -73,6 +73,12 @@ DocumentDTO documentDTO = fileUploader.uploadDocument("userId", file, uploadRequ
 
 EncodingOptions encodingOptions = new EncodingOptions(newHashSet(EncodingOptions.VideoFormat.MP4), true, true, EncodingOptions.AudioFormat.M4A, EncodingOptions.ImageFormat.JPEG);
 VideoDTO videoDTO = fileUploader.uploadVideo("userId", file, uploadRequest || null, encodingOptions || null);
+
+/**
+* Import a file from a remote source
+*/
+ImportFileRequest importFileRequest = new ImportFileRequest().setMediaType(MediaType.IMAGE).setUrl("http://this.is/a/url").setName("name.png");
+FileDTO fileDTO = fileUploader.importFile("userId", importFileRequest);
 ```
 
 ### Browser

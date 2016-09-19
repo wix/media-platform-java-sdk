@@ -5,10 +5,13 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.AuthenticationFacade;
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.dto.FileDTO;
+import com.wix.mediaplatform.dto.MediaType;
 import com.wix.mediaplatform.dto.audio.AudioDTO;
 import com.wix.mediaplatform.dto.document.DocumentDTO;
 import com.wix.mediaplatform.dto.image.ImageDTO;
 import com.wix.mediaplatform.dto.upload.GetUploadUrlResponse;
+import com.wix.mediaplatform.dto.upload.ImportFileRequest;
 import com.wix.mediaplatform.dto.upload.UploadRequest;
 import com.wix.mediaplatform.dto.video.EncodingOptions;
 import com.wix.mediaplatform.dto.video.VideoDTO;
@@ -244,5 +247,22 @@ public class FileUploaderTest extends BaseTest {
         DocumentDTO documentDTO = fileUploader.uploadDocument("userId", file, uploadRequest);
 
         assertThat(documentDTO.getIconUrl(), is("wixmedia-public/images/b0068f926fc542fbb1f3653df8ce5099/music_note.png"));
+    }
+
+    @Test
+    public void importImage() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+
+        stubFor(post(urlEqualTo("/files/upload/external/async"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("image-import-response.json")));
+
+        FileDTO fileDTO = fileUploader.importFile("userId", new ImportFileRequest()
+                .setMediaType(MediaType.IMAGE)
+                .setUrl("http://this.is/a/url")
+                .setName("name.png"));
+
+        assertThat(fileDTO.getStatus(), is("IN-DOWNLOAD-QUEUE"));
     }
 }

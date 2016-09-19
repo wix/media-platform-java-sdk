@@ -1,7 +1,7 @@
 package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.FileBaseDTO;
+import com.wix.mediaplatform.dto.FileDTO;
 import com.wix.mediaplatform.dto.folder.FolderDTO;
 import com.wix.mediaplatform.dto.management.*;
 import com.wix.mediaplatform.exception.UnauthorizedException;
@@ -33,12 +33,12 @@ public class FileManager {
     }
 
     @Nullable
-    public FileBaseDTO getFile(String userId, String fileId) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.get(userId, baseUrl + "/files/" + fileId, null, FileBaseDTO.class);
+    public FileDTO getFile(String userId, String fileId) throws UnauthorizedException, IOException, URISyntaxException {
+        return authenticatedHTTPClient.get(userId, baseUrl + "/files/" + fileId, null, FileDTO.class);
     }
 
-    public FileBaseDTO updateFile(String userId, String fileId, UpdateFileRequest updateFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.put(userId, baseUrl + "/files/" + fileId, updateFileRequest, null, FileBaseDTO.class);
+    public FileDTO updateFile(String userId, String fileId, UpdateFileRequest updateFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        return authenticatedHTTPClient.put(userId, baseUrl + "/files/" + fileId, updateFileRequest, null, FileDTO.class);
     }
 
     public void deleteFile(String userId, String fileId) throws UnauthorizedException, IOException, URISyntaxException {

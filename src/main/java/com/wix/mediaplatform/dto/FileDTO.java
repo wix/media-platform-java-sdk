@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-public class FileBaseDTO {
+public class FileDTO {
 
     @SerializedName("parent_folder_id")
     private String parentFolderId;
@@ -39,16 +39,19 @@ public class FileBaseDTO {
 
     private Set<String> tags = newHashSet();
 
+    @SerializedName("op_status")
+    private String status;
+
     @SerializedName("created_ts")
     private long dateCreated;
 
     @SerializedName("modified_ts")
     private long dateModified;
 
-    public FileBaseDTO() {
+    public FileDTO() {
     }
 
-    public FileBaseDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, long dateCreated, long dateModified) {
+    public FileDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, String status, long dateCreated, long dateModified) {
         this.parentFolderId = parentFolderId;
         this.hash = hash;
         this.originalFileName = originalFileName;
@@ -60,6 +63,7 @@ public class FileBaseDTO {
         this.mimeType = mimeType;
         this.labels = labels;
         this.tags = tags;
+        this.status = status;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
     }
@@ -123,6 +127,10 @@ public class FileBaseDTO {
         return tags;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public long getDateCreated() {
         return dateCreated;
     }
@@ -133,7 +141,7 @@ public class FileBaseDTO {
 
     @Override
     public String toString() {
-        return "FileBaseDTO{" +
+        return "FileDTO{" +
                 "parentFolderId='" + parentFolderId + '\'' +
                 ", hash='" + hash + '\'' +
                 ", originalFileName='" + originalFileName + '\'' +
