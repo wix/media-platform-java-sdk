@@ -38,7 +38,7 @@ The respective JavaScript (for the Browser and Node.js) library can be found [he
 <dependency>
     <groupId>com.wix</groupId>
     <artifactId>media-platform-java-sdk</artifactId>
-    <version>[1.0,2.0)</version>
+    <version>[1.3,2.0)</version>
 </dependency>
 ```
 
@@ -175,6 +175,20 @@ String url = imageRequest.fit(500, 500).negative().saturation(-90).toUrl();
 Operation operation = Parser.operationFromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
 
 String url = imageOperation.negative().saturation(-90).toUrl();
+```
+
+## Secure File URL
+
+Files can be secured, in order to access them a secure URL must be generated
+
+```java
+FileDownloader fileDownloader = mediaPlatform.fileDownloader();
+
+GetSecureUrlResponse[] response = fileDownloader.getSecureUrls("userId", new GetSecureUrlRequest()
+    .setFileId("fileId")
+    .addEncoding("src")
+    .setSaveAs("fish.jpg")
+);
 ```
 
 ## File Management

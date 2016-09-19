@@ -10,6 +10,7 @@ import com.wix.mediaplatform.exception.UnauthorizedException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.cache.CacheBuilder.newBuilder;
@@ -62,11 +64,28 @@ public class AuthenticationFacade {
      * @param userId Your user id, that the token is generated for
      * @return The authorization header, or null if the authentication failed
      * @throws IOException If the request failed
+     * @throws UnauthorizedException If the authentication failed
      */
     @Nullable
     public String getHeader(String userId) throws IOException, UnauthorizedException {
-
         String token = getToken(userId);
+        if (token == null) {
+            return null;
+        }
+
+        return MEDIA_PLATFORM_TOKEN_PREFIX + token;
+    }
+
+    /**
+     * @param userId Your user id, that the token is generated for
+     * @param additionalClaims optional claims to be added to the token
+     * @return The authorization header, or null if the authentication failed
+     * @throws IOException If the request failed
+     * @throws UnauthorizedException If the authentication failed
+     */
+    @Nullable
+    public String getProvisionalHeader(String userId, Map<String, String> additionalClaims) throws IOException, UnauthorizedException {
+        String token = getProvisionalToken(userId, additionalClaims);
         if (token == null) {
             return null;
         }
@@ -94,16 +113,7 @@ public class AuthenticationFacade {
             return token;
         }
 
-        long now = System.currentTimeMillis() / 1000;
-        byte[] nonce = new byte[6];
-        random.nextBytes(nonce);
-        HashMap<String, Object> claims = new HashMap<>();
-        claims.put(SUBJECT, "user:" + userId);
-        claims.put(ISSUER, "app:" + this.configuration.getAppId());
-        claims.put(EXPIRATION, now + 60);
-        claims.put(ISSUED_AT, now);
-        claims.put(IDENTIFIER, BaseEncoding.base16().encode(nonce));
-        String authHeader = "APP " + signer.sign(claims);
+        String authHeader = getAuthHeader(userId, null);
 
         HttpGet request = new HttpGet(authUrl);
         request.addHeader(AUTHORIZATION, authHeader);
@@ -128,5 +138,47 @@ public class AuthenticationFacade {
             this.tokenCache.put(userId, token);
         }
         return token;
+    }
+
+    @Nullable
+    private String getProvisionalToken(String userId, Map<String, String> additionalClaims) throws IOException, UnauthorizedException {
+        String authHeader = getAuthHeader(userId, additionalClaims);
+
+        HttpGet request = new HttpGet(authUrl);
+        request.addHeader(AUTHORIZATION, authHeader);
+        request.addHeader(ACCEPT_JSON);
+        HttpResponse response;
+
+        response = httpClient.execute(request);
+
+        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
+            throw new UnauthorizedException();
+        }
+
+        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+            throw new IOException(response.toString());
+        }
+
+        return gson.fromJson(
+                new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), GetAuthTokenResponse.class)
+                .getToken();
+    }
+
+    @NotNull
+    private String getAuthHeader(String userId, Map<String, String> additionalClaims) {
+        long now = System.currentTimeMillis() / 1000;
+        byte[] nonce = new byte[6];
+        random.nextBytes(nonce);
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put(SUBJECT, "user:" + userId);
+        claims.put(ISSUER, "app:" + this.configuration.getAppId());
+        claims.put(EXPIRATION, now + 60);
+        claims.put(ISSUED_AT, now);
+        claims.put(IDENTIFIER, BaseEncoding.base16().encode(nonce));
+        if (additionalClaims != null) {
+            claims.putAll(additionalClaims);
+        }
+
+        return "APP " + signer.sign(claims);
     }
 }

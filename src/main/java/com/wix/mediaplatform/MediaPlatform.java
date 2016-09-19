@@ -10,6 +10,7 @@ import com.wix.mediaplatform.dto.audio.AudioDTO;
 import com.wix.mediaplatform.dto.document.DocumentDTO;
 import com.wix.mediaplatform.dto.image.ImageDTO;
 import com.wix.mediaplatform.dto.video.VideoDTO;
+import com.wix.mediaplatform.filedownloader.FileDownloader;
 import com.wix.mediaplatform.fileuploader.FileUploader;
 import com.wix.mediaplatform.gson.RuntimeTypeAdapterFactory;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
@@ -21,6 +22,9 @@ public class MediaPlatform {
 
     @SuppressWarnings("WeakerAccess")
     public final FileUploader fileUploader;
+
+    @SuppressWarnings("WeakerAccess")
+    public final FileDownloader fileDownloader;
 
     @SuppressWarnings("WeakerAccess")
     public final FileManager fileManager;
@@ -37,12 +41,17 @@ public class MediaPlatform {
         AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticationFacade, httpClient, gson);
 
         fileUploader = new FileUploader(authenticatedHTTPClient, gson, configuration);
+        fileDownloader = new FileDownloader(authenticatedHTTPClient, configuration);
         fileManager = new FileManager(authenticatedHTTPClient, configuration);
         collectionManager = new CollectionManager(authenticatedHTTPClient, configuration);
     }
 
     public FileUploader fileUploader() {
         return fileUploader;
+    }
+
+    public FileDownloader fileDownloader() {
+        return fileDownloader;
     }
 
     public FileManager fileManager() {
