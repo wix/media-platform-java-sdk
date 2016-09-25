@@ -83,7 +83,7 @@ public class AuthenticatedHTTPClient {
     }
 
     public <T> T post(String userId, String url, Map<String, Object> additionalClaims, Type responseType) throws IOException, UnauthorizedException {
-        String authHeader = authenticationFacade.getProvisionalHeader(userId, additionalClaims);
+        String authHeader = authenticationFacade.getSelfSignedHeader(userId, additionalClaims);
         if (authHeader == null) {
             throw new UnauthorizedException();
         }

@@ -10,7 +10,6 @@ import com.wix.mediaplatform.exception.UnauthorizedException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -29,7 +28,8 @@ import static org.apache.http.HttpHeaders.AUTHORIZATION;
 public class AuthenticationFacade {
 
     private static final String AUTH_ENDPOINT = "/apps/auth/token";
-    private static final String MEDIA_PLATFORM_TOKEN_PREFIX = "MCLOUDTOKEN ";
+    private static final String MEDIA_PLATFORM_HEADER_PREFIX = "MCLOUDTOKEN ";
+    private static final String APP_HEADER_PREFIX = "APP ";
 
     private final Configuration configuration;
     private final Gson gson;
@@ -73,24 +73,18 @@ public class AuthenticationFacade {
             return null;
         }
 
-        return MEDIA_PLATFORM_TOKEN_PREFIX + token;
+        return MEDIA_PLATFORM_HEADER_PREFIX + token;
     }
 
     /**
      * @param userId Your user id, that the token is generated for
      * @param additionalClaims optional claims to be added to the token
      * @return The authorization header, or null if the authentication failed
-     * @throws IOException If the request failed
-     * @throws UnauthorizedException If the authentication failed
      */
-    @Nullable
-    public String getProvisionalHeader(String userId, Map<String, Object> additionalClaims) throws IOException, UnauthorizedException {
-        String token = getProvisionalToken(userId, additionalClaims);
-        if (token == null) {
-            return null;
-        }
+    public String getSelfSignedHeader(String userId, Map<String, Object> additionalClaims) {
+        String token = selfSignToken(userId, additionalClaims);
 
-        return MEDIA_PLATFORM_TOKEN_PREFIX + token;
+        return APP_HEADER_PREFIX + token;
     }
 
     /**
@@ -140,32 +134,11 @@ public class AuthenticationFacade {
         return token;
     }
 
-    @Nullable
-    private String getProvisionalToken(String userId, Map<String, Object> additionalClaims) throws IOException, UnauthorizedException {
-        String authHeader = getAuthHeader(userId, additionalClaims);
-
-        HttpGet request = new HttpGet(authUrl);
-        request.addHeader(AUTHORIZATION, authHeader);
-        request.addHeader(ACCEPT_JSON);
-        HttpResponse response;
-
-        response = httpClient.execute(request);
-
-        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
-            throw new UnauthorizedException();
-        }
-
-        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
-            throw new IOException(response.toString());
-        }
-
-        return gson.fromJson(
-                new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), GetAuthTokenResponse.class)
-                .getToken();
+    private String getAuthHeader(String userId, Map<String, Object> additionalClaims) {
+        return APP_HEADER_PREFIX + selfSignToken(userId, additionalClaims);
     }
 
-    @NotNull
-    private String getAuthHeader(String userId, Map<String, Object> additionalClaims) {
+    private String selfSignToken(String userId, @Nullable  Map<String, Object> additionalClaims) {
         long now = System.currentTimeMillis() / 1000;
         byte[] nonce = new byte[6];
         random.nextBytes(nonce);
@@ -179,6 +152,6 @@ public class AuthenticationFacade {
             claims.putAll(additionalClaims);
         }
 
-        return "APP " + signer.sign(claims);
+        return signer.sign(claims);
     }
 }

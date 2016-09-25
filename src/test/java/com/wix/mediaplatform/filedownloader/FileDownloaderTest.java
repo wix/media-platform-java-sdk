@@ -42,7 +42,7 @@ public class FileDownloaderTest extends BaseTest {
         Map<String,Object> additionalClaims = newHashMap();
         additionalClaims.put("encoding", "src");
         additionalClaims.put("save_as", "fish.jpg");
-        when(authenticationFacade.getProvisionalHeader("userId", additionalClaims)).thenReturn("header");
+        when(authenticationFacade.getSelfSignedHeader("userId", additionalClaims)).thenReturn("header");
 
         stubFor(post(urlEqualTo("/secure-files/fileId/tickets/create"))
                 .willReturn(aResponse()
