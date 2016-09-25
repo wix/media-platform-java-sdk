@@ -82,7 +82,7 @@ public class AuthenticatedHTTPClient {
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
-    public <T> T post(String userId, String url, Map<String, String> additionalClaims, Type responseType) throws IOException, UnauthorizedException {
+    public <T> T post(String userId, String url, Map<String, Object> additionalClaims, Type responseType) throws IOException, UnauthorizedException {
         String authHeader = authenticationFacade.getProvisionalHeader(userId, additionalClaims);
         if (authHeader == null) {
             throw new UnauthorizedException();

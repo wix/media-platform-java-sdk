@@ -84,7 +84,7 @@ public class AuthenticationFacade {
      * @throws UnauthorizedException If the authentication failed
      */
     @Nullable
-    public String getProvisionalHeader(String userId, Map<String, String> additionalClaims) throws IOException, UnauthorizedException {
+    public String getProvisionalHeader(String userId, Map<String, Object> additionalClaims) throws IOException, UnauthorizedException {
         String token = getProvisionalToken(userId, additionalClaims);
         if (token == null) {
             return null;
@@ -141,7 +141,7 @@ public class AuthenticationFacade {
     }
 
     @Nullable
-    private String getProvisionalToken(String userId, Map<String, String> additionalClaims) throws IOException, UnauthorizedException {
+    private String getProvisionalToken(String userId, Map<String, Object> additionalClaims) throws IOException, UnauthorizedException {
         String authHeader = getAuthHeader(userId, additionalClaims);
 
         HttpGet request = new HttpGet(authUrl);
@@ -165,7 +165,7 @@ public class AuthenticationFacade {
     }
 
     @NotNull
-    private String getAuthHeader(String userId, Map<String, String> additionalClaims) {
+    private String getAuthHeader(String userId, Map<String, Object> additionalClaims) {
         long now = System.currentTimeMillis() / 1000;
         byte[] nonce = new byte[6];
         random.nextBytes(nonce);

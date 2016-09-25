@@ -39,7 +39,7 @@ public class FileDownloaderTest extends BaseTest {
 
     @Test
     public void getSecureUrls() throws Exception {
-        Map<String,String> additionalClaims = newHashMap();
+        Map<String,Object> additionalClaims = newHashMap();
         additionalClaims.put("encoding", "src");
         additionalClaims.put("save_as", "fish.jpg");
         when(authenticationFacade.getProvisionalHeader("userId", additionalClaims)).thenReturn("header");

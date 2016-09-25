@@ -25,10 +25,10 @@ public class FileDownloader {
 
     public GetSecureUrlResponse[] getSecureUrls(String userId, GetSecureUrlRequest getSecureUrlRequest) throws IOException, UnauthorizedException {
 
-        Map<String, String> additionalClaims = newHashMap();
+        Map<String, Object> additionalClaims = newHashMap();
         additionalClaims.put("encoding", StringUtils.join(getSecureUrlRequest.getEncoding(), ","));
         if (getSecureUrlRequest.getExpiresIn() != null) {
-            additionalClaims.put("expiry", getSecureUrlRequest.getExpiresIn().toString());
+            additionalClaims.put("expiry", getSecureUrlRequest.getExpiresIn());
         }
         if (getSecureUrlRequest.getSaveAs() != null) {
             additionalClaims.put("save_as", getSecureUrlRequest.getSaveAs());
