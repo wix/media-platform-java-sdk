@@ -37,6 +37,6 @@ public class FileDownloader {
             additionalClaims.put("expiration_redirect_url", getSecureUrlRequest.getExpiredRedirectUrl());
         }
 
-        return authenticatedHTTPClient.post(userId, baseUrl + "/secure-files/" + getSecureUrlRequest.getFileId() + "/tickets/create", additionalClaims, GetSecureUrlResponse[].class);
+        return authenticatedHTTPClient.postWithSelfSignedToken(userId, baseUrl + "/secure-files/" + getSecureUrlRequest.getFileId() + "/tickets/create", null, additionalClaims, GetSecureUrlResponse[].class);
     }
 }

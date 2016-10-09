@@ -251,7 +251,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void importImage() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticationFacade.getSelfSignedHeader("userId", null)).thenReturn("header");
 
         stubFor(post(urlEqualTo("/files/upload/external/async"))
                 .willReturn(aResponse()

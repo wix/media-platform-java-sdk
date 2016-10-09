@@ -129,7 +129,7 @@ public class FileUploader {
     }
 
     public FileDTO importFile(String userId, ImportFileRequest importFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        ResponseWrapper<FileDTO> response = authenticatedHTTPClient.post(userId, baseUrl + "/external/async", importFileRequest, null, fileDTOWrappedResponseType);
+        ResponseWrapper<FileDTO> response = authenticatedHTTPClient.postWithSelfSignedToken(userId, baseUrl + "/external/async", importFileRequest, null, fileDTOWrappedResponseType);
 
         //noinspection ConstantConditions
         return response.getPayload();

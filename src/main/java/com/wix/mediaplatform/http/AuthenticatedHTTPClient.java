@@ -82,7 +82,7 @@ public class AuthenticatedHTTPClient {
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
-    public <T> T post(String userId, String url, Map<String, Object> additionalClaims, Type responseType) throws IOException, UnauthorizedException {
+    public <T> T postWithSelfSignedToken(String userId, String url, Object payload, Map<String, Object> additionalClaims, Type responseType) throws IOException, UnauthorizedException {
         String authHeader = authenticationFacade.getSelfSignedHeader(userId, additionalClaims);
         if (authHeader == null) {
             throw new UnauthorizedException();
@@ -92,6 +92,11 @@ public class AuthenticatedHTTPClient {
         request.addHeader(ACCEPT_JSON);
         request.addHeader(CONTENT_TYPE_JSON);
         request.addHeader(AUTHORIZATION, authHeader);
+        if (payload != null) {
+            String json = gson.toJson(payload);
+            StringEntity entity = new StringEntity(json);
+            request.setEntity(entity);
+        }
 
         HttpResponse response = httpClient.execute(request);
 
