@@ -49,9 +49,9 @@ Once registered you'll be issued with your own API Key, API Secret and API Endpo
 
 ```java
 MediaPlatform mediaPlatform = new MediaPlatform(
-  "<domain as appears in the Dashboard>",
-  "<appId as appears in the Dashboard>",
-  "<sharedSecret as appears in the Dashboard>"
+  "api.wixmp.com",
+  "<API Key as appears in the Dashboard>",
+  "<API Secret as appears in the Dashboard>"
 );
 ```
 
