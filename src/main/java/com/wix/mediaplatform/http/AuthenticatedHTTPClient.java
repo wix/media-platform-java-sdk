@@ -100,7 +100,9 @@ public class AuthenticatedHTTPClient {
 
         HttpResponse response = httpClient.execute(request);
 
-        assertResponseStatus(userId, response);
+        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
+            throw new UnauthorizedException();
+        }
 
         if (responseType == null) {
             return null;

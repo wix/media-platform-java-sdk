@@ -14,6 +14,7 @@ import com.wix.mediaplatform.dto.upload.ImportFileRequest;
 import com.wix.mediaplatform.dto.upload.UploadRequest;
 import com.wix.mediaplatform.dto.video.EncodingOptions;
 import com.wix.mediaplatform.dto.video.VideoDTO;
+import com.wix.mediaplatform.exception.FileSizeException;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.apache.commons.lang3.StringUtils;
@@ -131,6 +132,9 @@ public class FileUploader {
     public FileDTO importFile(String userId, ImportFileRequest importFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
         ResponseWrapper<FileDTO> response = authenticatedHTTPClient.postWithSelfSignedToken(userId, baseUrl + "/external/async", importFileRequest, null, fileDTOWrappedResponseType);
 
+        if (response.getCode() == -7752) {
+            throw new FileSizeException();
+        }
         //noinspection ConstantConditions
         return response.getPayload();
     }
