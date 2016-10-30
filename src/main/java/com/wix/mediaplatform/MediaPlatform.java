@@ -17,6 +17,7 @@ import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.management.FileManager;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 public class MediaPlatform {
 
@@ -73,6 +74,9 @@ public class MediaPlatform {
     }
 
     protected static HttpClient getHttpClient() {
-        return HttpClients.createMinimal();
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(100);
+        connectionManager.setDefaultMaxPerRoute(50);
+        return HttpClients.createMinimal(connectionManager);
     }
 }

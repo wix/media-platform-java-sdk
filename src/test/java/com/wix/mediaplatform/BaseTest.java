@@ -29,6 +29,8 @@ public abstract class BaseTest {
                     .disableAuthCaching()
                     .disableCookieManagement()
                     .disableConnectionState()
+                    .setMaxConnPerRoute(50)
+                    .setMaxConnTotal(100)
                     .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
                     .setSSLContext(SSLContexts.custom()
                             .loadTrustMaterial(null, new TrustStrategy() {
