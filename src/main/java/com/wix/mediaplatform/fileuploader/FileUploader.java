@@ -135,6 +135,10 @@ public class FileUploader {
         if (response.getCode() == -7752) {
             throw new FileSizeException();
         }
+
+        if (response.getCode() != 0) {
+            throw new RuntimeException(String.valueOf(response.getCode()));
+        }
         //noinspection ConstantConditions
         return response.getPayload();
     }
