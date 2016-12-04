@@ -30,12 +30,11 @@ public class MediaPlatform {
     @SuppressWarnings("WeakerAccess")
     public final FileManager fileManager;
 
+    @SuppressWarnings("WeakerAccess")
     public final CollectionManager collectionManager;
 
-    public MediaPlatform(String domain, String appId, String sharedSecret) {
-
+    public MediaPlatform(String domain, String appId, String sharedSecret, HttpClient httpClient) {
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
-        HttpClient httpClient = getHttpClient();
         Gson gson = getGson();
 
         AuthenticationFacade authenticationFacade = new AuthenticationFacade(configuration, httpClient, gson);
@@ -45,6 +44,11 @@ public class MediaPlatform {
         fileDownloader = new FileDownloader(authenticatedHTTPClient, configuration);
         fileManager = new FileManager(authenticatedHTTPClient, configuration);
         collectionManager = new CollectionManager(authenticatedHTTPClient, configuration);
+    }
+
+
+    public MediaPlatform(String domain, String appId, String sharedSecret) {
+        this(domain, appId, sharedSecret, getHttpClient());
     }
 
     public FileUploader fileUploader() {

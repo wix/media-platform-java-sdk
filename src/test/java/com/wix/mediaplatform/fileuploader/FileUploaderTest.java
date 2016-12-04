@@ -15,6 +15,7 @@ import com.wix.mediaplatform.dto.upload.ImportFileRequest;
 import com.wix.mediaplatform.dto.upload.UploadRequest;
 import com.wix.mediaplatform.dto.video.EncodingOptions;
 import com.wix.mediaplatform.dto.video.VideoDTO;
+import com.wix.mediaplatform.exception.FileSizeException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Before;
 import org.junit.Rule;
@@ -264,5 +265,21 @@ public class FileUploaderTest extends BaseTest {
                 .setName("name.png"));
 
         assertThat(fileDTO.getStatus(), is("IN-DOWNLOAD-QUEUE"));
+    }
+
+    @Test(expected = FileSizeException.class)
+    public void importImage7752Response() throws Exception {
+        when(authenticationFacade.getSelfSignedHeader("userId", null)).thenReturn("header");
+
+        stubFor(post(urlEqualTo("/files/upload/external/async"))
+                .willReturn(aResponse()
+                        .withStatus(406)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("image-import-7752-error-response.json")));
+
+        fileUploader.importFile("userId", new ImportFileRequest()
+                .setMediaType(MediaType.IMAGE)
+                .setUrl("http://this.is/a/url")
+                .setName("name.png"));
     }
 }

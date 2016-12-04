@@ -22,9 +22,11 @@ public class ItemDTO {
     private Set<String> tags = newHashSet();
 
     @SerializedName("public_properties")
+    //TODO: <String, Object>
     private Map<String, String> publicProperties = newHashMap();
 
     @SerializedName("private_properties")
+    //TODO: <String, Object>
     private Map<String, String> privateProperties = newHashMap();
 
     @SerializedName("date_created")
