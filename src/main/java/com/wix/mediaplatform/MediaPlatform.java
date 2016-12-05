@@ -46,7 +46,6 @@ public class MediaPlatform {
         collectionManager = new CollectionManager(authenticatedHTTPClient, configuration);
     }
 
-
     public MediaPlatform(String domain, String appId, String sharedSecret) {
         this(domain, appId, sharedSecret, getHttpClient());
     }
@@ -67,7 +66,7 @@ public class MediaPlatform {
         return collectionManager;
     }
 
-    protected static Gson getGson() {
+    public static Gson getGson() {
         return new GsonBuilder()
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(FileDTO.class, "media_type")
                         .registerSubtype(ImageDTO.class, "picture")

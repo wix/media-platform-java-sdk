@@ -57,4 +57,30 @@ public class FileDownloaderTest extends BaseTest {
 
         assertThat(response[0].getPath(), is("/path_1"));
     }
+
+    @Test
+    public void getSecureUrlsBatch() throws Exception {
+        Map<String,Object> additionalClaims = newHashMap();
+        additionalClaims.put("encoding", "src");
+        additionalClaims.put("save_as", "fish.jpg");
+        when(authenticationFacade.getSelfSignedHeader("userId", additionalClaims)).thenReturn("header");
+
+        stubFor(post(urlEqualTo("/secure-files/fileId/tickets/create"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-secure-download-url-response.json")));
+
+        GetSecureUrlRequest[] requests = new GetSecureUrlRequest[10];
+        for (int i = 0; i < 10; i++) {
+            requests[i] =  new GetSecureUrlRequest()
+                    .setFileId("fileId")
+                    .addEncoding("src")
+                    .setSaveAs("fish.jpg");
+        }
+
+        GetSecureUrlResponse[] response = fileDownloader.getSecureUrls("userId", requests);
+
+        assertThat(response[0].getPath(), is("/path_1"));
+        assertThat(response[29].getPath(), is("/path_3"));
+    }
 }
