@@ -18,6 +18,8 @@ public class GetSecureUrlRequest {
 
     private String expiredRedirectUrl;
 
+    private String resize;
+
     public GetSecureUrlRequest() {
     }
 
@@ -27,6 +29,15 @@ public class GetSecureUrlRequest {
         this.encoding = encoding;
         this.saveAs = saveAs;
         this.expiredRedirectUrl = expiredRedirectUrl;
+    }
+
+    public GetSecureUrlRequest(String fileId, Set<String> encoding, @Nullable Integer expiresIn, @Nullable String saveAs, @Nullable String expiredRedirectUrl, @Nullable String resize) {
+        this.fileId = fileId;
+        this.encoding = encoding;
+        this.expiresIn = expiresIn;
+        this.saveAs = saveAs;
+        this.expiredRedirectUrl = expiredRedirectUrl;
+        this.resize = resize;
     }
 
     public GetSecureUrlRequest setFileId(String fileId) {
@@ -59,6 +70,11 @@ public class GetSecureUrlRequest {
         return this;
     }
 
+    public GetSecureUrlRequest setResize(String resize) {
+        this.resize = resize;
+        return this;
+    }
+
     public String getFileId() {
         return fileId;
     }
@@ -80,5 +96,10 @@ public class GetSecureUrlRequest {
     @Nullable
     public String getExpiredRedirectUrl() {
         return expiredRedirectUrl;
+    }
+
+    @Nullable
+    public String getResize() {
+        return resize;
     }
 }
