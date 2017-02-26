@@ -15,13 +15,13 @@ import com.wix.mediaplatform.dto.upload.ImportFileRequest;
 import com.wix.mediaplatform.dto.upload.UploadRequest;
 import com.wix.mediaplatform.dto.video.EncodingOptions;
 import com.wix.mediaplatform.dto.video.VideoDTO;
-import com.wix.mediaplatform.exception.FileSizeException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
@@ -267,7 +267,7 @@ public class FileUploaderTest extends BaseTest {
         assertThat(fileDTO.getStatus(), is("IN-DOWNLOAD-QUEUE"));
     }
 
-    @Test(expected = FileSizeException.class)
+    @Test(expected = IOException.class)
     public void importImage7752Response() throws Exception {
         when(authenticationFacade.getSelfSignedHeader("userId", null)).thenReturn("header");
 

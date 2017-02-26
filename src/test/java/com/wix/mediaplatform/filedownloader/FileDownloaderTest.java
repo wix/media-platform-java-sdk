@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -82,5 +83,25 @@ public class FileDownloaderTest extends BaseTest {
 
         assertThat(response[0].getPath(), is("/path_1"));
         assertThat(response[29].getPath(), is("/path_3"));
+    }
+
+    @Test(expected = IOException.class)
+    public void getSecureUrlsNotFound() throws Exception {
+        Map<String,Object> additionalClaims = newHashMap();
+        additionalClaims.put("encoding", "src");
+        additionalClaims.put("save_as", "fish.jpg");
+        when(authenticationFacade.getSelfSignedHeader("userId", additionalClaims)).thenReturn("header");
+
+        stubFor(post(urlEqualTo("/secure-files/fileId/tickets/create"))
+                .willReturn(aResponse()
+                        .withStatus(404)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-secure-download-url-not-found-error.json")));
+
+        fileDownloader.getSecureUrls("userId", new GetSecureUrlRequest()
+                .setFileId("fileId")
+                .addEncoding("src")
+                .setSaveAs("fish.jpg")
+        );
     }
 }

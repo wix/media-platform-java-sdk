@@ -1,4 +1,6 @@
 package com.wix.mediaplatform.exception;
 
-public class FileSizeException extends RuntimeException {
+import java.io.IOException;
+
+public class FileSizeException extends IOException {
 }

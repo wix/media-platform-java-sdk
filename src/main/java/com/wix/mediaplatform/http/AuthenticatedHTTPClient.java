@@ -52,8 +52,7 @@ public class AuthenticatedHTTPClient {
         HttpResponse response = httpClient.execute(request);
 
         assertResponseStatus(userId, response);
-
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        return parseResponse(responseType, response);
     }
 
     @Nullable
@@ -75,11 +74,7 @@ public class AuthenticatedHTTPClient {
         HttpResponse response = httpClient.execute(request);
 
         assertResponseStatus(userId, response);
-
-        if (responseType == null) {
-            return null;
-        }
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        return parseResponse(responseType, response);
     }
 
     public <T> T postWithSelfSignedToken(String userId, String url, Object payload, Map<String, Object> additionalClaims, Type responseType) throws IOException, UnauthorizedException {
@@ -100,14 +95,8 @@ public class AuthenticatedHTTPClient {
 
         HttpResponse response = httpClient.execute(request);
 
-        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
-            throw new UnauthorizedException();
-        }
-
-        if (responseType == null) {
-            return null;
-        }
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        assertResponseStatus(userId, response);
+        return parseResponse(responseType, response);
     }
 
     public <T> T put(String userId, String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
@@ -129,8 +118,7 @@ public class AuthenticatedHTTPClient {
         HttpResponse response = httpClient.execute(request);
 
         assertResponseStatus(userId, response);
-
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        return parseResponse(responseType, response);
     }
 
     @Nullable
@@ -148,11 +136,7 @@ public class AuthenticatedHTTPClient {
         HttpResponse response = httpClient.execute(request);
 
         assertResponseStatus(userId, response);
-
-        if (responseType == null) {
-            return null;
-        }
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        return parseResponse(responseType, response);
     }
 
     public <T> T postMultipartAnonymous(String url, HttpEntity form, Type responseType) throws IOException {
@@ -167,7 +151,18 @@ public class AuthenticatedHTTPClient {
             throw new IOException(response.toString());
         }
 
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        return parseResponse(responseType, response);
+    }
+
+    private String appendQueryString(String url, @Nullable Map<String, String> params) throws URISyntaxException {
+        URIBuilder builder = new URIBuilder(url);
+        if (params != null) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                builder.addParameter(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return builder.toString();
     }
 
     private void assertResponseStatus(String userId, HttpResponse response) throws UnauthorizedException, IOException {
@@ -181,14 +176,18 @@ public class AuthenticatedHTTPClient {
         }
     }
 
-    private String appendQueryString(String url, @Nullable Map<String, String> params) throws URISyntaxException {
-        URIBuilder builder = new URIBuilder(url);
-        if (params != null) {
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                builder.addParameter(entry.getKey(), entry.getValue());
-            }
+    private <T> T parseResponse(Type responseType, HttpResponse response) throws IOException {
+        if (responseType == null) {
+            return null;
         }
 
-        return builder.toString();
+        T payload;
+        try {
+            payload = gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        } catch (RuntimeException e) {
+            throw new IOException(response.getStatusLine().getReasonPhrase());
+        }
+
+        return payload;
     }
 }
