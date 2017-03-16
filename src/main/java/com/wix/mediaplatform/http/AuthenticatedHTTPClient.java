@@ -1,8 +1,12 @@
 package com.wix.mediaplatform.http;
 
 import com.google.gson.Gson;
-import com.wix.mediaplatform.authentication.AuthenticationFacade;
+import com.google.gson.reflect.TypeToken;
+import com.wix.mediaplatform.authentication.Authenticator;
+import com.wix.mediaplatform.dto.FileDescriptor;
+import com.wix.mediaplatform.dto.ResponseWrapper;
 import com.wix.mediaplatform.exception.UnauthorizedException;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -12,6 +16,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -21,28 +26,29 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static com.wix.mediaplatform.http.Constants.ACCEPT_JSON;
-import static com.wix.mediaplatform.http.Constants.CONTENT_TYPE_JSON;
-import static org.apache.http.HttpHeaders.AUTHORIZATION;
+import static org.apache.http.HttpHeaders.*;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 public class AuthenticatedHTTPClient {
 
-    private final AuthenticationFacade authenticationFacade;
+    private final Type fileDescriptorWrappedResponseType = new TypeToken<ResponseWrapper<FileDescriptor>>(){}.getType();
+
+    private static final Header ACCEPT_JSON = new BasicHeader(ACCEPT, APPLICATION_JSON.getMimeType());
+    private static final Header CONTENT_TYPE_JSON = new BasicHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType());
+
+    private final Authenticator authenticator;
     private final HttpClient httpClient;
     private final Gson gson;
 
-    public AuthenticatedHTTPClient(AuthenticationFacade authenticationFacade, HttpClient httpClient, Gson gson) {
-        this.authenticationFacade = authenticationFacade;
+    public AuthenticatedHTTPClient(Authenticator authenticator, HttpClient httpClient, Gson gson) {
+        this.authenticator = authenticator;
         this.httpClient = httpClient;
         this.gson = gson;
     }
 
-    public <T> T get(String userId, String url, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+    public <T> T get(String url, @Nullable Map<String, String> params, Type responseType) throws IOException, URISyntaxException, UnauthorizedException {
 
-        String authHeader = authenticationFacade.getHeader(userId);
-        if (authHeader == null) {
-            throw new UnauthorizedException();
-        }
+        String authHeader = authenticator.getHeader();
 
         String fullUrl = appendQueryString(url, params);
         HttpGet request = new HttpGet(fullUrl);
@@ -51,44 +57,17 @@ public class AuthenticatedHTTPClient {
 
         HttpResponse response = httpClient.execute(request);
 
-        assertResponseStatus(userId, response);
+        assertResponseStatus(response);
 
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
-    @Nullable
-    public <T> T post(String userId, String url, Object payload, Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
-        String authHeader = authenticationFacade.getHeader(userId);
-        if (authHeader == null) {
-            throw new UnauthorizedException();
-        }
+    public <T> T post(String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+
+        String authHeader = authenticator.getHeader();
 
         String fullUrl = appendQueryString(url, params);
         HttpPost request = new HttpPost(fullUrl);
-        request.addHeader(ACCEPT_JSON);
-        request.addHeader(CONTENT_TYPE_JSON);
-        request.addHeader(AUTHORIZATION, authHeader);
-        String json = gson.toJson(payload);
-        StringEntity entity = new StringEntity(json);
-        request.setEntity(entity);
-
-        HttpResponse response = httpClient.execute(request);
-
-        assertResponseStatus(userId, response);
-
-        if (responseType == null) {
-            return null;
-        }
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
-    }
-
-    public <T> T postWithSelfSignedToken(String userId, String url, Object payload, Map<String, Object> additionalClaims, Type responseType) throws IOException, UnauthorizedException {
-        String authHeader = authenticationFacade.getSelfSignedHeader(userId, additionalClaims);
-        if (authHeader == null) {
-            throw new UnauthorizedException();
-        }
-
-        HttpPost request = new HttpPost(url);
         request.addHeader(ACCEPT_JSON);
         request.addHeader(CONTENT_TYPE_JSON);
         request.addHeader(AUTHORIZATION, authHeader);
@@ -110,53 +89,7 @@ public class AuthenticatedHTTPClient {
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
-    public <T> T put(String userId, String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
-
-        String authHeader = authenticationFacade.getHeader(userId);
-        if (authHeader == null) {
-            throw new UnauthorizedException();
-        }
-
-        String fullUrl = appendQueryString(url, params);
-        HttpPut request = new HttpPut(fullUrl);
-        request.addHeader(ACCEPT_JSON);
-        request.addHeader(CONTENT_TYPE_JSON);
-        request.addHeader(AUTHORIZATION, authHeader);
-        String json = gson.toJson(payload);
-        StringEntity entity = new StringEntity(json);
-        request.setEntity(entity);
-
-        HttpResponse response = httpClient.execute(request);
-
-        assertResponseStatus(userId, response);
-
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
-    }
-
-    @Nullable
-    public <T> T delete(String userId, String url, @Nullable Map<String, String> params, @Nullable Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
-        String authHeader = authenticationFacade.getHeader(userId);
-        if (authHeader == null) {
-            throw new UnauthorizedException();
-        }
-
-        String fullUrl = appendQueryString(url, params);
-        HttpDelete request = new HttpDelete(fullUrl);
-        request.addHeader(ACCEPT_JSON);
-        request.addHeader(AUTHORIZATION, authHeader);
-
-        HttpResponse response = httpClient.execute(request);
-
-        assertResponseStatus(userId, response);
-
-        if (responseType == null) {
-            return null;
-        }
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
-    }
-
-    public <T> T postMultipartAnonymous(String url, HttpEntity form, Type responseType) throws IOException {
-
+    public <T> T post(String url, HttpEntity form, Type responseType) throws IOException {
         HttpPost request = new HttpPost(url);
         request.addHeader(ACCEPT_JSON);
         request.setEntity(form);
@@ -170,9 +103,47 @@ public class AuthenticatedHTTPClient {
         return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
     }
 
-    private void assertResponseStatus(String userId, HttpResponse response) throws UnauthorizedException, IOException {
+    public <T> T put(String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+
+        String authHeader = authenticator.getHeader();
+
+        String fullUrl = appendQueryString(url, params);
+        HttpPut request = new HttpPut(fullUrl);
+        request.addHeader(ACCEPT_JSON);
+        request.addHeader(CONTENT_TYPE_JSON);
+        request.addHeader(AUTHORIZATION, authHeader);
+        String json = gson.toJson(payload);
+        StringEntity entity = new StringEntity(json);
+        request.setEntity(entity);
+
+        HttpResponse response = httpClient.execute(request);
+
+        assertResponseStatus(response);
+
+        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+    }
+
+    public <T> T delete(String url, @Nullable Map<String, String> params, @Nullable Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+
+        String authHeader = authenticator.getHeader();
+
+        String fullUrl = appendQueryString(url, params);
+        HttpDelete request = new HttpDelete(fullUrl);
+        request.addHeader(ACCEPT_JSON);
+        request.addHeader(AUTHORIZATION, authHeader);
+
+        HttpResponse response = httpClient.execute(request);
+
+        assertResponseStatus(response);
+
+        if (responseType == null) {
+            return null;
+        }
+        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+    }
+
+    private void assertResponseStatus(HttpResponse response) throws UnauthorizedException, IOException {
         if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
-            authenticationFacade.invalidateToken(userId);
             throw new UnauthorizedException();
         }
 

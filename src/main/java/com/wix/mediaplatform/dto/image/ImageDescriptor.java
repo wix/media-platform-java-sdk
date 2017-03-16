@@ -1,13 +1,13 @@
 package com.wix.mediaplatform.dto.image;
 
 import com.google.gson.annotations.SerializedName;
-import com.wix.mediaplatform.dto.FileDTO;
+import com.wix.mediaplatform.dto.FileDescriptor;
 
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-public class ImageDTO extends FileDTO {
+public class ImageDescriptor extends FileDescriptor {
 
     private int width;
 
@@ -16,10 +16,10 @@ public class ImageDTO extends FileDTO {
     @SerializedName("file_input")
     private Analysis analysis;
 
-    public ImageDTO() {
+    public ImageDescriptor() {
     }
 
-    public ImageDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, String status, long dateCreated, long dateModified, int width, int height, Analysis analysis) {
+    public ImageDescriptor(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, String status, long dateCreated, long dateModified, int width, int height, Analysis analysis) {
         super(parentFolderId, hash, originalFileName, fileName, fileUrl, fileSize, iconUrl, mediaType, mimeType, labels, tags, status, dateCreated, dateModified);
         this.width = width;
         this.height = height;
@@ -100,7 +100,7 @@ public class ImageDTO extends FileDTO {
 
     @Override
     public String toString() {
-        return "ImageDTO{" +
+        return "ImageDescriptor{" +
                 "width=" + width +
                 ", height=" + height +
                 ", analysis=" + analysis +

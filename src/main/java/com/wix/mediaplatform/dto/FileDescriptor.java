@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-public class FileDTO {
+public class FileDescriptor {
 
     @SerializedName("parent_folder_id")
     private String parentFolderId;
@@ -48,10 +48,10 @@ public class FileDTO {
     @SerializedName("modified_ts")
     private long dateModified;
 
-    public FileDTO() {
+    public FileDescriptor() {
     }
 
-    public FileDTO(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, String status, long dateCreated, long dateModified) {
+    public FileDescriptor(String parentFolderId, String hash, String originalFileName, String fileName, String fileUrl, long fileSize, String iconUrl, String mediaType, String mimeType, Set<String> labels, Set<String> tags, String status, long dateCreated, long dateModified) {
         this.parentFolderId = parentFolderId;
         this.hash = hash;
         this.originalFileName = originalFileName;
@@ -141,7 +141,7 @@ public class FileDTO {
 
     @Override
     public String toString() {
-        return "FileDTO{" +
+        return "FileDescriptor{" +
                 "parentFolderId='" + parentFolderId + '\'' +
                 ", hash='" + hash + '\'' +
                 ", originalFileName='" + originalFileName + '\'' +

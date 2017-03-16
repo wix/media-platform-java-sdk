@@ -4,7 +4,7 @@ import com.google.common.escape.Escaper;
 
 import static com.google.common.net.UrlEscapers.urlFragmentEscaper;
 
-public class OriginalData {
+public class Metadata {
 
     private static final Escaper escaper = urlFragmentEscaper();
 
@@ -20,7 +20,7 @@ public class OriginalData {
 
     private String mimeType;
 
-    OriginalData(int width, int height, String mimeType) {
+    Metadata(int width, int height, String mimeType) {
         this.width = width;
         this.height = height;
         this.mimeType = mimeType;
@@ -47,7 +47,7 @@ public class OriginalData {
 
     @Override
     public String toString() {
-        return "OriginalData{" +
+        return "Metadata{" +
                 "width=" + width +
                 ", height=" + height +
                 ", mimeType='" + mimeType + '\'' +

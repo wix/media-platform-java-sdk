@@ -1,6 +1,6 @@
 package com.wix.mediaplatform.image.operation;
 
-import com.wix.mediaplatform.image.OriginalData;
+import com.wix.mediaplatform.image.Metadata;
 import org.jetbrains.annotations.Nullable;
 
 public class Crop extends Operation<Crop> {
@@ -19,8 +19,8 @@ public class Crop extends Operation<Crop> {
 
     private float scaleFactor;
 
-    public Crop(String baseUrl, String fileId, String fileName, int width, int height, @Nullable OriginalData originalData, int x, int y, float scaleFactor) {
-        super(NAME, baseUrl, fileId, fileName, width, height, originalData);
+    public Crop(String baseUrl, String fileId, String fileName, int width, int height, @Nullable Metadata metadata, int x, int y, float scaleFactor) {
+        super(NAME, baseUrl, fileId, fileName, width, height, metadata);
         this.x = x;
         this.y = y;
         this.scaleFactor = scaleFactor;

@@ -1,7 +1,7 @@
 package com.wix.mediaplatform.image;
 
 import com.google.common.collect.ImmutableMap;
-import com.wix.mediaplatform.dto.image.ImageDTO;
+import com.wix.mediaplatform.dto.image.ImageDescriptor;
 import com.wix.mediaplatform.image.operation.Operation;
 import com.wix.mediaplatform.image.option.Option;
 import com.wix.mediaplatform.image.option.alignment.Align;
@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.wix.mediaplatform.image.OriginalData.*;
+import static com.wix.mediaplatform.image.Metadata.*;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 
@@ -57,12 +57,12 @@ public class Parser {
             .put(Upscale.KEY, Upscale.class)
             .build();
 
-    public static ImageRequest fromDto(String host, ImageDTO imageDTO) {
-        return new ImageRequest(host + "/" + imageDTO.getBaseUrl(), imageDTO.getFileName(), imageDTO.getOriginalFileName(),
-                new OriginalData(imageDTO.getWidth(), imageDTO.getHeight(), imageDTO.getMimeType()));
+    public static Image fromDto(String host, ImageDescriptor imageDTO) {
+        return new Image(host + "/" + imageDTO.getBaseUrl(), imageDTO.getFileName(), imageDTO.getOriginalFileName(),
+                new Metadata(imageDTO.getWidth(), imageDTO.getHeight(), imageDTO.getMimeType()));
     }
 
-    public static ImageRequest fromUrl(String url) throws URISyntaxException {
+    public static Image fromUrl(String url) throws URISyntaxException {
         ExplodedUrl explodedUrl = parseUrl(url);
 
         return fromExplodedUrl(explodedUrl);
@@ -70,7 +70,7 @@ public class Parser {
 
     public static Operation operationFromUrl(String url) throws URISyntaxException {
         ExplodedUrl explodedUrl = parseUrl(url);
-        ImageRequest imageRequest = fromExplodedUrl(explodedUrl);
+        Image image = fromExplodedUrl(explodedUrl);
 
         Map<String, String[]> options = newHashMap();
         String[] parts = explodedUrl.getOptions().split(",");
@@ -79,7 +79,7 @@ public class Parser {
             options.put(option[0], Arrays.copyOfRange(option, 1, option.length));
         }
 
-        Method method = findMethod(imageRequest, explodedUrl.getOperation());
+        Method method = findMethod(image, explodedUrl.getOperation());
         if (method == null) {
             throw new URISyntaxException(url, "operation not supported");
         }
@@ -88,7 +88,7 @@ public class Parser {
         try {
             switch (method.getName()) {
                 case "crop":
-                    operation = (Operation) method.invoke(imageRequest, parseInt(options.get("w")[0]), parseInt(options.get("h")[0]),
+                    operation = (Operation) method.invoke(image, parseInt(options.get("w")[0]), parseInt(options.get("h")[0]),
                             parseInt(options.get("x")[0]),
                             parseInt(options.get("y")[0]),
                             parseFloat(options.get("scl")[0]));
@@ -100,7 +100,7 @@ public class Parser {
                     options.remove("scl");
                     break;
                 default:
-                    operation = (Operation) method.invoke(imageRequest, parseInt(options.get("w")[0]), parseInt(options.get("h")[0]));
+                    operation = (Operation) method.invoke(image, parseInt(options.get("w")[0]), parseInt(options.get("h")[0]));
                     options.remove("w");
                     options.remove("h");
             }
@@ -123,13 +123,13 @@ public class Parser {
         return operation;
     }
 
-    private static ImageRequest fromExplodedUrl(ExplodedUrl explodedUrl) {
-        return new ImageRequest(explodedUrl.getBaseUrl(), explodedUrl.getImageId(), explodedUrl.getFileName(), explodedUrl.getOriginalData());
+    private static Image fromExplodedUrl(ExplodedUrl explodedUrl) {
+        return new Image(explodedUrl.getBaseUrl(), explodedUrl.getImageId(), explodedUrl.getFileName(), explodedUrl.getMetadata());
     }
 
     @Nullable
-    private static Method findMethod(ImageRequest imageRequest, String methodName) {
-        Method[] methods = imageRequest.getClass().getMethods();
+    private static Method findMethod(Image image, String methodName) {
+        Method[] methods = image.getClass().getMethods();
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 return method;
@@ -142,7 +142,7 @@ public class Parser {
     private static ExplodedUrl parseUrl(String url) throws URISyntaxException {
         URI u = new URI(url);
 
-        OriginalData originalData = parseOriginalData(u.getFragment());
+        Metadata metadata = parseOriginalData(u.getFragment());
 
         String path = u.getPath();
         String[] parts = path.split("/");
@@ -150,11 +150,11 @@ public class Parser {
             throw new URISyntaxException(url, "not a valid media platform image URL");
         }
         return new ExplodedUrl(u.getScheme(), u.getHost(), (u.getPort() == -1) ? null : u.getPort(), parts[1], parts[2], parts[3], parts[4],
-                parts[5], parts[6], parts[7], originalData);
+                parts[5], parts[6], parts[7], metadata);
     }
 
     @Nullable
-    private static OriginalData parseOriginalData(String fragment) {
+    private static Metadata parseOriginalData(String fragment) {
         if (fragment == null) {
             return null;
         }
@@ -173,7 +173,7 @@ public class Parser {
             return null;
         }
 
-        return new OriginalData(parseInt(values.get(WIDTH_KEY)), parseInt(values.get(HEIGHT_KEY)), values.get(MIME_TYPE_KEY));
+        return new Metadata(parseInt(values.get(WIDTH_KEY)), parseInt(values.get(HEIGHT_KEY)), values.get(MIME_TYPE_KEY));
     }
 
     private static class ExplodedUrl {
@@ -198,9 +198,9 @@ public class Parser {
 
         private String fileName;
 
-        private OriginalData originalData;
+        private Metadata metadata;
 
-        ExplodedUrl(String scheme, String host, @Nullable Integer port, String bucket, String folder, String imageId, String version, String operation, String options, String fileName, OriginalData originalData) {
+        ExplodedUrl(String scheme, String host, @Nullable Integer port, String bucket, String folder, String imageId, String version, String operation, String options, String fileName, Metadata metadata) {
             this.scheme = scheme;
             this.host = host;
             this.port = port;
@@ -211,7 +211,7 @@ public class Parser {
             this.operation = operation;
             this.options = options;
             this.fileName = fileName;
-            this.originalData = originalData;
+            this.metadata = metadata;
         }
 
         String getScheme() {
@@ -254,8 +254,8 @@ public class Parser {
             return fileName;
         }
 
-        OriginalData getOriginalData() {
-            return originalData;
+        Metadata getMetadata() {
+            return metadata;
         }
 
         String getBaseUrl() {

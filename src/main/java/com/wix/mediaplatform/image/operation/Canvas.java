@@ -1,6 +1,6 @@
 package com.wix.mediaplatform.image.operation;
 
-import com.wix.mediaplatform.image.OriginalData;
+import com.wix.mediaplatform.image.Metadata;
 import com.wix.mediaplatform.image.option.alignment.Align;
 import com.wix.mediaplatform.image.option.alignment.Alignment;
 import com.wix.mediaplatform.image.option.background.Background;
@@ -10,8 +10,8 @@ public class Canvas extends Operation<Canvas> {
 
     private static final String NAME = "canvas";
 
-    public Canvas(String baseUrl, String fileId, String fileName, int width, int height, @Nullable OriginalData originalData) {
-        super(NAME, baseUrl, fileId, fileName, width, height, originalData);
+    public Canvas(String baseUrl, String fileId, String fileName, int width, int height, @Nullable Metadata metadata) {
+        super(NAME, baseUrl, fileId, fileName, width, height, metadata);
     }
 
     public Canvas alignment(Alignment alignment) {

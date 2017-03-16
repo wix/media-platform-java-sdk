@@ -2,7 +2,7 @@ package com.wix.mediaplatform.collection;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
-import com.wix.mediaplatform.authentication.AuthenticationFacade;
+import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.collection.*;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
@@ -23,14 +23,14 @@ public class CollectionManagerTest extends BaseTest {
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(PORT));
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
-    private AuthenticationFacade authenticationFacade = mock(AuthenticationFacade.class);
-    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticationFacade, httpClient, gson);
+    private Authenticator authenticator = mock(Authenticator.class);
+    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
 
     private CollectionManager collectionManager = new CollectionManager(authenticatedHTTPClient, configuration);
 
     @Test
     public void newCollection() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -50,7 +50,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void listCollections() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(get(urlEqualTo("/collections?type=type"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -63,7 +63,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void getCollection() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(get(urlEqualTo("/collections/collectionId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -77,7 +77,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void updateCollection() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(put(urlEqualTo("/collections/collectionId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -93,7 +93,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void publishCollection() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -106,7 +106,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void deleteCollection() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(delete(urlEqualTo("/collections/collectionId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -117,7 +117,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void prependItems() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/prepend"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -133,7 +133,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void appendItems() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/append"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -149,7 +149,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void insertBefore() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/insert-before/itemId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -165,7 +165,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void insertAfter() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/insert-after/itemId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -181,7 +181,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void updateItems() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(put(urlEqualTo("/collections/collectionId/items"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -198,7 +198,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void moveToStart() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/move-first"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -211,7 +211,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void moveToEnd() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/move-last"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -224,7 +224,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void moveBefore() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/move-before/itemId1"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -237,7 +237,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void moveAfter() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/move-after/itemId1"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -250,7 +250,7 @@ public class CollectionManagerTest extends BaseTest {
 
     @Test
     public void deleteItems() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/collections/collectionId/items/delete"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")

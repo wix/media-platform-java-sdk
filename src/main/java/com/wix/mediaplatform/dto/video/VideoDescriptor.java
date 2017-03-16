@@ -1,13 +1,13 @@
 package com.wix.mediaplatform.dto.video;
 
 import com.google.gson.annotations.SerializedName;
-import com.wix.mediaplatform.dto.FileDTO;
+import com.wix.mediaplatform.dto.FileDescriptor;
 
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-public class VideoDTO extends FileDTO {
+public class VideoDescriptor extends FileDescriptor {
 
     private int height;
 
@@ -19,7 +19,7 @@ public class VideoDTO extends FileDTO {
     @SerializedName("file_output")
     private OutputFiles outputFiles;
 
-    public VideoDTO() {
+    public VideoDescriptor() {
     }
 
     public int getHeight() {
@@ -212,7 +212,7 @@ public class VideoDTO extends FileDTO {
 
     @Override
     public String toString() {
-        return "VideoDTO{" +
+        return "VideoDescriptor{" +
                 "height=" + height +
                 ", width=" + width +
                 ", inputFile=" + inputFile +

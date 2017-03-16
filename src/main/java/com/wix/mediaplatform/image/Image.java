@@ -6,7 +6,7 @@ import com.wix.mediaplatform.image.operation.Fill;
 import com.wix.mediaplatform.image.operation.Fit;
 import org.jetbrains.annotations.Nullable;
 
-public class ImageRequest {
+public class Image {
 
     private String baseUrl;
 
@@ -14,38 +14,38 @@ public class ImageRequest {
 
     private String fileName;
 
-    private OriginalData originalData;
+    private Metadata metadata;
 
-    public ImageRequest(String baseUrl, String fileId, String fileName, @Nullable OriginalData originalData) {
+    public Image(String baseUrl, String fileId, String fileName, @Nullable Metadata metadata) {
         this.baseUrl = baseUrl;
         this.fileId = fileId;
         this.fileName = fileName;
-        this.originalData = originalData;
+        this.metadata = metadata;
     }
 
     public Fit fit(int width, int height) {
-        return new Fit(baseUrl, fileId, fileName, width, height, originalData);
+        return new Fit(baseUrl, fileId, fileName, width, height, metadata);
     }
 
     public Fill fill(int width, int height) {
-        return new Fill(baseUrl, fileId, fileName, width, height, originalData);
+        return new Fill(baseUrl, fileId, fileName, width, height, metadata);
     }
 
     public Crop crop(int width, int height, int x, int y, float scaleFactor) {
-        return new Crop(baseUrl, fileId, fileName, width, height, originalData, x, y, scaleFactor);
+        return new Crop(baseUrl, fileId, fileName, width, height, metadata, x, y, scaleFactor);
     }
 
     public Canvas canvas(int width, int height) {
-        return new Canvas(baseUrl, fileId, fileName, width, height, originalData);
+        return new Canvas(baseUrl, fileId, fileName, width, height, metadata);
     }
 
     @Override
     public String toString() {
-        return "ImageRequest{" +
+        return "Image{" +
                 "baseUrl='" + baseUrl + '\'' +
                 ", fileId='" + fileId + '\'' +
                 ", fileName='" + fileName + '\'' +
-                ", originalData=" + originalData +
+                ", metadata=" + metadata +
                 '}';
     }
 }

@@ -15,13 +15,13 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class AuthenticationFacadeTest extends BaseTest {
+public class AuthenticatorTest extends BaseTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(PORT));
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
-    private AuthenticationFacade authenticationFacade = new AuthenticationFacade(configuration, httpClient, gson);
+    private Authenticator authenticator = new Authenticator(configuration, httpClient, gson);
 
     @Before
     public void setup() {
@@ -35,7 +35,7 @@ public class AuthenticationFacadeTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-auth-token-response.json")));
 
-        String token = authenticationFacade.getHeader("userId");
+        String token = authenticator.getHeader("userId");
         assertThat(token, is("MCLOUDTOKEN token"));
     }
 
@@ -46,9 +46,9 @@ public class AuthenticationFacadeTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-auth-token-response.json")));
 
-        String token = authenticationFacade.getHeader("userId");
+        String token = authenticator.getHeader("userId");
         assertThat(token, is("MCLOUDTOKEN token"));
-        token = authenticationFacade.getHeader("userId");
+        token = authenticator.getHeader("userId");
         assertThat(token, is("MCLOUDTOKEN token"));
 
         verify(exactly(1), getRequestedFor(urlEqualTo("/apps/auth/token")));
@@ -60,7 +60,7 @@ public class AuthenticationFacadeTest extends BaseTest {
                 .willReturn(aResponse()
                         .withStatus(500)));
 
-        authenticationFacade.getHeader("userId");
+        authenticator.getHeader("userId");
     }
 
     @Test(expected = IOException.class)
@@ -70,7 +70,7 @@ public class AuthenticationFacadeTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("Not a JSON")));
 
-        authenticationFacade.getHeader("userId");
+        authenticator.getHeader("userId");
     }
 
     @Test
@@ -79,16 +79,16 @@ public class AuthenticationFacadeTest extends BaseTest {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-auth-token-response.json")));
-        authenticationFacade.getHeader("userId");
+        authenticator.getHeader("userId");
 
-        authenticationFacade.invalidateToken("userId");
-        authenticationFacade.getHeader("userId");
+        authenticator.invalidateToken("userId");
+        authenticator.getHeader("userId");
 
         verify(exactly(2), getRequestedFor(urlEqualTo("/apps/auth/token")));
     }
 
     @Test
     public void invalidateTokenIdempotent() throws Exception {
-        authenticationFacade.invalidateToken("moshe");
+        authenticator.invalidateToken("moshe");
     }
 }

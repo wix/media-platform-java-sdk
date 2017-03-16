@@ -1,9 +1,9 @@
 package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.FileDTO;
-import com.wix.mediaplatform.dto.folder.FolderDTO;
-import com.wix.mediaplatform.dto.management.*;
+import com.wix.mediaplatform.dto.FileDescriptor;
+import com.wix.mediaplatform.dto.management.ListFilesRequest;
+import com.wix.mediaplatform.dto.management.ListFilesResponse;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.jetbrains.annotations.Nullable;
@@ -23,42 +23,25 @@ public class FileManager {
         this.baseUrl = "https://" + configuration.getDomain();
     }
 
-    public ListFilesResponse listFiles(String userId, @Nullable ListFilesRequest listFilesRequest) throws UnauthorizedException, IOException, URISyntaxException {
+    public ListFilesResponse listFiles(@Nullable ListFilesRequest listFilesRequest) throws UnauthorizedException, IOException, URISyntaxException {
         Map<String, String> params = null;
         if (listFilesRequest != null) {
                 params = listFilesRequest.toParams();
         }
 
-        return authenticatedHTTPClient.get(userId, baseUrl + "/files/getpage", params, ListFilesResponse.class);
+        return authenticatedHTTPClient.get(baseUrl + "/files/getpage", params, ListFilesResponse.class);
     }
 
     @Nullable
-    public FileDTO getFile(String userId, String fileId) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.get(userId, baseUrl + "/files/" + fileId, null, FileDTO.class);
+    public FileDescriptor getFile(String fileId) throws UnauthorizedException, IOException, URISyntaxException {
+        return authenticatedHTTPClient.get(baseUrl + "/files/" + fileId, null, FileDescriptor.class);
     }
 
-    public FileDTO updateFile(String userId, String fileId, UpdateFileRequest updateFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.put(userId, baseUrl + "/files/" + fileId, updateFileRequest, null, FileDTO.class);
+    public FileDescriptor updateFile(String fileId, UpdateFileRequest updateFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        return authenticatedHTTPClient.put(baseUrl + "/files/" + fileId, updateFileRequest, null, FileDescriptor.class);
     }
 
-    public void deleteFile(String userId, String fileId) throws UnauthorizedException, IOException, URISyntaxException {
-        authenticatedHTTPClient.delete(userId, baseUrl + "/files/" + fileId, null, null);
-    }
-
-    public ListFoldersResponse listFolders(String userId, @Nullable String parentFolderId) throws UnauthorizedException, IOException, URISyntaxException {
-        String url = baseUrl + "/folders" + (parentFolderId != null ? "/" + parentFolderId : "");
-        return authenticatedHTTPClient.get(userId, url, null, ListFoldersResponse.class);
-    }
-
-    public FolderDTO newFolder(String userId, NewFolderRequest newFolderRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.post(userId, baseUrl + "/folders", newFolderRequest, null, FolderDTO.class);
-    }
-
-    public FolderDTO updateFolder(String userId, String folderId, UpdateFolderRequest updateFolderRequest) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHTTPClient.put(userId, baseUrl + "/folders/" + folderId, updateFolderRequest, null, FolderDTO.class);
-    }
-
-    public void deleteFolder(String userId, String folderId) throws UnauthorizedException, IOException, URISyntaxException {
-        authenticatedHTTPClient.delete(userId, baseUrl + "/folders/" + folderId, null, null);
+    public void deleteFile(String fileId) throws UnauthorizedException, IOException, URISyntaxException {
+        authenticatedHTTPClient.delete(baseUrl + "/files/" + fileId, null, null);
     }
 }

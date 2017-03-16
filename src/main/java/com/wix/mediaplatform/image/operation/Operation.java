@@ -1,6 +1,6 @@
 package com.wix.mediaplatform.image.operation;
 
-import com.wix.mediaplatform.image.OriginalData;
+import com.wix.mediaplatform.image.Metadata;
 import com.wix.mediaplatform.image.option.Option;
 import com.wix.mediaplatform.image.option.blur.Blur;
 import com.wix.mediaplatform.image.option.brightness.Brightness;
@@ -56,18 +56,18 @@ public abstract class Operation<T extends Operation<T>> {
 
     private int height;
 
-    private OriginalData originalData;
+    private Metadata metadata;
 
     SortedSet<Option> options = newTreeSet(OPTION_COMPARATOR);
 
-    Operation(String name, String baseUrl, String fileId, String fileName, int width, int height, @Nullable OriginalData originalData) {
+    Operation(String name, String baseUrl, String fileId, String fileName, int width, int height, @Nullable Metadata metadata) {
         this.name = name;
         this.baseUrl = baseUrl;
         this.fileId = fileId;
         this.fileName = fileName;
         this.width = width;
         this.height = height;
-        this.originalData = originalData;
+        this.metadata = metadata;
     }
 
     public T width(int width) {
@@ -191,8 +191,8 @@ public abstract class Operation<T extends Operation<T>> {
 
         sb.append(FORWARD_SLASH).append(fileName);
 
-        if (originalData != null) {
-            sb.append("#").append(originalData.serialize());
+        if (metadata != null) {
+            sb.append("#").append(metadata.serialize());
         }
 
         return sb.toString();
@@ -215,7 +215,7 @@ public abstract class Operation<T extends Operation<T>> {
                 ", fileName='" + fileName + '\'' +
                 ", width=" + width +
                 ", height=" + height +
-                ", originalData=" + originalData +
+                ", metadata=" + metadata +
                 ", options=" + options +
                 '}';
     }

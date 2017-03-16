@@ -3,18 +3,18 @@ package com.wix.mediaplatform.fileuploader;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
-import com.wix.mediaplatform.authentication.AuthenticationFacade;
+import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.FileDTO;
+import com.wix.mediaplatform.dto.FileDescriptor;
 import com.wix.mediaplatform.dto.MediaType;
-import com.wix.mediaplatform.dto.audio.AudioDTO;
-import com.wix.mediaplatform.dto.document.DocumentDTO;
-import com.wix.mediaplatform.dto.image.ImageDTO;
+import com.wix.mediaplatform.dto.audio.AudioDescriptor;
+import com.wix.mediaplatform.dto.document.DocumentDescriptor;
+import com.wix.mediaplatform.dto.image.ImageDescriptor;
 import com.wix.mediaplatform.dto.upload.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.upload.ImportFileRequest;
 import com.wix.mediaplatform.dto.upload.UploadRequest;
 import com.wix.mediaplatform.dto.video.EncodingOptions;
-import com.wix.mediaplatform.dto.video.VideoDTO;
+import com.wix.mediaplatform.dto.video.VideoDescriptor;
 import com.wix.mediaplatform.exception.FileSizeException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Before;
@@ -37,8 +37,8 @@ public class FileUploaderTest extends BaseTest {
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(PORT));
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
-    private AuthenticationFacade authenticationFacade = mock(AuthenticationFacade.class);
-    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticationFacade, httpClient, gson);
+    private Authenticator authenticator = mock(Authenticator.class);
+    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
     private FileUploader fileUploader = new FileUploader(authenticatedHTTPClient, gson, configuration);
 
     private UploadRequest uploadRequest = new UploadRequest(newHashSet("fish", "cat"), "folderId");
@@ -50,7 +50,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void getUploadUrl() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -65,7 +65,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void uploadImageFromFile() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -78,14 +78,14 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
-        ImageDTO imageDTO = fileUploader.uploadImage("userId", file, null);
+        ImageDescriptor imageDTO = fileUploader.uploadImage("userId", file, null);
 
         assertThat(imageDTO.getHeight(), is(17));
     }
 
     @Test
     public void uploadImageFromFileWithUploadRequest() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -98,14 +98,14 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
-        ImageDTO imageDTO = fileUploader.uploadImage("userId", file, uploadRequest);
+        ImageDescriptor imageDTO = fileUploader.uploadImage("userId", file, uploadRequest);
 
         assertThat(imageDTO.getHeight(), is(17));
     }
 
     @Test
     public void uploadAudioFromFile() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -118,14 +118,14 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/audio.mp3").getFile());
-        AudioDTO audioDTO = fileUploader.uploadAudio("userId", file, null);
+        AudioDescriptor audioDTO = fileUploader.uploadAudio("userId", file, null);
 
         assertThat(audioDTO.getFileSize(), is(3528120L));
     }
 
     @Test
     public void uploadAudioFromFileWithUploadRequest() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -138,14 +138,14 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/audio.mp3").getFile());
-        AudioDTO audioDTO = fileUploader.uploadAudio("userId", file, uploadRequest);
+        AudioDescriptor audioDTO = fileUploader.uploadAudio("userId", file, uploadRequest);
 
         assertThat(audioDTO.getFileSize(), is(3528120L));
     }
 
     @Test
     public void uploadVideoFromFile() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -158,7 +158,7 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/video.mp4").getFile());
-        VideoDTO videoDTO = fileUploader.uploadVideo("userId", file, null, null);
+        VideoDescriptor videoDTO = fileUploader.uploadVideo("userId", file, null, null);
 
         System.out.println(videoDTO);
 
@@ -167,7 +167,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void uploadVideoFromFileWithUploadRequest() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -180,14 +180,14 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/video.mp4").getFile());
-        VideoDTO videoDTO = fileUploader.uploadVideo("userId", file, uploadRequest, null);
+        VideoDescriptor videoDTO = fileUploader.uploadVideo("userId", file, uploadRequest, null);
 
         assertThat(videoDTO.getDateCreated(), is(1471955310L));
     }
 
     @Test
     public void uploadVideoFromFileWithUploadRequestAndEncodingOptions() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -200,7 +200,7 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/video.mp4").getFile());
-        VideoDTO videoDTO = fileUploader.uploadVideo("userId", file, uploadRequest,
+        VideoDescriptor videoDTO = fileUploader.uploadVideo("userId", file, uploadRequest,
                 new EncodingOptions(newHashSet(EncodingOptions.VideoFormat.MP4),
                         true,
                         true,
@@ -212,7 +212,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void uploadDocumentFromFile() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -225,14 +225,14 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/document.xlsx").getFile());
-        DocumentDTO documentDTO = fileUploader.uploadDocument("userId", file, null);
+        DocumentDescriptor documentDTO = fileUploader.uploadDocument("userId", file, null);
 
         assertThat(documentDTO.getFileUrl(), is("ggl-109789773458215503884/audio/af63a5d465ce48a998297684f3246df6/file.mp3"));
     }
 
     @Test
     public void uploadDocumentFromFileWithUploadRequest() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
 
         stubFor(get(urlEqualTo("/files/upload/url"))
                 .willReturn(aResponse()
@@ -245,31 +245,31 @@ public class FileUploaderTest extends BaseTest {
 
         @SuppressWarnings("ConstantConditions")
         File file = new File(this.getClass().getClassLoader().getResource("source/document.xlsx").getFile());
-        DocumentDTO documentDTO = fileUploader.uploadDocument("userId", file, uploadRequest);
+        DocumentDescriptor documentDTO = fileUploader.uploadDocument("userId", file, uploadRequest);
 
         assertThat(documentDTO.getIconUrl(), is("wixmedia-public/images/b0068f926fc542fbb1f3653df8ce5099/music_note.png"));
     }
 
     @Test
     public void importImage() throws Exception {
-        when(authenticationFacade.getSelfSignedHeader("userId", null)).thenReturn("header");
+        when(authenticator.getSelfSignedHeader("userId", null)).thenReturn("header");
 
         stubFor(post(urlEqualTo("/files/upload/external/async"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("image-import-response.json")));
 
-        FileDTO fileDTO = fileUploader.importFile("userId", new ImportFileRequest()
+        FileDescriptor fileDescriptor = fileUploader.importFile("userId", new ImportFileRequest()
                 .setMediaType(MediaType.IMAGE)
                 .setUrl("http://this.is/a/url")
                 .setName("name.png"));
 
-        assertThat(fileDTO.getStatus(), is("IN-DOWNLOAD-QUEUE"));
+        assertThat(fileDescriptor.getStatus(), is("IN-DOWNLOAD-QUEUE"));
     }
 
     @Test(expected = FileSizeException.class)
     public void importImage7752Response() throws Exception {
-        when(authenticationFacade.getSelfSignedHeader("userId", null)).thenReturn("header");
+        when(authenticator.getSelfSignedHeader("userId", null)).thenReturn("header");
 
         stubFor(post(urlEqualTo("/files/upload/external/async"))
                 .willReturn(aResponse()

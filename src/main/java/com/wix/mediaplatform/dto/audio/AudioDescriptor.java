@@ -1,14 +1,14 @@
 package com.wix.mediaplatform.dto.audio;
 
 import com.google.gson.annotations.SerializedName;
-import com.wix.mediaplatform.dto.FileDTO;
+import com.wix.mediaplatform.dto.FileDescriptor;
 
-public class AudioDTO extends FileDTO {
+public class AudioDescriptor extends FileDescriptor {
 
     @SerializedName("file_input")
     private Analysis analysis;
 
-    public AudioDTO() {
+    public AudioDescriptor() {
     }
 
     public Analysis getAnalysis() {
@@ -73,7 +73,7 @@ public class AudioDTO extends FileDTO {
 
     @Override
     public String toString() {
-        return "AudioDTO{" +
+        return "AudioDescriptor{" +
                 "analysis=" + analysis +
                 "} " + super.toString();
     }

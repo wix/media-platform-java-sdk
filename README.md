@@ -78,7 +78,7 @@ VideoDTO videoDTO = fileUploader.uploadVideo("userId", file, uploadRequest || nu
 * Import a file from a remote source
 */
 ImportFileRequest importFileRequest = new ImportFileRequest().setMediaType(MediaType.IMAGE).setUrl("http://this.is/a/url").setName("name.png");
-FileDTO fileDTO = fileUploader.importFile("userId", importFileRequest);
+FileDTO fileDescriptor = fileUploader.importFile("userId", importFileRequest);
 ```
 
 ### Browser
@@ -132,8 +132,8 @@ From the browser GET the URL and POST the form to it, including the token in the
             request.responseType = 'json';
             request.addEventListener('load', function (event) {
                 var imageDto = new ImageDTO(event.target.response[0]);
-                var imageRequest = MP.image.fromDto('media.wixapps.net', imageDto);
-                var imageUrl = imageRequest.crop(800, 200, 1, 1).toUrl();
+                var image = MP.image.fromDto('media.wixapps.net', imageDto);
+                var imageUrl = image.crop(800, 200, 1, 1).toUrl();
                 var img = document.createElement('img');
                 img.setAttribute('src', imageUrl.url);
             });
@@ -153,21 +153,21 @@ The SDK provides a programmatic facility to generate image URLs
 
 ```java
 /**
-* A new image request from the host and ImageDTO (response from server)
+*ImageDescriptor
 */
-ImageRequest imageRequest = Parser.fromDto("test.wix.com", imageDto);
+ImageRequest image = Parser.fromDto("test.wix.com", imageDto);
 
 /**
 * A new image request from a previously generated url
 */
-ImageRequest imageRequest = Parser.fromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
+ImageRequest image = Parser.fromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
 
 /**
 * A new image request from the base url and the file id
 */
-ImageRequest imageRequest = new ImageRequest("media.wixapps.net/wixmedia-samples/images", "000c45e21f8a433cb3b2483dfbb659d8", "image.jpeg", null);
+ImageRequest image = new ImageRequest("media.wixapps.net/wixmedia-samples/images", "000c45e21f8a433cb3b2483dfbb659d8", "image.jpeg", null);
 
-String url = imageRequest.fit(500, 500).negative().saturation(-90).toUrl();
+String url = image.fit(500, 500).negative().saturation(-90).toUrl();
 
 /**
 * A pre-configured operation from a previously generated url
@@ -179,7 +179,7 @@ String url = imageOperation.negative().saturation(-90).toUrl();
 
 ## Secure File URL
 
-Files can be secured, in order to access them a secure URL must be generated
+Files can be secured, in orderBy to access them a secure URL must be generated
 
 ```java
 FileDownloader fileDownloader = mediaPlatform.fileDownloader();

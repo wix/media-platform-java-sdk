@@ -1,4 +1,4 @@
-package com.wix.mediaplatform.jwt;
+package com.wix.mediaplatform.authentication.jwt;
 
 public class Constants {
     public static final String SUBJECT = "sub";
@@ -7,4 +7,6 @@ public class Constants {
     public static final String ISSUED_AT = "iat";
     public static final String IDENTIFIER = "jti";
     public static final String AUDIENCE = "aud";
+    public static final String OBJECT = "obj";
+    public static final String PAYLOAD = "payload";
 }

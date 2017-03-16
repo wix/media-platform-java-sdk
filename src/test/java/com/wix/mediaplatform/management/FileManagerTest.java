@@ -2,13 +2,14 @@ package com.wix.mediaplatform.management;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
-import com.wix.mediaplatform.authentication.AuthenticationFacade;
+import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.MediaType;
-import com.wix.mediaplatform.dto.audio.AudioDTO;
+import com.wix.mediaplatform.dto.audio.AudioDescriptor;
 import com.wix.mediaplatform.dto.folder.FolderDTO;
-import com.wix.mediaplatform.dto.image.ImageDTO;
-import com.wix.mediaplatform.dto.management.*;
+import com.wix.mediaplatform.dto.image.ImageDescriptor;
+import com.wix.mediaplatform.dto.management.ListFilesRequest;
+import com.wix.mediaplatform.dto.management.ListFilesResponse;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,14 +27,14 @@ public class FileManagerTest extends BaseTest {
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(PORT));
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
-    private AuthenticationFacade authenticationFacade = mock(AuthenticationFacade.class);
-    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticationFacade, httpClient, gson);
+    private Authenticator authenticator = mock(Authenticator.class);
+    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
 
     private FileManager fileManager = new FileManager(authenticatedHTTPClient, configuration);
 
     @Test
     public void listFiles() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(get(urlEqualTo("/files/getpage"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -46,17 +47,17 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void listFilesWithOptions() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(get(urlEqualTo("/files/getpage?cursor=cursor&page_size=10&order=-date&parent_folder_id=parentFolderId&media_type=video&tag=tag"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("list-files-response.json")));
 
         ListFilesResponse response = fileManager.listFiles("userId", new ListFilesRequest()
-                .setOrder(ListFilesRequest.OrderBy.date)
+                .setOrderBy(ListFilesRequest.OrderBy.date)
                 .descending()
                 .setCursor("cursor")
-                .setSize(10)
+                .setPageSize(10)
                 .setMediaType(MediaType.VIDEO)
                 .setParentFolderId("parentFolderId")
                 .setTag("tag"));
@@ -66,26 +67,26 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void getFile() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(get(urlEqualTo("/files/fileId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-file-image-response.json")));
 
-        ImageDTO file = (ImageDTO) fileManager.getFile("userId", "fileId");
+        ImageDescriptor file = (ImageDescriptor) fileManager.getFile("userId", "fileId");
 
-        assertThat(file.getAnalysis().getFaces().toArray(new ImageDTO.Square[1])[0].getHeight(), is(207));
+        assertThat(file.getAnalysis().getFaces().toArray(new ImageDescriptor.Square[1])[0].getHeight(), is(207));
     }
 
     @Test
     public void updateFile() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(put(urlEqualTo("/files/fileId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("update-file-audio-response.json")));
 
-        AudioDTO file = (AudioDTO) fileManager.updateFile("userId", "fileId", new UpdateFileRequest()
+        AudioDescriptor file = (AudioDescriptor) fileManager.updateFile("userId", "fileId", new UpdateFileRequest()
                 .setOriginalFileName("file")
                 .setParentFolderId("parent")
                 .addTag("tag"));
@@ -95,7 +96,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void deleteFile() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(delete(urlEqualTo("/files/fileId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -106,7 +107,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void listFolders() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(get(urlEqualTo("/folders"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -119,7 +120,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void listFoldersWithParentFolderId() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(get(urlEqualTo("/folders/parentFolderId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -132,7 +133,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void newFolder() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(post(urlEqualTo("/folders"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -149,7 +150,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void updateFolder() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(put(urlEqualTo("/folders/folderId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -164,7 +165,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void deleteFolder() throws Exception {
-        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        when(authenticator.getHeader("userId")).thenReturn("header");
         stubFor(delete(urlEqualTo("/folders/folderId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")

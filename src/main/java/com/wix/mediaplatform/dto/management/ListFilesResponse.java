@@ -1,7 +1,7 @@
 package com.wix.mediaplatform.dto.management;
 
 import com.google.gson.annotations.SerializedName;
-import com.wix.mediaplatform.dto.FileDTO;
+import com.wix.mediaplatform.dto.FileDescriptor;
 
 import java.util.Set;
 
@@ -15,12 +15,12 @@ public class ListFilesResponse {
     @SerializedName("cursor")
     private String nextPageCursor;
 
-    private Set<FileDTO> files;
+    private Set<FileDescriptor> files;
 
     public ListFilesResponse() {
     }
 
-    public ListFilesResponse(long timeStamp, int count, String nextPageCursor, Set<FileDTO> files) {
+    public ListFilesResponse(long timeStamp, int count, String nextPageCursor, Set<FileDescriptor> files) {
         this.timeStamp = timeStamp;
         this.count = count;
         this.nextPageCursor = nextPageCursor;
@@ -39,7 +39,7 @@ public class ListFilesResponse {
         return nextPageCursor;
     }
 
-    public Set<FileDTO> getFiles() {
+    public Set<FileDescriptor> getFiles() {
         return files;
     }
 
