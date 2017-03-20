@@ -1,4 +1,4 @@
-package com.wix.mediaplatform.filedownloader;
+package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.authentication.NS;
@@ -18,9 +18,13 @@ public class FileDownloader {
 
     private final Configuration configuration;
 
-    public FileDownloader(Authenticator authenticator, Configuration configuration) {
+    public FileDownloader(Configuration configuration, Authenticator authenticator) {
         this.authenticator = authenticator;
         this.configuration = configuration;
+    }
+
+    public String getDownloadUrl(String path) {
+        return getDownloadUrl(path, null);
     }
 
     public String getDownloadUrl(String path, @Nullable DownloadUrlRequest downloadUrlRequest) {

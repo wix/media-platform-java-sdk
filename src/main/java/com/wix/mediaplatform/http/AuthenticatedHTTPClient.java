@@ -26,7 +26,7 @@ import java.util.Map;
 import static org.apache.http.HttpHeaders.*;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
-public class HTTPClient {
+public class AuthenticatedHTTPClient {
 
     private static final Header ACCEPT_JSON = new BasicHeader(ACCEPT, APPLICATION_JSON.getMimeType());
     private static final Header CONTENT_TYPE_JSON = new BasicHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType());
@@ -35,7 +35,7 @@ public class HTTPClient {
     private final HttpClient httpClient;
     private final Gson gson;
 
-    public HTTPClient(Authenticator authenticator, HttpClient httpClient, Gson gson) {
+    public AuthenticatedHTTPClient(Authenticator authenticator, HttpClient httpClient, Gson gson) {
         this.authenticator = authenticator;
         this.httpClient = httpClient;
         this.gson = gson;

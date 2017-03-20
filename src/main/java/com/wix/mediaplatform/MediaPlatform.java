@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.filedownloader.FileDownloader;
-import com.wix.mediaplatform.fileuploader.FileUploader;
-import com.wix.mediaplatform.http.HTTPClient;
+import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.management.FileDownloader;
 import com.wix.mediaplatform.management.FileManager;
+import com.wix.mediaplatform.management.FileUploader;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -23,11 +23,11 @@ public class MediaPlatform {
         Gson gson = getGson();
 
         Authenticator authenticator = new Authenticator(configuration);
-        HTTPClient HTTPClient = new HTTPClient(authenticator, httpClient, gson);
-        FileUploader fileUploader = new FileUploader(HTTPClient, configuration);
+        AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
 
-        this.fileDownloader = new FileDownloader(authenticator, configuration);
-        this.fileManager = new FileManager(configuration, HTTPClient, fileUploader);
+        FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient);
+        this.fileDownloader = new FileDownloader(configuration, authenticator);
+        this.fileManager = new FileManager(configuration, authenticatedHTTPClient, fileUploader);
     }
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
