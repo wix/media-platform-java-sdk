@@ -5,7 +5,7 @@ import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.collection.*;
-import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.http.HTTPClient;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -24,9 +24,9 @@ public class CollectionManagerTest extends BaseTest {
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
     private Authenticator authenticator = mock(Authenticator.class);
-    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
+    private HTTPClient HTTPClient = new HTTPClient(authenticator, httpClient, gson);
 
-    private CollectionManager collectionManager = new CollectionManager(authenticatedHTTPClient, configuration);
+    private CollectionManager collectionManager = new CollectionManager(HTTPClient, configuration);
 
     @Test
     public void newCollection() throws Exception {

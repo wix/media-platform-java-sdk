@@ -5,9 +5,9 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.download.DownloadUrlRequest;
 import com.wix.mediaplatform.dto.download.GetSecureUrlResponse;
-import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.dto.request.DownloadUrlRequest;
+import com.wix.mediaplatform.http.HTTPClient;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,8 +28,8 @@ public class FileDownloaderTest extends BaseTest {
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
     private Authenticator authenticator = mock(Authenticator.class);
-    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
-    private FileDownloader fileDownloader = new FileDownloader(authenticatedHTTPClient, configuration);
+    private HTTPClient HTTPClient = new HTTPClient(authenticator, httpClient, gson);
+    private FileDownloader fileDownloader = new FileDownloader(HTTPClient, configuration);
 
     @Before
     public void setup() {

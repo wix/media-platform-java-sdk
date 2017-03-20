@@ -5,18 +5,18 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.FileDescriptor;
 import com.wix.mediaplatform.dto.MediaType;
 import com.wix.mediaplatform.dto.audio.AudioDescriptor;
 import com.wix.mediaplatform.dto.document.DocumentDescriptor;
 import com.wix.mediaplatform.dto.image.ImageDescriptor;
-import com.wix.mediaplatform.dto.upload.GetUploadUrlResponse;
+import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+import com.wix.mediaplatform.dto.request.UploadRequest;
+import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.upload.ImportFileRequest;
-import com.wix.mediaplatform.dto.upload.UploadRequest;
 import com.wix.mediaplatform.dto.video.EncodingOptions;
 import com.wix.mediaplatform.dto.video.VideoDescriptor;
 import com.wix.mediaplatform.exception.FileSizeException;
-import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.http.HTTPClient;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,8 +38,8 @@ public class FileUploaderTest extends BaseTest {
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
     private Authenticator authenticator = mock(Authenticator.class);
-    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
-    private FileUploader fileUploader = new FileUploader(authenticatedHTTPClient, gson, configuration);
+    private HTTPClient HTTPClient = new HTTPClient(authenticator, httpClient, gson);
+    private FileUploader fileUploader = new FileUploader(HTTPClient, gson, configuration);
 
     private UploadRequest uploadRequest = new UploadRequest(newHashSet("fish", "cat"), "folderId");
 
@@ -207,7 +207,7 @@ public class FileUploaderTest extends BaseTest {
                         EncodingOptions.AudioFormat.M4A,
                         EncodingOptions.ImageFormat.JPEG));
 
-        assertThat(videoDTO.getDateModified(), is(1471955309L));
+        assertThat(videoDTO.getDateUpdated(), is(1471955309L));
     }
 
     @Test

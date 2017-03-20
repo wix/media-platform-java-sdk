@@ -6,7 +6,7 @@ import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.filedownloader.FileDownloader;
 import com.wix.mediaplatform.fileuploader.FileUploader;
-import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.http.HTTPClient;
 import com.wix.mediaplatform.management.FileManager;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -14,33 +14,24 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 public class MediaPlatform {
 
-    @SuppressWarnings("WeakerAccess")
-    public final FileUploader fileUploader;
+    private final FileDownloader fileDownloader;
 
-    @SuppressWarnings("WeakerAccess")
-    public final FileDownloader fileDownloader;
-
-    @SuppressWarnings("WeakerAccess")
-    public final FileManager fileManager;
+    private final FileManager fileManager;
 
     public MediaPlatform(String domain, String appId, String sharedSecret, HttpClient httpClient) {
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
         Gson gson = getGson();
 
         Authenticator authenticator = new Authenticator(configuration);
-        AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
+        HTTPClient HTTPClient = new HTTPClient(authenticator, httpClient, gson);
+        FileUploader fileUploader = new FileUploader(HTTPClient, configuration);
 
-        fileUploader = new FileUploader(authenticatedHTTPClient, configuration);
-        fileDownloader = new FileDownloader(authenticator, configuration);
-        fileManager = new FileManager(authenticatedHTTPClient, configuration);
+        this.fileDownloader = new FileDownloader(authenticator, configuration);
+        this.fileManager = new FileManager(configuration, HTTPClient, fileUploader);
     }
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
         this(domain, appId, sharedSecret, getHttpClient());
-    }
-
-    public FileUploader fileUploader() {
-        return fileUploader;
     }
 
     public FileDownloader fileDownloader() {

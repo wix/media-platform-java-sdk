@@ -1,11 +1,11 @@
 package com.wix.mediaplatform.fileuploader;
 
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.upload.GetUploadUrlResponse;
-import com.wix.mediaplatform.dto.upload.UploadRequest;
+import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+import com.wix.mediaplatform.dto.request.UploadUrlRequest;
+import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.exception.UnauthorizedException;
-import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
-import org.apache.commons.lang3.StringUtils;
+import com.wix.mediaplatform.http.HTTPClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -13,52 +13,54 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import static com.wix.mediaplatform.gson.Types.FILE_DESCRIPTORS_REST_RESPONSE;
+import static com.wix.mediaplatform.gson.Types.GET_UPLOAD_URL_REST_RESPONSE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileUploader {
 
-    private final AuthenticatedHTTPClient authenticatedHTTPClient;
+    private final HTTPClient HTTPClient;
+
     private final String uploadUrlEndpoint;
 
-    public FileUploader(AuthenticatedHTTPClient authenticatedHTTPClient, Configuration configuration) {
+    public FileUploader(HTTPClient HTTPClient, Configuration configuration) {
 
-        this.authenticatedHTTPClient = authenticatedHTTPClient;
+        this.HTTPClient = HTTPClient;
 
         this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/files/upload/url";
     }
 
-    public GetUploadUrlResponse getUploadUrl() throws IOException, UnauthorizedException, URISyntaxException {
-        return authenticatedHTTPClient.get(uploadUrlEndpoint, null, GetUploadUrlResponse.class);
+    public GetUploadUrlResponse getUploadUrl(@Nullable UploadUrlRequest uploadUrlRequest) throws IOException, UnauthorizedException, URISyntaxException {
+        Map<String, String> params = null;
+        if (uploadUrlRequest != null) {
+            params = uploadUrlRequest.toParams();
+        }
+
+        return HTTPClient.get(uploadUrlEndpoint, params, GET_UPLOAD_URL_REST_RESPONSE);
     }
 
-    private <T> T uploadFile(String mimeType, String fileName, InputStream source, @Nullable UploadRequest uploadRequest, @Nullable Map<String, String> additionalParams, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
-        GetUploadUrlResponse uploadUrlResponse = getUploadUrl();
+    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source, @Nullable String acl) throws IOException, UnauthorizedException, URISyntaxException {
+        UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
+                .setMimeType(mimeType)
+                .setPath(path);
+        GetUploadUrlResponse uploadUrlResponse = getUploadUrl(uploadUrlRequest);
 
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
         multipartEntityBuilder.setLaxMode();
         multipartEntityBuilder.setCharset(UTF_8);
+        multipartEntityBuilder.addTextBody("path", path);
+        multipartEntityBuilder.addTextBody("uploadToken", uploadUrlResponse.getUploadToken());
+        multipartEntityBuilder.addTextBody("mimeType", mimeType);
         multipartEntityBuilder.addBinaryBody("file", source, ContentType.parse(mimeType), fileName);
-        multipartEntityBuilder.addTextBody("upload_token", uploadUrlResponse.getUploadToken());
-        if (uploadRequest != null) {
-            if (uploadRequest.getParentFolderId() != null) {
-                multipartEntityBuilder.addTextBody("parent_folder_id", uploadRequest.getParentFolderId());
-            }
-            if (uploadRequest.getTags() != null && !uploadRequest.getTags().isEmpty()) {
-                multipartEntityBuilder.addTextBody("tags", StringUtils.join(uploadRequest.getTags(), ","));
-            }
-        }
-        if (additionalParams != null) {
-            for (Map.Entry<String, String> entry : additionalParams.entrySet()) {
-                multipartEntityBuilder.addTextBody(entry.getKey(), entry.getValue());
-            }
+        if (acl != null) {
+            multipartEntityBuilder.addTextBody("acl", acl);
         }
 
         HttpEntity form = multipartEntityBuilder.build();
 
-        return authenticatedHTTPClient.post(uploadUrlResponse.getUploadUrl(), form, responseType);
+        return HTTPClient.post(uploadUrlResponse.getUploadUrl(), form, FILE_DESCRIPTORS_REST_RESPONSE);
     }
 }

@@ -8,15 +8,14 @@ import com.wix.mediaplatform.dto.MediaType;
 import com.wix.mediaplatform.dto.audio.AudioDescriptor;
 import com.wix.mediaplatform.dto.folder.FolderDTO;
 import com.wix.mediaplatform.dto.image.ImageDescriptor;
-import com.wix.mediaplatform.dto.management.ListFilesRequest;
-import com.wix.mediaplatform.dto.management.ListFilesResponse;
-import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.dto.request.ListFilesRequest;
+import com.wix.mediaplatform.dto.response.ListFilesResponse;
+import com.wix.mediaplatform.http.HTTPClient;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,9 +27,9 @@ public class FileManagerTest extends BaseTest {
 
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
     private Authenticator authenticator = mock(Authenticator.class);
-    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
+    private HTTPClient HTTPClient = new HTTPClient(authenticator, httpClient, gson);
 
-    private FileManager fileManager = new FileManager(authenticatedHTTPClient, configuration);
+    private FileManager fileManager = new FileManager(HTTPClient, configuration);
 
     @Test
     public void listFiles() throws Exception {
@@ -56,7 +55,7 @@ public class FileManagerTest extends BaseTest {
         ListFilesResponse response = fileManager.listFiles("userId", new ListFilesRequest()
                 .setOrderBy(ListFilesRequest.OrderBy.date)
                 .descending()
-                .setCursor("cursor")
+                .setNextPageToken("cursor")
                 .setPageSize(10)
                 .setMediaType(MediaType.VIDEO)
                 .setParentFolderId("parentFolderId")

@@ -205,7 +205,7 @@ Retrieve a list of uploaded files
 ListFilesResponse response = fileManager.listFiles("userId", new ListFilesRequest()
     .setOrder(ListFilesRequest.OrderBy.date)
     .descending()
-    .setCursor("cursor")
+    .setCursor("nextPageToken")
     .setSize(10)
     .setMediaType(MediaType.VIDEO)
     .setParentFolderId("parentFolderId")

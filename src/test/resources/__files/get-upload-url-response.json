@@ -1,4 +1,8 @@
 {
-  "upload_url": "url",
-  "upload_token": "token"
+  "code": 0,
+  "message": "OK",
+  "payload": {
+    "uploadToken": "some token",
+    "uploadUrl": "https://manager.com/_api/upload/file"
+  }
 }

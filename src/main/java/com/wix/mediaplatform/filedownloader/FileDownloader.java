@@ -5,7 +5,7 @@ import com.wix.mediaplatform.authentication.NS;
 import com.wix.mediaplatform.authentication.Token;
 import com.wix.mediaplatform.authentication.VERB;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.download.DownloadUrlRequest;
+import com.wix.mediaplatform.dto.request.DownloadUrlRequest;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -15,6 +15,7 @@ import static com.google.common.collect.Maps.newHashMap;
 public class FileDownloader {
 
     private final Authenticator authenticator;
+
     private final Configuration configuration;
 
     public FileDownloader(Authenticator authenticator, Configuration configuration) {
