@@ -3,16 +3,14 @@ package com.wix.mediaplatform.image;
 import com.google.common.escape.Escaper;
 
 import static com.google.common.net.UrlEscapers.urlFragmentEscaper;
+import static com.wix.mediaplatform.image.StringToken.KEY_HEIGHT;
+import static com.wix.mediaplatform.image.StringToken.KEY_WIDTH;
 
 public class Metadata {
 
     private static final Escaper escaper = urlFragmentEscaper();
 
-    static final String WIDTH_KEY = "w";
-
-    static final String HEIGHT_KEY = "h";
-
-    static final String MIME_TYPE_KEY = "mt";
+    public static final String KEY_MIME_TYPE = "mt";
 
     private int width;
 
@@ -20,7 +18,7 @@ public class Metadata {
 
     private String mimeType;
 
-    Metadata(int width, int height, String mimeType) {
+    public Metadata(int width, int height, String mimeType) {
         this.width = width;
         this.height = height;
         this.mimeType = mimeType;
@@ -42,15 +40,6 @@ public class Metadata {
      * @return the URL fragment (after the #) string representation
      */
     public String serialize() {
-            return WIDTH_KEY + "_" + width + "," + HEIGHT_KEY + "_" + height + "," + MIME_TYPE_KEY + "_" + escaper.escape(mimeType);
-    }
-
-    @Override
-    public String toString() {
-        return "Metadata{" +
-                "width=" + width +
-                ", height=" + height +
-                ", mimeType='" + mimeType + '\'' +
-                '}';
+            return KEY_WIDTH + "_" + width + "," + KEY_HEIGHT + "_" + height + "," + KEY_MIME_TYPE + "_" + escaper.escape(mimeType);
     }
 }

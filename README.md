@@ -83,7 +83,7 @@ FileDTO fileDescriptor = fileUploader.importFile("userId", importFileRequest);
 
 ### Browser
 
-File upload from the browser is a 2 step operation: 
+File upload from the browser is a 2 step geometry: 
  1. First the signed URL and the upload token is retrieved from the server
  2. Then a multipart/form-data request is made to the URL
 
@@ -170,9 +170,9 @@ ImageRequest image = new ImageRequest("media.wixapps.net/wixmedia-samples/images
 String url = image.fit(500, 500).negative().saturation(-90).toUrl();
 
 /**
-* A pre-configured operation from a previously generated url
+* A pre-configured geometry from a previously generated url
 */
-Operation operation = Parser.operationFromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
+Operation geometry = Parser.operationFromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
 
 String url = imageOperation.negative().saturation(-90).toUrl();
 ```

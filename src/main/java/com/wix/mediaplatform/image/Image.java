@@ -1,51 +1,144 @@
 package com.wix.mediaplatform.image;
 
-import com.wix.mediaplatform.image.operation.Canvas;
-import com.wix.mediaplatform.image.operation.Crop;
-import com.wix.mediaplatform.image.operation.Fill;
-import com.wix.mediaplatform.image.operation.Fit;
-import org.jetbrains.annotations.Nullable;
+import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+import com.wix.mediaplatform.dto.metadata.FileMetadata;
+import com.wix.mediaplatform.image.encoder.JPEG;
+import com.wix.mediaplatform.image.filter.*;
+import com.wix.mediaplatform.image.framing.Crop;
+import com.wix.mediaplatform.image.framing.Frame;
+import com.wix.mediaplatform.image.parser.FileDescriptorParser;
+import com.wix.mediaplatform.image.parser.FileMetadataParser;
+import com.wix.mediaplatform.image.parser.ImageUrlParser;
+
+import java.util.Map;
+
+import static com.google.common.collect.Maps.newHashMap;
+import static com.wix.mediaplatform.image.StringToken.*;
 
 public class Image {
 
-    private String baseUrl;
+    private static final String API_VERSION = "v1";
 
-    private String fileId;
+    private String host;
+
+    private String path;
 
     private String fileName;
 
     private Metadata metadata;
 
-    public Image(String baseUrl, String fileId, String fileName, @Nullable Metadata metadata) {
-        this.baseUrl = baseUrl;
-        this.fileId = fileId;
+    private Frame frame;
+
+    private Map<String, Option> options = newHashMap();
+
+    public Image(String url) {
+        ImageUrlParser.parse(this, url);
+    }
+
+    public Image(FileDescriptor fileDescriptor) {
+        FileDescriptorParser.parse(this, fileDescriptor);
+    }
+
+    public Image(FileMetadata fileMetadata) {
+        FileMetadataParser.parse(this, fileMetadata);
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public Image setPath(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public Image setFileName(String fileName) {
         this.fileName = fileName;
+        return this;
+    }
+
+    public Image setMetadata(Metadata metadata) {
         this.metadata = metadata;
+        return this;
     }
 
-    public Fit fit(int width, int height) {
-        return new Fit(baseUrl, fileId, fileName, width, height, metadata);
+    public Image crop(int width, int height, int x, int y, float scaleFactor) {
+        this.frame = new Crop(width, height, x, y, scaleFactor);
+        return this;
     }
 
-    public Fill fill(int width, int height) {
-        return new Fill(baseUrl, fileId, fileName, width, height, metadata);
+    public Image addOption(Option option) {
+        this.options.put(option.getKey(), option);
+        return this;
     }
 
-    public Crop crop(int width, int height, int x, int y, float scaleFactor) {
-        return new Crop(baseUrl, fileId, fileName, width, height, metadata, x, y, scaleFactor);
+    public Image blur(int percentage) {
+        return addOption(new Blur(percentage));
     }
 
-    public Canvas canvas(int width, int height) {
-        return new Canvas(baseUrl, fileId, fileName, width, height, metadata);
+    public Image brightness(int brightness) {
+        return addOption(new Brightness(brightness));
     }
 
-    @Override
-    public String toString() {
-        return "Image{" +
-                "baseUrl='" + baseUrl + '\'' +
-                ", fileId='" + fileId + '\'' +
-                ", fileName='" + fileName + '\'' +
-                ", metadata=" + metadata +
-                '}';
+    public Image contrast(int contrast) {
+        return addOption(new Contrast(contrast));
+    }
+
+    public Image hue(int hue) {
+        return addOption(new Hue(hue));
+    }
+
+    public Image saturation(int saturation) {
+        return addOption(new Saturation(saturation));
+    }
+
+    public Image unsharpMask(float radius, float amount, float threshold) {
+        return addOption(new UnsharpMask(radius, amount, threshold));
+    }
+
+    public Image jpeg(int quality) {
+        return addOption(new JPEG(quality));
+    }
+
+    public String toUrl() {
+
+        StringBuilder sb = new StringBuilder();
+
+        if (host != null && !host.isEmpty()) {
+            if (!host.startsWith("http") && !host.startsWith("//")) {
+                sb.append("//");
+            }
+
+            if (host.endsWith(FORWARD_SLASH)) {
+                sb.append(host.substring(0, host.length() - 1));
+            } else {
+                sb.append(host);
+            }
+        }
+
+        sb.append(FORWARD_SLASH)
+                .append(path)
+                .append(FORWARD_SLASH)
+                .append(API_VERSION)
+                .append(FORWARD_SLASH);
+
+        sb.append(frame.serialize());
+
+        int i = options.size();
+        for (Map.Entry<String, Option> option : options.entrySet()) {
+            if (i > 0) {
+                sb.append(COMMA);
+            }
+            sb.append(option.getValue().serialize());
+            i--;
+        }
+
+        sb.append(FORWARD_SLASH).append(fileName);
+
+        if (metadata != null) {
+            sb.append(HASH).append(metadata.serialize());
+        }
+
+        return sb.toString();
     }
 }

@@ -1,37 +1,40 @@
 package com.wix.mediaplatform.authentication;
 
+import com.auth0.jwt.JWTVerifier;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.configuration.Configuration;
 import org.junit.Test;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import java.util.Map;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class AuthenticatorTest extends BaseTest {
 
-    private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
+    private Configuration configuration = new Configuration("domain", "appId", "sharedSecret");
     private Authenticator authenticator = new Authenticator(configuration);
+    private JWTVerifier verifier = new JWTVerifier(configuration.getSharedSecret());
 
     @Test
     public void getHeaderDefault() throws Exception {
-        stubFor(get(urlEqualTo("/apps/auth/token"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-auth-token-response.json")));
+        String header = authenticator.getHeader();
 
-        String token = authenticator.getHeader();
-        assertThat(token, is("MCLOUDTOKEN token"));
+        Map<String, Object> claims = verifier.verify(header);
+        assertThat(claims.get("iss").toString(), is("urn:app:appId"));
     }
 
     @Test
     public void getHeaderCustomToken() throws Exception {
-        stubFor(get(urlEqualTo("/apps/auth/token"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-auth-token-response.json")));
+        Token token = new Token()
+                .setIssuer(NS.APPLICATION + configuration.getAppId())
+                .setSubject(NS.APPLICATION + configuration.getAppId())
+                .addVerb("verb");
 
-        String token = authenticator.getHeader();
-        assertThat(token, is("MCLOUDTOKEN token"));
+        String header = authenticator.getHeader(token);
+
+        Map<String, Object> claims = verifier.verify(header);
+        assertThat(claims.get("iss").toString(), is("urn:app:appId"));
+        assertThat(claims.get("aud").toString(), is("[verb]"));
     }
 }

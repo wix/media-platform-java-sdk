@@ -129,6 +129,7 @@ public class Token {
         claims.put(EXPIRATION, expiration);
         claims.put(ISSUED_AT, issuedAt);
         claims.put(IDENTIFIER, tokenId);
+        claims.put(AUDIENCE, verbs);
         if (additionalClaims != null) {
             claims.putAll(additionalClaims);
         }

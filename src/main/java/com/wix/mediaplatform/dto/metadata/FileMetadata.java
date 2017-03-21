@@ -10,4 +10,19 @@ public class FileMetadata {
     private BasicMetadata basic;
 
     private Features features;
+
+    public FileMetadata() {
+    }
+
+    public FileDescriptor getFileDescriptor() {
+        return fileDescriptor;
+    }
+
+    public BasicMetadata getBasic() {
+        return basic;
+    }
+
+    public Features getFeatures() {
+        return features;
+    }
 }
