@@ -50,13 +50,13 @@ public class ImageTest {
     public void acceptsHTTPS() throws Exception {
         String url = new Image("https://test.com/1111/images/324234/v1/crop/w_709,h_400,x_1,y_2,scl_1/file.png#w_1000,h_2000,mt_image%2Fpng").toUrl();
 
-        assertThat(url, is("https://domain.com/user/bucket/fileId/v1/fill/w_100,h_100/fileName"));
+        assertThat(url, is("https://test.com/1111/images/324234/v1/crop/w_709,h_400,x_1,y_2,scl_1.0/file.png#w_1000,h_2000,mt_image/png"));
     }
 
     @Test
     public void acceptsDoubleSlash() throws Exception {
-        String url = new Image("//test.com/1111/images/324234/v1/crop/w_709,h_400,x_1,y_2,scl_1/file.png#w_1000,h_2000,mt_image%2Fpng").toUrl();
+        String url = new Image("//images-wixmp-8cbe8e680e95a22c77c8d3d0.wixmp.com/media_manager_demo/common/SanFranHouse.jpg/v1/crop/w_475,h_267,x_1,y_2,scl_1.0/SanFranHouse.jpg").toUrl();
 
-        assertThat(url, is("//domain.com/user/bucket/fileId/v1/fill/w_100,h_100/fileName"));
+        assertThat(url, is("//images-wixmp-8cbe8e680e95a22c77c8d3d0.wixmp.com/media_manager_demo/common/SanFranHouse.jpg/v1/crop/w_475,h_267,x_1,y_2,scl_1.0/SanFranHouse.jpg"));
     }
 }

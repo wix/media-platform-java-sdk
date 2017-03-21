@@ -31,7 +31,7 @@ public class Crop implements Frame {
     }
 
     public String serialize() {
-        return KEY_WIDTH + UNDERSCORE + width + COMMA + KEY_HEIGHT + UNDERSCORE + height + COMMA + KEY_X + UNDERSCORE + x + COMMA + KEY_Y + UNDERSCORE + y
+        return NAME + FORWARD_SLASH + KEY_WIDTH + UNDERSCORE + width + COMMA + KEY_HEIGHT + UNDERSCORE + height + COMMA + KEY_X + UNDERSCORE + x + COMMA + KEY_Y + UNDERSCORE + y
                 + COMMA + KEY_SCALE + UNDERSCORE + scale;
     }
 }

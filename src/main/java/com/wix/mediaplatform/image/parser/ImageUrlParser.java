@@ -162,7 +162,7 @@ public class ImageUrlParser {
             this.options = parts[parts.length - 2];
             this.geometry = parts[parts.length - 3];
             this.version = parts[parts.length - 4];
-            this.path = joiner.join(Arrays.copyOfRange(parts, 0, parts.length - 5));
+            this.path = joiner.join(Arrays.copyOfRange(parts, 0, parts.length - 4));
         }
 
         String getHost() {

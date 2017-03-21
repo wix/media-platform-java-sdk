@@ -63,7 +63,7 @@ public class Image {
     }
 
     public Image crop(int width, int height, int x, int y, float scaleFactor) {
-        this.frame = new Crop(width, height, x, y, scaleFactor);
+        this.frame = new Crop(x, y, width, height, scaleFactor);
         return this;
     }
 
@@ -116,8 +116,7 @@ public class Image {
             }
         }
 
-        sb.append(FORWARD_SLASH)
-                .append(path)
+        sb.append(path)
                 .append(FORWARD_SLASH)
                 .append(API_VERSION)
                 .append(FORWARD_SLASH);
