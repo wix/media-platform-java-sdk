@@ -12,6 +12,14 @@ public enum MediaType {
     IMAGE ("picture"),
     @SerializedName("document")
     DOCUMENT ("document");
+    @SerializedName("secure_music")
+    SECURE_AUDIO ("secure_music"),
+    @SerializedName("secure_video")
+    SECURE_VIDEO ("secure_video"),
+    @SerializedName("secure_picture")
+    SECURE_IMAGE ("secure_picture"),
+    @SerializedName("secure_document")
+    SECURE_DOCUMENT ("secure_document");
 
     private String mediaType;
 
