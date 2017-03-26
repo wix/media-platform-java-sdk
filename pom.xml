@@ -8,6 +8,11 @@
     <url>https://www.wixmp.com/</url>
     <version>1.15.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    
+    
+    <organization>
+      <name>Media Cloud</name>
+    </organization>
 
     <licenses>
         <license>
