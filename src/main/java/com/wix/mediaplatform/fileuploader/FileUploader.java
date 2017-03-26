@@ -143,7 +143,7 @@ public class FileUploader {
         return response.getPayload();
     }
 
-    private <T> T upload(String userId, MediaType mediaType, String mimeType, String fileName, InputStream source, @Nullable UploadRequest uploadRequest, @Nullable Map<String, String> additionalParams, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+    public <T> T upload(String userId, MediaType mediaType, String mimeType, String fileName, InputStream source, @Nullable UploadRequest uploadRequest, @Nullable Map<String, String> additionalParams, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
         GetUploadUrlResponse uploadUrlResponse = getUploadUrl(userId);
 
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
