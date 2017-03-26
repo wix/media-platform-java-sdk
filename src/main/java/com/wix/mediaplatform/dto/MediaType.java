@@ -11,7 +11,7 @@ public enum MediaType {
     @SerializedName("picture")
     IMAGE ("picture"),
     @SerializedName("document")
-    DOCUMENT ("document");
+    DOCUMENT ("document"),
     @SerializedName("secure_music")
     SECURE_AUDIO ("secure_music"),
     @SerializedName("secure_video")
