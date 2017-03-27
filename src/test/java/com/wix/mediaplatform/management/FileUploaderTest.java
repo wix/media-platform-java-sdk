@@ -36,31 +36,31 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void getUploadUrl() throws Exception {
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/_api/files/upload/url"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-upload-url-response.json")));
 
         GetUploadUrlResponse response = fileUploader.getUploadUrl(null);
 
-        assertThat(response.getUploadToken(), is("token"));
-        assertThat(response.getUploadUrl(), is("url"));
+        assertThat(response.getUploadToken(), is("some token"));
+        assertThat(response.getUploadUrl(), is("https://localhost:8443/_api/upload/file"));
     }
 
     @Test
     public void uploadFile() throws Exception {
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/_api/files/upload/url?path=%2Fa%2Fnew.txt&mimeType=text%2Fplain"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
-        stubFor(post(urlEqualTo("/upload"))
+                        .withBodyFile("get-upload-url-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("image-upload-response.json")));
+                        .withBodyFile("file-upload-response.json")));
 
         File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
         FileDescriptor[] files = fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
 
-        assertThat(files[0].getId(), is("id"));
+        assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
     }
 }

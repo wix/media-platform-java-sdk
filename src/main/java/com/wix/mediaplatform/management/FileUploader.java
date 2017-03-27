@@ -4,6 +4,7 @@ import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
+import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.apache.http.HttpEntity;
@@ -23,15 +24,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileUploader {
 
-    private final AuthenticatedHTTPClient AuthenticatedHTTPClient;
+    private final AuthenticatedHTTPClient authenticatedHTTPClient;
 
     private final String uploadUrlEndpoint;
 
     public FileUploader(Configuration configuration, AuthenticatedHTTPClient AuthenticatedHTTPClient) {
 
-        this.AuthenticatedHTTPClient = AuthenticatedHTTPClient;
+        this.authenticatedHTTPClient = AuthenticatedHTTPClient;
 
-        this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/files/upload/url";
+        this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/_api/files/upload/url";
     }
 
     public GetUploadUrlResponse getUploadUrl(@Nullable UploadUrlRequest uploadUrlRequest) throws IOException, UnauthorizedException, URISyntaxException {
@@ -40,7 +41,12 @@ public class FileUploader {
             params = uploadUrlRequest.toParams();
         }
 
-        return AuthenticatedHTTPClient.get(uploadUrlEndpoint, params, GET_UPLOAD_URL_REST_RESPONSE);
+        RestResponse<GetUploadUrlResponse> restResponse = authenticatedHTTPClient.get(
+                uploadUrlEndpoint,
+                params,
+                GET_UPLOAD_URL_REST_RESPONSE);
+
+        return restResponse.getPayload();
     }
 
     public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, File source, @Nullable String acl) throws IOException, UnauthorizedException, URISyntaxException {
@@ -54,7 +60,12 @@ public class FileUploader {
 
         HttpEntity form = multipartEntityBuilder.build();
 
-        return AuthenticatedHTTPClient.post(uploadUrlResponse.getUploadUrl(), form, FILE_DESCRIPTORS_REST_RESPONSE);
+        RestResponse<FileDescriptor[]> restResponse = authenticatedHTTPClient.post(
+                uploadUrlResponse.getUploadUrl(),
+                form,
+                FILE_DESCRIPTORS_REST_RESPONSE);
+
+        return restResponse.getPayload();
     }
 
     public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source, @Nullable String acl) throws IOException, UnauthorizedException, URISyntaxException {
@@ -68,7 +79,7 @@ public class FileUploader {
 
         HttpEntity form = multipartEntityBuilder.build();
 
-        return AuthenticatedHTTPClient.post(uploadUrlResponse.getUploadUrl(), form, FILE_DESCRIPTORS_REST_RESPONSE);
+        return authenticatedHTTPClient.post(uploadUrlResponse.getUploadUrl(), form, FILE_DESCRIPTORS_REST_RESPONSE);
     }
 
     private MultipartEntityBuilder prepareForm(String path, String mimeType, @Nullable String acl, GetUploadUrlResponse uploadUrlResponse) {
