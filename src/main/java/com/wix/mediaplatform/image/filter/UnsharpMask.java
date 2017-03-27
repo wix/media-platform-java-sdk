@@ -40,7 +40,7 @@ public class UnsharpMask extends Option {
 
     @Override
     public String serialize() {
-        return KEY + UNDERSCORE + DECIMAL_FORMAT.format(radius) + UNDERSCORE + DECIMAL_FORMAT.format(amount) + UNDERSCORE + DECIMAL_FORMAT.format(threshold);
+        return KEY + UNDERSCORE + decimalString(radius) + UNDERSCORE + decimalString(amount) + UNDERSCORE + decimalString(threshold);
     }
 
     @Override
