@@ -6,6 +6,7 @@ import com.wix.mediaplatform.dto.request.ListFilesRequest;
 import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
+import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +29,7 @@ public class FileManager {
     public FileManager(Configuration configuration, AuthenticatedHTTPClient authenticatedHttpClient, FileUploader fileUploader) {
         this.authenticatedHttpClient = authenticatedHttpClient;
 
-        this.baseUrl = "https://" + configuration.getDomain();
+        this.baseUrl = "https://" + configuration.getDomain() + "/_api";
 
         this.fileUploader = fileUploader;
     }
@@ -57,7 +58,11 @@ public class FileManager {
     public FileDescriptor getFile(String path) throws UnauthorizedException, IOException, URISyntaxException {
         Map<String, String> params = newHashMap();
         params.put("path", path);
-        return authenticatedHttpClient.get(baseUrl + "/files", params, FILE_DESCRIPTOR_REST_RESPONSE);
+        RestResponse<FileDescriptor> restResponse = authenticatedHttpClient.get(
+                baseUrl + "/files",
+                params,
+                FILE_DESCRIPTOR_REST_RESPONSE);
+        return restResponse.getPayload();
     }
 
     @Nullable
@@ -72,7 +77,12 @@ public class FileManager {
         }
         params.put("path", path);
 
-        return authenticatedHttpClient.get(baseUrl + "/files/ls_dir", params, FILE_LIST_REST_RESPONSE);
+        RestResponse<ListFilesResponse> restResponse = authenticatedHttpClient.get(
+                baseUrl + "/files/ls_dir",
+                params,
+                FILE_LIST_REST_RESPONSE
+        );
+        return restResponse.getPayload();
     }
 
     public void deleteFileByPath(String path) throws UnauthorizedException, IOException, URISyntaxException {

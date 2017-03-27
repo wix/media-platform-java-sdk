@@ -5,7 +5,6 @@ import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
-import com.wix.mediaplatform.dto.request.ListFilesRequest;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Rule;
@@ -30,7 +29,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void listFiles() throws Exception {
-        stubFor(get(urlEqualTo("/files/ls_dir"))
+        stubFor(get(urlEqualTo("/_api/files/ls_dir?path=%2F"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("list-files-response.json")));
@@ -41,37 +40,20 @@ public class FileManagerTest extends BaseTest {
     }
 
     @Test
-    public void listFilesWithOptions() throws Exception {
-        stubFor(get(urlEqualTo("/files/getpage?cursor=cursor&page_size=10&order=-date&parent_folder_id=parentFolderId&media_type=video&tag=tag"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("list-files-response.json")));
-
-        ListFilesResponse response = fileManager.listFiles("userId", new ListFilesRequest()
-                .setOrderBy(ListFilesRequest.OrderBy.date)
-                .descending()
-                .setNextPageToken("cursor")
-                .setPageSize(10)
-        );
-
-        assertThat(response.getFiles().length, is(2));
-    }
-
-    @Test
     public void getFile() throws Exception {
-        stubFor(get(urlEqualTo("/files/fileId"))
+        stubFor(get(urlEqualTo("/_api/files?path=%2Ffile.txt"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-file-image-response.json")));
+                        .withBodyFile("file-descriptor-response.json")));
 
         FileDescriptor file = fileManager.getFile("/file.txt");
 
-        assertThat(file.getId(), is("id"));
+        assertThat(file.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
     }
 
     @Test
     public void deleteFileById() throws Exception {
-        stubFor(delete(urlEqualTo("/files/fileId"))
+        stubFor(delete(urlEqualTo("/_api/files/fileId"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("null-payload-response.json")));
@@ -81,7 +63,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void deleteFileByPath() throws Exception {
-        stubFor(delete(urlEqualTo("/files/fileId"))
+        stubFor(delete(urlEqualTo("/_api/files?path=%2Ffile.txt"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("null-payload-response.json")));

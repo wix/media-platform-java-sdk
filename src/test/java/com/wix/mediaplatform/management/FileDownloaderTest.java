@@ -6,7 +6,7 @@ import com.wix.mediaplatform.configuration.Configuration;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 
 public class FileDownloaderTest extends BaseTest {
 
@@ -18,6 +18,6 @@ public class FileDownloaderTest extends BaseTest {
     public void getDownloadUrlDefault() throws Exception {
         String url = fileDownloader.getDownloadUrl("/file.txt");
 
-        assertThat(url, is("/path_1"));
+        assertThat(url, startsWith("https://localhost:8443/_api/download/file?downloadToken="));
     }
 }
