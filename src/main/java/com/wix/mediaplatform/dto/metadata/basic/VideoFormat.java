@@ -28,4 +28,14 @@ public class VideoFormat {
     public Long getSize() {
         return size;
     }
+
+    @Override
+    public String toString() {
+        return "VideoFormat{" +
+                "formatLongName='" + formatLongName + '\'' +
+                ", duration=" + duration +
+                ", bitrate=" + bitrate +
+                ", size=" + size +
+                '}';
+    }
 }

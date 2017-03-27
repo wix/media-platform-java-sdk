@@ -60,6 +60,21 @@ public class FileDescriptor {
     public Date getDateUpdated() {
         return dateUpdated;
     }
+
+    @Override
+    public String toString() {
+        return "FileDescriptor{" +
+                "id='" + id + '\'' +
+                ", hash='" + hash + '\'' +
+                ", path='" + path + '\'' +
+                ", mimeType='" + mimeType + '\'' +
+                ", type='" + type + '\'' +
+                ", size=" + size +
+                ", acl='" + acl + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", dateUpdated=" + dateUpdated +
+                '}';
+    }
 }
 
 

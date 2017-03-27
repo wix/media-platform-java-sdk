@@ -41,4 +41,16 @@ public class AudioStream {
     public Integer getIndex() {
         return index;
     }
+
+    @Override
+    public String toString() {
+        return "AudioStream{" +
+                "codecLongName='" + codecLongName + '\'' +
+                ", codecTag='" + codecTag + '\'' +
+                ", codecName='" + codecName + '\'' +
+                ", duration=" + duration +
+                ", bitrate=" + bitrate +
+                ", index=" + index +
+                '}';
+    }
 }

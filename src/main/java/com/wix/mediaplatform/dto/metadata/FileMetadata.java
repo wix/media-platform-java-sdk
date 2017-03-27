@@ -14,6 +14,12 @@ public class FileMetadata {
     public FileMetadata() {
     }
 
+    public FileMetadata(FileDescriptor fileDescriptor, BasicMetadata basic, Features features) {
+        this.fileDescriptor = fileDescriptor;
+        this.basic = basic;
+        this.features = features;
+    }
+
     public FileDescriptor getFileDescriptor() {
         return fileDescriptor;
     }
@@ -24,5 +30,14 @@ public class FileMetadata {
 
     public Features getFeatures() {
         return features;
+    }
+
+    @Override
+    public String toString() {
+        return "FileMetadata{" +
+                "fileDescriptor=" + fileDescriptor +
+                ", basic=" + basic +
+                ", features=" + features +
+                '}';
     }
 }

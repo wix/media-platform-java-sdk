@@ -34,4 +34,15 @@ public class Color {
     public Float getScore() {
         return score;
     }
+
+    @Override
+    public String toString() {
+        return "Color{" +
+                "r=" + r +
+                ", g=" + g +
+                ", b=" + b +
+                ", pixelFraction=" + pixelFraction +
+                ", score=" + score +
+                '}';
+    }
 }

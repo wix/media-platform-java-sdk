@@ -76,4 +76,22 @@ public class VideoStream {
     public String getDisplayAspectRatio() {
         return displayAspectRatio;
     }
+
+    @Override
+    public String toString() {
+        return "VideoStream{" +
+                "codecLongName='" + codecLongName + '\'' +
+                ", codecTag='" + codecTag + '\'' +
+                ", codecName='" + codecName + '\'' +
+                ", height=" + height +
+                ", width=" + width +
+                ", duration=" + duration +
+                ", bitrate=" + bitrate +
+                ", index=" + index +
+                ", rFrameRate='" + rFrameRate + '\'' +
+                ", avgFrameRate='" + avgFrameRate + '\'' +
+                ", smapleAspectRatio='" + smapleAspectRatio + '\'' +
+                ", displayAspectRatio='" + displayAspectRatio + '\'' +
+                '}';
+    }
 }

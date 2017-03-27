@@ -1,6 +1,8 @@
 package com.wix.mediaplatform.dto.metadata.basic;
 
 
+import java.util.Arrays;
+
 public class VideoBasicMetadata implements BasicMetadata {
 
     private Boolean interlaced;
@@ -28,5 +30,15 @@ public class VideoBasicMetadata implements BasicMetadata {
 
     public VideoFormat getFormat() {
         return format;
+    }
+
+    @Override
+    public String toString() {
+        return "VideoBasicMetadata{" +
+                "interlaced=" + interlaced +
+                ", videoStreams=" + Arrays.toString(videoStreams) +
+                ", audioStreams=" + Arrays.toString(audioStreams) +
+                ", format=" + format +
+                '}';
     }
 }

@@ -28,4 +28,14 @@ public class Rectangle {
     public Integer getHeight() {
         return height;
     }
+
+    @Override
+    public String toString() {
+        return "Rectangle{" +
+                "x=" + x +
+                ", y=" + y +
+                ", width=" + width +
+                ", height=" + height +
+                '}';
+    }
 }

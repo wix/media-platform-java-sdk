@@ -79,7 +79,12 @@ public class FileUploader {
 
         HttpEntity form = multipartEntityBuilder.build();
 
-        return authenticatedHTTPClient.post(uploadUrlResponse.getUploadUrl(), form, FILE_DESCRIPTORS_REST_RESPONSE);
+        RestResponse<FileDescriptor[]> restResponse = authenticatedHTTPClient.post(
+                uploadUrlResponse.getUploadUrl(),
+                form,
+                FILE_DESCRIPTORS_REST_RESPONSE);
+
+        return restResponse.getPayload();
     }
 
     private MultipartEntityBuilder prepareForm(String path, String mimeType, @Nullable String acl, GetUploadUrlResponse uploadUrlResponse) {

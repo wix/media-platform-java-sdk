@@ -5,6 +5,8 @@ import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+import com.wix.mediaplatform.dto.metadata.FileMetadata;
+import com.wix.mediaplatform.dto.request.CreateFileRequest;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Rule;
@@ -28,15 +30,17 @@ public class FileManagerTest extends BaseTest {
     private FileManager fileManager = new FileManager(configuration, authenticatedHttpClient, fileUploader);
 
     @Test
-    public void listFiles() throws Exception {
-        stubFor(get(urlEqualTo("/_api/files/ls_dir?path=%2F"))
+    public void createFile() throws Exception {
+        stubFor(post(urlEqualTo("/_api/files"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("list-files-response.json")));
+                        .withBodyFile("file-descriptor-response.json")));
 
-        ListFilesResponse response = fileManager.listFiles("/", null);
+        FileDescriptor fileDescriptor = fileManager.createFile(new CreateFileRequest()
+                .setPath("/")
+        );
 
-        assertThat(response.getFiles().length, is(2));
+        assertThat(fileDescriptor.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
     }
 
     @Test
@@ -49,6 +53,42 @@ public class FileManagerTest extends BaseTest {
         FileDescriptor file = fileManager.getFile("/file.txt");
 
         assertThat(file.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
+    }
+
+    @Test
+    public void getFileMetadataByIdImage() throws Exception {
+        stubFor(get(urlEqualTo("/_api/files/id/metadata"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-metadata-image-response.json")));
+
+        FileMetadata file = fileManager.getFileMetadataById("id");
+
+        assertThat(file.getFileDescriptor().getId(), is("2145ae56cd5c47c79c05d4cfef5f1078"));
+    }
+
+    @Test
+    public void getFileMetadataByIdVideo() throws Exception {
+        stubFor(get(urlEqualTo("/_api/files/id/metadata"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-metadata-video-response.json")));
+
+        FileMetadata file = fileManager.getFileMetadataById("id");
+
+        assertThat(file.getFileDescriptor().getId(), is("2de4305552004e0b9076183651030646"));
+    }
+
+    @Test
+    public void listFiles() throws Exception {
+        stubFor(get(urlEqualTo("/_api/files/ls_dir?path=%2F"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("list-files-response.json")));
+
+        ListFilesResponse response = fileManager.listFiles("/", null);
+
+        assertThat(response.getFiles().length, is(2));
     }
 
     @Test

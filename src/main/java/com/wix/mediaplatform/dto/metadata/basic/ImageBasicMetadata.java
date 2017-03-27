@@ -28,4 +28,14 @@ public class ImageBasicMetadata implements BasicMetadata {
     public String getFormat() {
         return format;
     }
+
+    @Override
+    public String toString() {
+        return "ImageBasicMetadata{" +
+                "height=" + height +
+                ", width=" + width +
+                ", colorspace='" + colorspace + '\'' +
+                ", format='" + format + '\'' +
+                '}';
+    }
 }

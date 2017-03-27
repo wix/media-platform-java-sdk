@@ -2,6 +2,8 @@ package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+import com.wix.mediaplatform.dto.metadata.FileMetadata;
+import com.wix.mediaplatform.dto.request.CreateFileRequest;
 import com.wix.mediaplatform.dto.request.ListFilesRequest;
 import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
@@ -17,8 +19,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.wix.mediaplatform.gson.Types.FILE_DESCRIPTOR_REST_RESPONSE;
-import static com.wix.mediaplatform.gson.Types.FILE_LIST_REST_RESPONSE;
+import static com.wix.mediaplatform.gson.Types.*;
 
 public class FileManager {
 
@@ -50,8 +51,14 @@ public class FileManager {
         return fileUploader.uploadFile(path, mimeType, fileName, source, acl);
     }
 
-    public FileDescriptor createFile(FileDescriptor fileDescriptor) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHttpClient.post(baseUrl + "/files", fileDescriptor, null, FILE_DESCRIPTOR_REST_RESPONSE);
+    public FileDescriptor createFile(CreateFileRequest createFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        RestResponse<FileDescriptor> restResponse = authenticatedHttpClient.post(
+                baseUrl + "/files",
+                createFileRequest,
+                null,
+                FILE_DESCRIPTOR_REST_RESPONSE);
+
+        return restResponse.getPayload();
     }
 
     @Nullable
@@ -66,8 +73,13 @@ public class FileManager {
     }
 
     @Nullable
-    public FileDescriptor getFileMetadataById(String fileId) throws UnauthorizedException, IOException, URISyntaxException {
-        return authenticatedHttpClient.get(baseUrl + "/files/" + fileId + "/metadata", null, FILE_DESCRIPTOR_REST_RESPONSE);
+    public FileMetadata getFileMetadataById(String fileId) throws UnauthorizedException, IOException, URISyntaxException {
+        RestResponse<FileMetadata> restResponse = authenticatedHttpClient.get(
+                baseUrl + "/files/" + fileId + "/metadata",
+                null,
+                FILE_METADATA_REST_RESPONSE);
+
+        return restResponse.getPayload();
     }
 
     public ListFilesResponse listFiles(String path, @Nullable ListFilesRequest listFilesRequest) throws UnauthorizedException, IOException, URISyntaxException {
