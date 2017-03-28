@@ -84,6 +84,26 @@ public class FileUploaderTest extends BaseTest {
     }
 
     @Test
+    public void uploadSecureImageFromFile() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+
+        stubFor(get(urlEqualTo("/files/upload/url"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
+        stubFor(post(urlEqualTo("/upload"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("secure-image-upload-response.json")));
+
+        @SuppressWarnings("ConstantConditions")
+        File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
+        ImageDTO imageDTO = fileUploader.uploadImage("userId", file, null);
+
+        assertThat(imageDTO.getHeight(), is(17));
+    }
+
+    @Test
     public void uploadImageFromFileWithUploadRequest() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
