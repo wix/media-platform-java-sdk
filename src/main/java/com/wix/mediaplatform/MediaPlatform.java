@@ -70,9 +70,13 @@ public class MediaPlatform {
         return new GsonBuilder()
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(FileDTO.class, "media_type")
                         .registerSubtype(ImageDTO.class, "picture")
+                        .registerSubtype(ImageDTO.class, "secure_picture")
                         .registerSubtype(VideoDTO.class, "video")
+                        .registerSubtype(VideoDTO.class, "secure_video")
                         .registerSubtype(AudioDTO.class, "music")
-                        .registerSubtype(DocumentDTO.class, "document"))
+                        .registerSubtype(AudioDTO.class, "secure_music")
+                        .registerSubtype(DocumentDTO.class, "document")
+                        .registerSubtype(DocumentDTO.class, "secure_document"))
                 .create();
     }
 
