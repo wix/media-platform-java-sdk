@@ -7,8 +7,12 @@ import com.wix.mediaplatform.collection.CollectionManager;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.FileDTO;
 import com.wix.mediaplatform.dto.audio.AudioDTO;
+import com.wix.mediaplatform.dto.audio.SecureAudioDTO;
 import com.wix.mediaplatform.dto.document.DocumentDTO;
+import com.wix.mediaplatform.dto.document.SecureDocumentDTO;
 import com.wix.mediaplatform.dto.image.ImageDTO;
+import com.wix.mediaplatform.dto.image.SecureImageDTO;
+import com.wix.mediaplatform.dto.video.SecureVideoDTO;
 import com.wix.mediaplatform.dto.video.VideoDTO;
 import com.wix.mediaplatform.filedownloader.FileDownloader;
 import com.wix.mediaplatform.fileuploader.FileUploader;
@@ -70,13 +74,14 @@ public class MediaPlatform {
         return new GsonBuilder()
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(FileDTO.class, "media_type")
                         .registerSubtype(ImageDTO.class, "picture")
-                        .registerSubtype(ImageDTO.class, "secure_picture")
+                        .registerSubtype(SecureImageDTO.class, "secure_picture")
                         .registerSubtype(VideoDTO.class, "video")
-                        .registerSubtype(VideoDTO.class, "secure_video")
+                        .registerSubtype(SecureVideoDTO.class, "secure_video")
                         .registerSubtype(AudioDTO.class, "music")
-                        .registerSubtype(AudioDTO.class, "secure_music")
+                        .registerSubtype(SecureAudioDTO.class, "secure_music")
                         .registerSubtype(DocumentDTO.class, "document")
-                        .registerSubtype(DocumentDTO.class, "secure_document"))
+                        .registerSubtype(SecureDocumentDTO.class, "secure_document")
+                )
                 .create();
     }
 

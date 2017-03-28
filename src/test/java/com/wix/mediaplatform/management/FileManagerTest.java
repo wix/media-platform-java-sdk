@@ -78,6 +78,19 @@ public class FileManagerTest extends BaseTest {
     }
 
     @Test
+    public void getSecureImageFile() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(get(urlEqualTo("/files/fileId"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-file-secure-image-response.json")));
+
+        ImageDTO file = (ImageDTO) fileManager.getFile("userId", "fileId");
+
+        assertThat(file.getAnalysis().getFaces().toArray(new ImageDTO.Square[1])[0].getHeight(), is(207));
+    }
+
+    @Test
     public void updateFile() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
         stubFor(put(urlEqualTo("/files/fileId"))
