@@ -9,6 +9,8 @@ import com.wix.mediaplatform.dto.audio.AudioDTO;
 import com.wix.mediaplatform.dto.folder.FolderDTO;
 import com.wix.mediaplatform.dto.image.ImageDTO;
 import com.wix.mediaplatform.dto.management.*;
+import com.wix.mediaplatform.dto.management.watermark.Gravity;
+import com.wix.mediaplatform.dto.management.watermark.SourceImage;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Rule;
 import org.junit.Test;
@@ -184,5 +186,29 @@ public class FileManagerTest extends BaseTest {
                         .withBody("{}")));
 
         fileManager.deleteFolder("userId", "folderId");
+    }
+
+    @Test
+    public void createWatermarks() throws Exception {
+        when(authenticationFacade.getHeader("userId")).thenReturn("header");
+        stubFor(post(urlEqualTo("/files/wm"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("watermark-response.json")));
+
+        WatermarkRequest watermarkRequest = new WatermarkRequest()
+                .addSourceImages(new SourceImage()
+                        .setFileName("source.png")
+                        .setGravity(Gravity.Center)
+                        .setOpacity(10)
+                        .setScale(10f)
+                        .setWatermark("watermark.jpg"))
+                .setGravity(Gravity.Center)
+                .setOpacity(10)
+                .setScale(10f)
+                .setWatermark("watermark.jpg");
+        WatermarkResponse response = fileManager.createWatermarks("userId", watermarkRequest);
+
+        assertThat(response.getWatermark(), is("e66d82_d86fbbe72336468e9fbae571970c7f02.png"));
     }
 }

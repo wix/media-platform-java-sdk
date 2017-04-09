@@ -61,4 +61,8 @@ public class FileManager {
     public void deleteFolder(String userId, String folderId) throws UnauthorizedException, IOException, URISyntaxException {
         authenticatedHTTPClient.delete(userId, baseUrl + "/folders/" + folderId, null, null);
     }
+
+    public WatermarkResponse createWatermarks(String userId, WatermarkRequest watermarkRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        return authenticatedHTTPClient.post(userId, baseUrl + "/files/wm", watermarkRequest, null, WatermarkResponse.class);
+    }
 }

@@ -1,0 +1,22 @@
+{
+  "files": [{
+    "wm_man": "e66d82_d86fbbe72336468e9fbae571970c7f02.png-75-1-100",
+    "file_name": "e66d82_00001e039ffe94a96a275f20939288cb50001.jpg",
+    "wm": "e66d82_d86fbbe72336468e9fbae571970c7f02.png",
+    "wmscl": 100,
+    "wmop": 85,
+    "wmpos": 5
+  },
+    {
+      "wm_man": "e66d82_d86fbbe72336468e9fbae571970c7f02.png-75-1-100",
+      "file_name": "e66d82_00002e039ffe94a96a275f20939288cb50002.jpg",
+      "wm": "e66d82_d86fbbe72336468e9fbae571970c7f02.png",
+      "wmscl": 100,
+      "wmop": 75,
+      "wmpos": 1
+    }],
+  "wmop": 75,
+  "wm": "e66d82_d86fbbe72336468e9fbae571970c7f02.png",
+  "wmpos": 5,
+  "wmscl": 100
+}
