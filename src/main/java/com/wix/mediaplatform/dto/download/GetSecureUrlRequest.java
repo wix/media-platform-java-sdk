@@ -20,24 +20,27 @@ public class GetSecureUrlRequest {
 
     private String resize;
 
+    private String namespace;
+
     public GetSecureUrlRequest() {
     }
 
     public GetSecureUrlRequest(String fileId, Set<String> encoding, @Nullable Integer expiresIn, @Nullable String saveAs, @Nullable String expiredRedirectUrl) {
         this.fileId = fileId;
-        this.expiresIn = expiresIn;
         this.encoding = encoding;
+        this.expiresIn = expiresIn;
         this.saveAs = saveAs;
         this.expiredRedirectUrl = expiredRedirectUrl;
     }
 
     public GetSecureUrlRequest(String fileId, Set<String> encoding, @Nullable Integer expiresIn, @Nullable String saveAs, @Nullable String expiredRedirectUrl, @Nullable String resize) {
-        this.fileId = fileId;
-        this.encoding = encoding;
-        this.expiresIn = expiresIn;
-        this.saveAs = saveAs;
-        this.expiredRedirectUrl = expiredRedirectUrl;
+        this(fileId, encoding, expiresIn, saveAs, expiredRedirectUrl);
         this.resize = resize;
+    }
+
+    public GetSecureUrlRequest(String fileId, Set<String> encoding, @Nullable Integer expiresIn, @Nullable String saveAs, @Nullable String expiredRedirectUrl, @Nullable String resize, @Nullable String namespace) {
+        this(fileId, encoding, expiresIn, saveAs, expiredRedirectUrl, resize);
+        this.namespace = namespace;
     }
 
     public GetSecureUrlRequest setFileId(String fileId) {
@@ -75,6 +78,11 @@ public class GetSecureUrlRequest {
         return this;
     }
 
+    public GetSecureUrlRequest setNamespace(String namespace) {
+        this.namespace = namespace;
+        return this;
+    }
+
     public String getFileId() {
         return fileId;
     }
@@ -101,5 +109,10 @@ public class GetSecureUrlRequest {
     @Nullable
     public String getResize() {
         return resize;
+    }
+
+    @Nullable
+    public String getNamespace() {
+        return namespace;
     }
 }

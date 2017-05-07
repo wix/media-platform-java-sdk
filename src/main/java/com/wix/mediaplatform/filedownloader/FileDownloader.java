@@ -41,6 +41,9 @@ public class FileDownloader {
         if (getSecureUrlRequest.getResize() != null) {
             additionalClaims.put("resize", getSecureUrlRequest.getResize());
         }
+        if (getSecureUrlRequest.getNamespace() != null) {
+            additionalClaims.put("ns", getSecureUrlRequest.getNamespace());
+        }
 
         return authenticatedHTTPClient.postWithSelfSignedToken(userId, baseUrl + "/secure-files/" + getSecureUrlRequest.getFileId() + "/tickets/create", null, additionalClaims, GetSecureUrlResponse[].class);
     }
