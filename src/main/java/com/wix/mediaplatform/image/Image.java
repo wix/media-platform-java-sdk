@@ -6,6 +6,7 @@ import com.wix.mediaplatform.image.encoder.JPEG;
 import com.wix.mediaplatform.image.filter.*;
 import com.wix.mediaplatform.image.framing.Crop;
 import com.wix.mediaplatform.image.framing.Frame;
+import com.wix.mediaplatform.image.framing.SmartCrop;
 import com.wix.mediaplatform.image.parser.FileDescriptorParser;
 import com.wix.mediaplatform.image.parser.FileMetadataParser;
 import com.wix.mediaplatform.image.parser.ImageUrlParser;
@@ -64,6 +65,11 @@ public class Image {
 
     public Image crop(int width, int height, int x, int y, float scaleFactor) {
         this.frame = new Crop(x, y, width, height, scaleFactor);
+        return this;
+    }
+
+    public Image smartCrop(int width, int height) {
+        this.frame = new SmartCrop(width, height);
         return this;
     }
 

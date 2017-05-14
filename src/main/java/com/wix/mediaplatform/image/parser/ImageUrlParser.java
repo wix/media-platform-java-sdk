@@ -123,6 +123,9 @@ public class ImageUrlParser {
     }
 
     private static Method findMethod(Image image, String methodName) {
+        if ("scrop".equals(methodName)) {
+            methodName = "smartCrop";
+        }
         Method[] methods = image.getClass().getMethods();
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {

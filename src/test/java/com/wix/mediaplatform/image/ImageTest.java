@@ -40,6 +40,22 @@ public class ImageTest {
     }
 
     @Test
+    public void smartCrop() throws Exception {
+        String url = new Image("//test.com/file.jpeg/v1/crop/w_709,h_400,x_1,y_2,scl_1,q_75,usm_0.5_0.2_0.0/file.jpeg")
+                .smartCrop(100, 200)
+                .toUrl();
+
+        assertThat(url, is("//test.com/file.jpeg/v1/scrop/w_100,h_200,q_75,usm_0.50_0.20_0.00/file.jpeg"));
+    }
+
+    @Test
+    public void parseSmartCrop() throws Exception {
+        String url = new Image("//test.com/file.jpeg/v1/scrop/w_100,h_200,q_75,usm_0.50_0.20_0.00/file.jpeg").toUrl();
+
+        assertThat(url, is("//test.com/file.jpeg/v1/scrop/w_100,h_200,q_75,usm_0.50_0.20_0.00/file.jpeg"));
+    }
+
+    @Test
     public void acceptsHTTP() throws Exception {
         String url = new Image("http://test.com/1111/images/324234/v1/crop/w_709,h_400,x_1,y_2,scl_1/file.png#w_1000,h_2000,mt_image%2Fpng").toUrl();
 
