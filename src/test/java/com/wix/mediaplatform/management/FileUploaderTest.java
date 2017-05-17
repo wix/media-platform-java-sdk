@@ -36,7 +36,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void getUploadUrl() throws Exception {
-        stubFor(get(urlEqualTo("/_api/files/upload/url"))
+        stubFor(get(urlEqualTo("/_api/upload/url"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-upload-url-response.json")));
@@ -49,7 +49,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void uploadFile() throws Exception {
-        stubFor(get(urlEqualTo("/_api/files/upload/url?path=%2Fa%2Fnew.txt&mimeType=text%2Fplain"))
+        stubFor(get(urlEqualTo("/_api/upload/url?path=%2Fa%2Fnew.txt&mimeType=text%2Fplain"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-upload-url-response.json")));

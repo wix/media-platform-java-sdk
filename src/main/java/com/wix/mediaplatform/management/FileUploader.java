@@ -32,7 +32,7 @@ public class FileUploader {
 
         this.authenticatedHTTPClient = AuthenticatedHTTPClient;
 
-        this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/_api/files/upload/url";
+        this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/_api/upload/url";
     }
 
     public GetUploadUrlResponse getUploadUrl(@Nullable UploadUrlRequest uploadUrlRequest) throws IOException, UnauthorizedException, URISyntaxException {

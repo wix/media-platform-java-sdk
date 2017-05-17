@@ -13,6 +13,7 @@ import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -48,6 +49,10 @@ public class FileManager {
     }
 
     public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source, String acl) throws UnauthorizedException, IOException, URISyntaxException {
+        return fileUploader.uploadFile(path, mimeType, fileName, source, acl);
+    }
+
+    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, File source, String acl) throws UnauthorizedException, IOException, URISyntaxException {
         return fileUploader.uploadFile(path, mimeType, fileName, source, acl);
     }
 
