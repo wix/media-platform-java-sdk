@@ -44,8 +44,9 @@ public class Image {
         FileMetadataParser.parse(this, fileMetadata);
     }
 
-    public void setHost(String host) {
+    public Image setHost(String host) {
         this.host = host;
+        return this;
     }
 
     public Image setPath(String path) {
