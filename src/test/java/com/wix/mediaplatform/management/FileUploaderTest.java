@@ -81,7 +81,7 @@ public class FileUploaderTest extends BaseTest {
                         .setDirectory("/fish"));
         Job job = fileUploader.importFile(importFileRequest);
 
-        System.out.println(job.toString());
+        assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
     }
 
     @Test
@@ -98,6 +98,6 @@ public class FileUploaderTest extends BaseTest {
                         .setDirectory("/fish"));
         Job job = fileUploader.importFile(importFileRequest);
 
-        System.out.println(job.toString());
+        assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
     }
 }
