@@ -1,9 +1,11 @@
 package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.dto.request.CreateFileRequest;
+import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.request.ListFilesRequest;
 import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
@@ -54,6 +56,10 @@ public class FileManager {
 
     public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, File source, String acl) throws UnauthorizedException, IOException, URISyntaxException {
         return fileUploader.uploadFile(path, mimeType, fileName, source, acl);
+    }
+
+    public Job importFile(ImportFileRequest importFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        return fileUploader.importFile(importFileRequest);
     }
 
     public FileDescriptor createFile(CreateFileRequest createFileRequest) throws UnauthorizedException, IOException, URISyntaxException {

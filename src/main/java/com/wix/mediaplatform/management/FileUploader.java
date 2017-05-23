@@ -1,7 +1,9 @@
 package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.response.RestResponse;
@@ -18,8 +20,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import static com.wix.mediaplatform.gson.Types.FILE_DESCRIPTORS_REST_RESPONSE;
-import static com.wix.mediaplatform.gson.Types.GET_UPLOAD_URL_REST_RESPONSE;
+import static com.wix.mediaplatform.gson.Types.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileUploader {
@@ -28,9 +29,13 @@ public class FileUploader {
 
     private final String uploadUrlEndpoint;
 
+    private final String apiBaseUrl;
+
     public FileUploader(Configuration configuration, AuthenticatedHTTPClient AuthenticatedHTTPClient) {
 
         this.authenticatedHTTPClient = AuthenticatedHTTPClient;
+
+        this.apiBaseUrl = "https://" + configuration.getDomain() + "/_api";
 
         this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/_api/upload/url";
     }
@@ -83,6 +88,16 @@ public class FileUploader {
                 uploadUrlResponse.getUploadUrl(),
                 form,
                 FILE_DESCRIPTORS_REST_RESPONSE);
+
+        return restResponse.getPayload();
+    }
+
+    public Job importFile(ImportFileRequest importFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+        RestResponse<Job> restResponse = authenticatedHTTPClient.post(
+                apiBaseUrl + "/import/file",
+                importFileRequest,
+                null,
+                JOB_REST_RESPONSE);
 
         return restResponse.getPayload();
     }

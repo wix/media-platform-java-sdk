@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.dto.job.FileImportJob;
+import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
-import com.wix.mediaplatform.gson.FileMetadataJsonDeserializaer;
+import com.wix.mediaplatform.gson.FileMetadataJsonDeserializer;
+import com.wix.mediaplatform.gson.RuntimeTypeAdapterFactory;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.management.FileDownloader;
 import com.wix.mediaplatform.management.FileManager;
@@ -46,7 +49,9 @@ public class MediaPlatform {
 
     public static Gson getGson() {
         return new GsonBuilder()
-                .registerTypeAdapter(FileMetadata.class, new FileMetadataJsonDeserializaer())
+                .registerTypeAdapter(FileMetadata.class, new FileMetadataJsonDeserializer())
+                .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Job.class, "type")
+                        .registerSubtype(FileImportJob.class, "urn:job:import.file"))
                 .create();
     }
 

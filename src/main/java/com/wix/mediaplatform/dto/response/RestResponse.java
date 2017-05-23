@@ -19,4 +19,13 @@ public class RestResponse<T> {
     public T getPayload() {
         return payload;
     }
+
+    @Override
+    public String toString() {
+        return "RestResponse{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", payload=" + payload +
+                '}';
+    }
 }

@@ -14,7 +14,7 @@ import com.wix.mediaplatform.dto.metadata.features.ImageFeatures;
 
 import java.lang.reflect.Type;
 
-public class FileMetadataJsonDeserializaer implements JsonDeserializer<FileMetadata> {
+public class FileMetadataJsonDeserializer implements JsonDeserializer<FileMetadata> {
 
     @Override
     public FileMetadata deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

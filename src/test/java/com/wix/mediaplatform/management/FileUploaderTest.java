@@ -5,7 +5,10 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.dto.job.Destination;
+import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Before;
@@ -62,5 +65,39 @@ public class FileUploaderTest extends BaseTest {
         FileDescriptor[] files = fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
 
         assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void importFilePending() throws Exception {
+        stubFor(post(urlEqualTo("/_api/import/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("import-file-pending-response.json")));
+
+        ImportFileRequest importFileRequest = new ImportFileRequest()
+                .setSourceUrl("http://source.url")
+                .setDestination(new Destination()
+                        .setAcl("public")
+                        .setDirectory("/fish"));
+        Job job = fileUploader.importFile(importFileRequest);
+
+        System.out.println(job.toString());
+    }
+
+    @Test
+    public void importFileSuccess() throws Exception {
+        stubFor(post(urlEqualTo("/_api/import/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("import-file-success-response.json")));
+
+        ImportFileRequest importFileRequest = new ImportFileRequest()
+                .setSourceUrl("http://source.url")
+                .setDestination(new Destination()
+                        .setAcl("public")
+                        .setDirectory("/fish"));
+        Job job = fileUploader.importFile(importFileRequest);
+
+        System.out.println(job.toString());
     }
 }
