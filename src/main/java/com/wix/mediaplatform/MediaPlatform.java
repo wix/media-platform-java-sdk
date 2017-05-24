@@ -13,6 +13,7 @@ import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.management.FileDownloader;
 import com.wix.mediaplatform.management.FileManager;
 import com.wix.mediaplatform.management.FileUploader;
+import com.wix.mediaplatform.management.JobManager;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -22,6 +23,8 @@ public class MediaPlatform {
     private final FileDownloader fileDownloader;
 
     private final FileManager fileManager;
+
+    private final JobManager jobManager;
 
     public MediaPlatform(String domain, String appId, String sharedSecret, HttpClient httpClient) {
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
@@ -33,6 +36,7 @@ public class MediaPlatform {
         FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient);
         this.fileDownloader = new FileDownloader(configuration, authenticator);
         this.fileManager = new FileManager(configuration, authenticatedHTTPClient, fileUploader);
+        this.jobManager = new JobManager(configuration, authenticatedHTTPClient);
     }
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
@@ -45,6 +49,10 @@ public class MediaPlatform {
 
     public FileManager fileManager() {
         return fileManager;
+    }
+
+    public JobManager jobManager() {
+        return jobManager;
     }
 
     public static Gson getGson() {
