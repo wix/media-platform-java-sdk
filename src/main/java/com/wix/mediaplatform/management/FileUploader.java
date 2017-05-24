@@ -31,9 +31,9 @@ public class FileUploader {
 
     private final String apiBaseUrl;
 
-    public FileUploader(Configuration configuration, AuthenticatedHTTPClient AuthenticatedHTTPClient) {
+    public FileUploader(Configuration configuration, AuthenticatedHTTPClient authenticatedHTTPClient) {
 
-        this.authenticatedHTTPClient = AuthenticatedHTTPClient;
+        this.authenticatedHTTPClient = authenticatedHTTPClient;
 
         this.apiBaseUrl = "https://" + configuration.getDomain() + "/_api";
 
