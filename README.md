@@ -2,35 +2,11 @@
 
 [![MVN version][mvn-image]][mvn-url]
 
-[Wix Media Platform](https://www.wixmp.com/) is a collection of services for storing, serving, uploading, and managing image, audio, and video files.
-
-## Image
-
-Wix Media Platform provides powerful image-processing services that support resizing, cropping, rotating, sharpening, and face-detection, as well as offering a number of filters and adjustments. Images can be easily served with on-the-fly manipulations using the Wix Media Platform SDKs or Image API.
-
-See it in [action.](https://app.wixmp.com/dashboard/index.html)
-
-## Audio
-
-Wix Media Platform provides storage for professional, high-quality audio files that can then be used in commercial music-selling applications.
-
-## Video
-
-Video files uploaded to Wix Media Platform are automatically transcoded into additional formats of various qualities, enabling video playback on any browser or Internet-connected device.
-
-For video playback see [Vidi](https://github.com/wix/vidi) - Adaptive video playback library.
-
-## Documents
-
-In addition, Wix Media Platform supports uploading and distribution of documents such as Excel and Word.
+[Wix Media Platform][wixmp-url] is a collection of services for storing, serving, uploading, and managing media files and any files in general
 
 # Java SDK
 
 This artifact is a Java library, compatible with Java 7+.
-
-## JavaScript SDK
-
-The respective JavaScript (for the Browser and Node.js) library can be found [here.](https://github.com/wix/media-platform-js-sdk)
 
 ## Installation
 
@@ -38,113 +14,58 @@ The respective JavaScript (for the Browser and Node.js) library can be found [he
 <dependency>
     <groupId>com.wix</groupId>
     <artifactId>media-platform-java-sdk</artifactId>
-    <version>[1.3,2.0)</version>
+    <version>[5.0,6.0)</version>
 </dependency>
 ```
 
-## Instantiating the Media Platform in the Server
+## JavaScript SDK
 
-First, if you haven't done so yet, register at [Wix Media Media Platform](https://app.wixmp.com/dashboard/index.html),
-Once registered you'll be issued with your own API Key, API Secret and API Endpoint.
+The respective JavaScript (for the Browser and Node.js) package can be found [here.][npm-url]
+
+## Instantiating the Media Platform
+
+First, if you haven't done so yet, register at [Wix Media Platform][wixmp-url], create your organization, project and application.
 
 ```java
 MediaPlatform mediaPlatform = new MediaPlatform(
-  "api.wixmp.com",
-  "<API Key as appears in the Dashboard>",
-  "<API Secret as appears in the Dashboard>"
+    "<project host as appears in the application page>",
+    "<application id as appears in the application page>",
+    "<shared secret as appears in the application page>"
 );
 ```
 
 ## File Upload
 
-### Server
-
 ```java
-FileUploader fileUploader = mediaPlatform.fileUploader();
-
 File file = new File(...);
-UploadRequest uploadRequest = new UploadRequest(newHashSet("fish", "cat"), "folderId");
-
-ImageDTO imageDTO = fileUploader.uploadImage("userId", file, uploadRequest || null);
-
-AudioDTO audioDTO = fileUploader.uploadAudio("userId", file, uploadRequest || null);
-
-DocumentDTO documentDTO = fileUploader.uploadDocument("userId", file, uploadRequest || null);
-
-EncodingOptions encodingOptions = new EncodingOptions(newHashSet(EncodingOptions.VideoFormat.MP4), true, true, EncodingOptions.AudioFormat.M4A, EncodingOptions.ImageFormat.JPEG);
-VideoDTO videoDTO = fileUploader.uploadVideo("userId", file, uploadRequest || null, encodingOptions || null);
-
-/**
-* Import a file from a remote source
-*/
-ImportFileRequest importFileRequest = new ImportFileRequest().setMediaType(MediaType.IMAGE).setUrl("http://this.is/a/url").setName("name.png");
-FileDTO fileDescriptor = fileUploader.importFile("userId", importFileRequest);
+FileDescriptor[] files = mediaPlatform.fileManager().uploadFile("/destination_path/file_name.ext", "mime_type", "file_name.ext", file, "private||public");
 ```
 
-### Browser
+### Get Upload URL
 
-File upload from the browser is a 2 step geometry: 
- 1. First the signed URL and the upload token is retrieved from the server
- 2. Then a multipart/form-data request is made to the URL
-
-In the server expose a url that returns the signed URL and upload token:
+Generates a signed URL and token, required for uploading from the browser
 
 ```java
-protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    GetUploadUrlResponse response = fileUploader.getUploadUrl("userId");
-          
-    response.setContentType("application/json");
-    
-    PrintWriter out = response.getWriter();
-    out.println(gson.toJson(response));
-}
+GetUploadUrlResponse getUploadUrlResponse = mediaPlatform.fileManager().getUploadUrl();
 ```
 
-From the browser GET the URL and POST the form to it, including the token in the form body 
+## File Import
 
-```html
-<!-- Based on the JavaScript SDK -->
+```java
+ImportFileRequest importFileRequest = new ImportFileRequest()
+        .setSourceUrl("from URL")
+        .setDestination(new Destination()
+                .setPath("/to/file.ext")
+                .setAcl("private||public"));
+Job job = mediaPlatform.fileManager().importFile(importFileRequest);
+```
 
-<form id="upload-form" enctype="multipart/form-data" action="" method="post" target="upload-result">
-    <input id="file" name="file" type="file" accept="image/*">
-    <input id="media-type" name="media_type" type="text" value="picture" hidden>
-</form>
-<button id="upload-button">Upload</button>
+## Secure File URL
 
-<script>
-    var button = document.getElementById('upload-button');
-    var form = document.getElementById('upload-form');
-    
-    button.addEventListener('click', function () {
+File access can be restricted by setting the acl to 'private', in order to access them a secure URL must be generated
 
-        mediaPlatform.fileUploader.getUploadUrl(MP.MediaType.IMAGE, function(error, response) {
-            
-            if (error) {
-                alert('Oops! Something went wrong.');
-                return;
-            }
-            
-            var formData = new FormData(form);
-            formData.append('upload_token', response.uploadToken);
-
-            var request = new XMLHttpRequest();
-            request.responseType = 'json';
-            request.addEventListener('load', function (event) {
-                var imageDto = new ImageDTO(event.target.response[0]);
-                var image = MP.image.fromDto('media.wixapps.net', imageDto);
-                var imageUrl = image.crop(800, 200, 1, 1).toUrl();
-                var img = document.createElement('img');
-                img.setAttribute('src', imageUrl.url);
-            });
-            request.addEventListener('error', function (event) {
-                alert('Oops! Something went wrong.');
-            });
-
-            request.open('POST', response.uploadUrl);
-            request.send(formData);
-        })
-})</script>
+```java
+String signedUrl = mediaPlatform.fileDownloader().getDownloadUrl("path/to/file.ext");
 ```
 
 ## Image Consumption
@@ -152,248 +73,33 @@ From the browser GET the URL and POST the form to it, including the token in the
 The SDK provides a programmatic facility to generate image URLs
 
 ```java
-/**
-*ImageDescriptor
-*/
-ImageRequest image = Parser.fromDto("test.wix.com", imageDto);
+Image image = new Image(fileDescriptor).setHost("images service host");
 
-/**
-* A new image request from a previously generated url
-*/
-ImageRequest image = Parser.fromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
+image.crop(width, height, x, y, scale);
 
-/**
-* A new image request from the base url and the file id
-*/
-ImageRequest image = new ImageRequest("media.wixapps.net/wixmedia-samples/images", "000c45e21f8a433cb3b2483dfbb659d8", "image.jpeg", null);
-
-String url = image.fit(500, 500).negative().saturation(-90).toUrl();
-
-/**
-* A pre-configured geometry from a previously generated url
-*/
-Operation geometry = Parser.operationFromUrl("//media.wixapps.net/wixmedia-samples/images/000c45e21f8a433cb3b2483dfbb659d8/v1/fit/w_300,h_200/image.jpg#w_600,h_400,mt_image%2Fjpeg");
-
-String url = imageOperation.negative().saturation(-90).toUrl();
+String url = image.toUrl(); 
 ```
 
-## Secure File URL
+## File Metadata & Management
 
-Files can be secured, in orderBy to access them a secure URL must be generated
+Wix Media Platform exposes a comprehensive set of APIs tailored for the management of files.
+
+### List Files
 
 ```java
-FileDownloader fileDownloader = mediaPlatform.fileDownloader();
-
-GetSecureUrlResponse[] response = fileDownloader.getSecureUrls("userId", new GetSecureUrlRequest()
-    .setFileId("fileId")
-    .addEncoding("src")
-    .setSaveAs("fish.jpg")
-);
+ListFilesResponse response = mediaPlatform.fileManager().listFiles("directory path");
 ```
 
-## File Management
-
-Wix Media Platform exposes a comprehensive set of APIs tailored for the management of previously uploaded files.
+### Get File Metadata
 
 ```java
-FileManager fileManager = mediaPlatform.fileManager();
+FileMetadata fileMetadata = mediaPlatform.fileManager().getFileMetadataById("file id");
 ```
 
-Retrieve a list of uploaded files
+### Delete File
 
 ```java
-ListFilesResponse response = fileManager.listFiles("userId", new ListFilesRequest()
-    .setOrder(ListFilesRequest.OrderBy.date)
-    .descending()
-    .setCursor("nextPageToken")
-    .setSize(10)
-    .setMediaType(MediaType.VIDEO)
-    .setParentFolderId("parentFolderId")
-    .setTag("tag"));
-```
-
-Get an uploaded file metadata 
-
-(*does not return the actual file*)
-
-```java
-ImageDTO file = (ImageDTO) fileManager.getFile("userId", "fileId");
-```
-
-Update a file metadata
-
-```java
-AudioDTO file = (AudioDTO) fileManager.updateFile("userId", "fileId", new UpdateFileRequest()
-    .setOriginalFileName("file")
-    .setParentFolderId("parent")
-    .addTag("tag"));
-```
-
-Delete file
-
-*Warning: The file will no longer be reachable*
-
-```java
-fileManager.deleteFile("userId", "fileId");
-```
-
-### Folder Management
-
-Wix Media Platform supports folders
- 
-List folders
-
-```java
-ListFoldersResponse response = fileManager.listFolders("userId", "folderId" || null);
-```
-
-Create a new folder
-
-```java
-FolderDTO folder = fileManager.newFolder("userId", new NewFolderRequest()
-    .setFolderName("name")
-    .setParentFolderId("parent")
-    .setMediaType(MediaType.DOCUMENT));
-```
-
-Update a folder
-
-```java
-FolderDTO folder = fileManager.updateFolder("userId", "folderId", new UpdateFolderRequest()
-    .setFolderName("name"));
-```
-
-Delete a folder
-
-*this will not delete the folder content*
-
-```java
-fileManager.deleteFolder("userId", "folderId");
-```
-
-## Collection Management
-
-The collection service enables the creation, management and publishing of item groups such as curated image galleries, audio playlist etc.
-
-```java
-CollectionManager collectionManager = mediaPlatform.collectionManager();
-```
-
-Create a new collection
-
-```java
-CollectionDTO collectionDTO = collectionManager.newCollection("userId", new NewCollectionRequest()
-    .setType("type")
-    .setTitle("title")
-    .setThumbnailUrl("thumbnailUrl")
-    .addTag("tag")
-    .putPrivateProperty("priv-key", "priv-value")
-    .putPublicProperty("pub-key", "pub-value"));
-```
-
-List collections
-
-```java
-CollectionDTO[] collections = collectionManager.listCollections("userId", "type");
-```
-
-Get collection
-
-```java
-CollectionDTO collection = collectionManager.getCollection("userId", "collectionId");
-```
-
-Update collection 
-
-```java
-CollectionDTO collection = collectionManager.updateCollection("userId", "collectionId", new UpdateCollectionRequest()
-    .addTag("tag")
-    .setTitle("title"));
-```
-
-Publish collection
-
-```java
-String pathToCollectionJson = collectionManager.publishCollection("userId", "collectionId");
-```
-
-Delete collection
-
-```java
-collectionManager.deleteCollection("userId", "collectionId");
-```
-
-Add items at the beginning of a collection
-
-```java
-ItemDTO[] items = collectionManager.prependItems("userId", "collectionId", new NewItemRequest[]{
-    new NewItemRequest()
-        .setTitle("title")});
-```
-
-Add items to the end of a collection
-
-```java
-ItemDTO[] items = collectionManager.appendItems("userId", "collectionId", new NewItemRequest[]{
-    new NewItemRequest()
-        .setTitle("title")});
-```
-
-Add items *before* an exiting item in a collection
-
-```java
-ItemDTO[] items = collectionManager.insertBefore("userId", "collectionId", "itemId", new NewItemRequest[]{
-    new NewItemRequest()
-        .setTitle("title")});
-```
-
-Add items *after* an exiting item in a collection
-
-```java
-ItemDTO[] items = collectionManager.insertAfter("userId", "collectionId", "itemId", new NewItemRequest[]{
-    new NewItemRequest()
-        .setTitle("title")
-});
-```
-
-Update existing items in a collection
-
-```java
-ItemDTO[] items = collectionManager.updateItems("userId", "collectionId", new UpdateItemRequest[]{
-    new UpdateItemRequest()
-        .setId("itemId")
-        .setTitle("title")
-});
-```
-
-Move items to the *start* of the collection
-
-```java
-ItemDTO[] items = collectionManager.moveToStart("userId", "collectionId", new String[]{"itemId"});
-```
-
-Move items to the *end* of the collection
-
-```java
-ItemDTO[] items = collectionManager.moveToEnd("userId", "collectionId", new String[]{"itemId"});
-```
-
-Move items *before* another item
-
-```java
-ItemDTO[] items = collectionManager.moveBefore("userId", "collectionId", "itemId1", new String[]{"itemId2"});
-```
-
-Move items *after* another item
-
-```java
-ItemDTO[] items = collectionManager.moveAfter("userId", "collectionId", "itemId1", new String[]{"itemId2"});
-```
-
-Delete items from a collection
-
-```java
-collectionManager.deleteItems("userId", "collectionId", new String[]{"itemId2"});
+mediaPlatform.fileManager().deleteFileById("file id");
 ```
 
 ## Reporting Issues
@@ -406,7 +112,7 @@ We use a custom license, see [LICENSE.md](LICENSE.md).
 
 ## About Wix
 
-[Wix.com](https://www.wix.com) is a leading cloud-based web development platform with more than 86 million registered users worldwide. 
+[Wix.com](https://www.wix.com) is a leading cloud-based web development platform with more than 100 million registered users worldwide. 
 Our powerful technology makes it simple for everyone to create a beautiful website and grow their business online.
 
 ## About Google Cloud Platform
@@ -415,5 +121,8 @@ Our powerful technology makes it simple for everyone to create a beautiful websi
 It offers computing, storage and application services for web, mobile and backend solutions.
 
 
+[wix-url]: https://www.wix.com/
+[wixmp-url]: https://gcp.wixmp.com/
 [mvn-image]: https://img.shields.io/maven-central/v/com.wix/media-platform-java-sdk.svg
 [mvn-url]: https://search.maven.org/#search%7Cga%7C1%7Cmedia-platform-java-sdk
+[npm-url]: https://npmjs.org/package/media-platform-js-sdk
