@@ -7,7 +7,7 @@ public class FileImportJob extends Job {
 
     public static final String job_type = "urn:job:import.file";
 
-    private ImportFileSpecification specification;
+    private FileImportSpecification specification;
 
     private RestResponse<FileDescriptor> result;
 

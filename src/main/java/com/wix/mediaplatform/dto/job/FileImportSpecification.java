@@ -1,13 +1,13 @@
 package com.wix.mediaplatform.dto.job;
 
 
-public class ImportFileSpecification implements Specification {
+public class FileImportSpecification implements Specification {
 
     private String sourceUrl;
 
     private Destination destination;
 
-    public ImportFileSpecification() {
+    public FileImportSpecification() {
     }
 
     public String getSourceUrl() {
@@ -20,7 +20,7 @@ public class ImportFileSpecification implements Specification {
 
     @Override
     public String toString() {
-        return "ImportFileSpecification{" +
+        return "FileImportSpecification{" +
                 "sourceUrl='" + sourceUrl + '\'' +
                 ", destination=" + destination +
                 '}';
