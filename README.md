@@ -112,7 +112,7 @@ We use a custom license, see [LICENSE.md](LICENSE.md).
 
 ## About Wix
 
-[Wix.com](https://www.wix.com) is a leading cloud-based web development platform with more than 100 million registered users worldwide. 
+[Wix.com][wix-url] is a leading cloud-based web development platform with more than 100 million registered users worldwide. 
 Our powerful technology makes it simple for everyone to create a beautiful website and grow their business online.
 
 ## About Google Cloud Platform
