@@ -18,10 +18,6 @@ public abstract class Job {
 
     private Source[] sources;
 
-//    private Specification specification;
-//
-//    private RestResponse result;
-
     public String getId() {
         return id;
     }

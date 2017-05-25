@@ -1,15 +1,14 @@
 package com.wix.mediaplatform.dto.job;
 
-import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.response.RestResponse;
 
-public class FileImportJob extends Job {
+public class TranscodeJob extends Job {
 
-    public static final String job_type = "urn:job:import.file";
+    public static final String job_type = "urn:job:av.transcode";
 
-    private ImportFileSpecification specification;
+    private TranscodeSpecification specification;
 
-    private RestResponse<FileDescriptor> result;
+    private RestResponse<TranscodeJobResult> result;
 
     @Override
     public Specification getSpecification() {

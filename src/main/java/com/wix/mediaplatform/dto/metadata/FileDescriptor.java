@@ -68,7 +68,7 @@ public class FileDescriptor {
                 ", hash='" + hash + '\'' +
                 ", path='" + path + '\'' +
                 ", mimeType='" + mimeType + '\'' +
-                ", type='" + type + '\'' +
+                ", job_type='" + type + '\'' +
                 ", size=" + size +
                 ", acl='" + acl + '\'' +
                 ", dateCreated=" + dateCreated +

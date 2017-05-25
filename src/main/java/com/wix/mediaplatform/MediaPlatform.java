@@ -6,6 +6,7 @@ import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.job.FileImportJob;
 import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.job.TranscodeJob;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.gson.FileMetadataJsonDeserializer;
 import com.wix.mediaplatform.gson.RuntimeTypeAdapterFactory;
@@ -59,7 +60,8 @@ public class MediaPlatform {
         return new GsonBuilder()
                 .registerTypeAdapter(FileMetadata.class, new FileMetadataJsonDeserializer())
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Job.class, "type")
-                        .registerSubtype(FileImportJob.class, "urn:job:import.file"))
+                        .registerSubtype(FileImportJob.class, FileImportJob.job_type)
+                        .registerSubtype(TranscodeJob.class, TranscodeJob.job_type))
                 .create();
     }
 
