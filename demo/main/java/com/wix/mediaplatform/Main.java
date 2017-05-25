@@ -12,7 +12,7 @@ public class Main {
             "48fa9aa3e9d342a3a33e66af08cd7fe3",
             "fad475d88786ab720b04f059ac674b0e");
 
-    public static void main(String [] args) {
+    public static void main(String [] args) throws InterruptedException {
 
         for (String arg : args) {
             System.out.println(arg);

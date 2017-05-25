@@ -29,7 +29,7 @@ public class MediaPlatform {
 
     public MediaPlatform(String domain, String appId, String sharedSecret, HttpClient httpClient) {
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
-        Gson gson = getGson();
+        Gson gson = getGson(false);
 
         Authenticator authenticator = new Authenticator(configuration);
         AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
@@ -56,13 +56,18 @@ public class MediaPlatform {
         return jobManager;
     }
 
-    public static Gson getGson() {
-        return new GsonBuilder()
+    public static Gson getGson(boolean pretty) {
+        GsonBuilder builder = new GsonBuilder()
                 .registerTypeAdapter(FileMetadata.class, new FileMetadataJsonDeserializer())
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Job.class, "type")
                         .registerSubtype(FileImportJob.class, FileImportJob.job_type)
-                        .registerSubtype(TranscodeJob.class, TranscodeJob.job_type))
-                .create();
+                        .registerSubtype(TranscodeJob.class, TranscodeJob.job_type));
+
+        if (pretty) {
+            builder.setPrettyPrinting();
+        }
+
+        return builder.create();
     }
 
     protected static HttpClient getHttpClient() {

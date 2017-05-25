@@ -16,7 +16,7 @@ public abstract class BaseTest {
 
     protected HttpClient httpClient;
 
-    protected Gson gson = MediaPlatform.getGson();
+    protected Gson gson = MediaPlatform.getGson(true);
 
     public BaseTest() {
 
