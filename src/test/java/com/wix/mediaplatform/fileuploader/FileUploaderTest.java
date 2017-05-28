@@ -67,7 +67,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadImageFromFile() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=picture"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -87,7 +87,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadSecureImageFromFile() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=picture"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -107,7 +107,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadImageFromFileWithUploadRequest() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=picture"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -127,7 +127,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadAudioFromFile() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=music"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -147,7 +147,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadAudioFromFileWithUploadRequest() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=music"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -167,7 +167,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadVideoFromFile() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=video"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -189,7 +189,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadVideoFromFileWithUploadRequest() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=video"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -209,7 +209,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadVideoFromFileWithUploadRequestAndEncodingOptions() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=video"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -234,7 +234,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadDocumentFromFile() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=document"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));
@@ -254,7 +254,7 @@ public class FileUploaderTest extends BaseTest {
     public void uploadDocumentFromFileWithUploadRequest() throws Exception {
         when(authenticationFacade.getHeader("userId")).thenReturn("header");
 
-        stubFor(get(urlEqualTo("/files/upload/url"))
+        stubFor(get(urlEqualTo("/files/upload/url?media_type=document"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(gson.toJson(new GetUploadUrlResponse("https://" + configuration.getDomain() + "/upload", "token")))));

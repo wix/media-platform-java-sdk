@@ -1,5 +1,6 @@
 package com.wix.mediaplatform.fileuploader;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wix.mediaplatform.configuration.Configuration;
@@ -54,6 +55,12 @@ public class FileUploader {
 
     public GetUploadUrlResponse getUploadUrl(String userId) throws IOException, UnauthorizedException, URISyntaxException {
         return authenticatedHTTPClient.get(userId, uploadUrlEndpoint, null, GetUploadUrlResponse.class);
+    }
+
+    public GetUploadUrlResponse getUploadUrl(String userId, MediaType mediaType) throws IOException, UnauthorizedException, URISyntaxException {
+        Map<String, String> additionalParams = ImmutableMap.of("media_type", mediaType.getMediaType());
+
+        return authenticatedHTTPClient.get(userId, uploadUrlEndpoint, additionalParams, GetUploadUrlResponse.class);
     }
 
     public ImageDTO uploadImage(String userId, File image, @Nullable UploadRequest uploadRequest) throws UnauthorizedException, IOException, URISyntaxException {
@@ -144,7 +151,7 @@ public class FileUploader {
     }
 
     public <T> T upload(String userId, MediaType mediaType, String mimeType, String fileName, InputStream source, @Nullable UploadRequest uploadRequest, @Nullable Map<String, String> additionalParams, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
-        GetUploadUrlResponse uploadUrlResponse = getUploadUrl(userId);
+        GetUploadUrlResponse uploadUrlResponse = getUploadUrl(userId, mediaType);
 
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
         multipartEntityBuilder.setLaxMode();
