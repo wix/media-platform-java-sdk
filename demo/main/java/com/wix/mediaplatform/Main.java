@@ -24,6 +24,7 @@ public class Main {
             demo.importFile();
             demo.uploadImage();
             demo.listJobs();
+            demo.extractArchive();
         } catch (IOException | UnauthorizedException | URISyntaxException e) {
             e.printStackTrace();
         }

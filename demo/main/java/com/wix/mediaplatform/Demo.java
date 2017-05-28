@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.wix.mediaplatform.dto.job.Destination;
 import com.wix.mediaplatform.dto.job.FileImportJob;
 import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.job.Source;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
 import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.request.SearchJobsRequest;
 import com.wix.mediaplatform.dto.response.SearchJobsResponse;
@@ -59,7 +61,8 @@ class Demo {
         String id = UUID.randomUUID().toString();
 
         File file = new File(this.getClass().getClassLoader().getResource("files/golan.jpg").getFile());
-        FileDescriptor[] files = mediaPlatform.fileManager().uploadFile("/demo/upload/" + id + ".golan.jpg","image/jpeg", "golan.jpg", file, null);
+        FileDescriptor[] files = mediaPlatform.fileManager()
+                .uploadFile("/demo/upload/" + id + ".golan.jpg","image/jpeg", "golan.jpg", file, null);
         Image image = new Image(files[0]).setHost("https://images-wixmp-410a67650b2f46baa5d003c6.wixmp.com");
         image.crop(200, 300, 0, 0, 2);
         System.out.println("CROPPED IMAGE @ " + image.toUrl());
@@ -74,5 +77,24 @@ class Demo {
         );
 
         System.out.println(gson.toJson(response));
+    }
+
+    void extractArchive() throws IOException, UnauthorizedException, URISyntaxException {
+
+        String id = UUID.randomUUID().toString();
+
+        File file = new File(this.getClass().getClassLoader().getResource("files/document.xlsx.zip").getFile());
+        FileDescriptor fileDescriptor = mediaPlatform.fileManager()
+                .uploadFile("/demo/upload/" + id + ".document.xlsx.zip",
+                        "application/zip",
+                        "document.xlsx.zip",
+                        file, "private")[0];
+
+        ExtractArchiveRequest extractArchiveRequest = new ExtractArchiveRequest()
+                .setSource(new Source().setFileId(fileDescriptor.getId()))
+                .setDestination(new Destination().setAcl("public").setDirectory("/demo/extracted"));
+        Job job = mediaPlatform.archiveManager().extractArchive(extractArchiveRequest);
+
+        System.out.println(gson.toJson(job));
     }
 }
