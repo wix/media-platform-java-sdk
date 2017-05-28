@@ -30,7 +30,7 @@ class Demo {
         ImportFileRequest importFileRequest = new ImportFileRequest()
                 .setSourceUrl("https://static.wixstatic.com/media/f31d7d0cfc554aacb1d737757c8d3f1b.jpg")
                 .setDestination(new Destination()
-                        .setDirectory("/" + UUID.randomUUID().toString())
+                        .setDirectory("/demo/import/" + UUID.randomUUID().toString())
                         .setAcl("public"));
         Job job = mediaPlatform.fileManager().importFile(importFileRequest);
 
@@ -59,7 +59,7 @@ class Demo {
         String id = UUID.randomUUID().toString();
 
         File file = new File(this.getClass().getClassLoader().getResource("files/golan.jpg").getFile());
-        FileDescriptor[] files = mediaPlatform.fileManager().uploadFile("/demo/" + id + ".golan.jpg","image/jpeg", "golan.jpg", file, null);
+        FileDescriptor[] files = mediaPlatform.fileManager().uploadFile("/demo/upload/" + id + ".golan.jpg","image/jpeg", "golan.jpg", file, null);
         Image image = new Image(files[0]).setHost("https://images-wixmp-410a67650b2f46baa5d003c6.wixmp.com");
         image.crop(200, 300, 0, 0, 2);
         System.out.println("CROPPED IMAGE @ " + image.toUrl());
