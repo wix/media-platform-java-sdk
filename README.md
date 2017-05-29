@@ -49,6 +49,24 @@ Generates a signed URL and token, required for uploading from the browser
 GetUploadUrlResponse getUploadUrlResponse = mediaPlatform.fileManager().getUploadUrl();
 ```
 
+## Jobs
+
+The Jobs API forms the basis for all long running asynchronous operations in the platform.
+
+### Job Lifecycle
+
+A job is created by a service that performs a long running operation, such as video transcode or file import.
+
+1. On job creation it is queued for execution and assumes the 'pending' status.
+2. When the job execution commences, the job status changes to 'working'
+3. On job completion the job assumes one of the following statuses: 'success' or 'error' and the 'result' property is populated
+
+### Get Job
+
+```java
+job = mediaPlatform.jobManager().getJob("job id");
+```
+
 ## File Import
 
 ```java
@@ -102,6 +120,18 @@ FileMetadata fileMetadata = mediaPlatform.fileManager().getFileMetadataById("fil
 mediaPlatform.fileManager().deleteFileById("file id");
 ```
 
+## Archive Extraction
+
+Instead of uploading numerous files one by one, it is possible to upload a single zip file
+and order the Media Platform to extract its content to a destination directory. 
+
+```java
+ExtractArchiveRequest extractArchiveRequest = new ExtractArchiveRequest()
+        .setSource(new Source().setFileId("file id"))
+        .setDestination(new Destination().setAcl("public").setDirectory("/demo/extracted"));
+Job job = mediaPlatform.archiveManager().extractArchive(extractArchiveRequest);
+```
+
 ## Reporting Issues
 
 Please use [the issue tracker](https://github.com/wix/media-platform-java-sdk/issues) to report issues related to this library, or to the Wix Media Platform API in general.
@@ -124,5 +154,5 @@ It offers computing, storage and application services for web, mobile and backen
 [wix-url]: https://www.wix.com/
 [wixmp-url]: https://gcp.wixmp.com/
 [mvn-image]: https://img.shields.io/maven-central/v/com.wix/media-platform-java-sdk.svg
-[mvn-url]: https://search.maven.org/#search%7Cga%7C1%7Cmedia-platform-java-sdk
+[mvn-url]: https://mvnrepository.com/artifact/com.wix/media-platform-java-sdk
 [npm-url]: https://npmjs.org/package/media-platform-js-sdk
