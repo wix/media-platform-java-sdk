@@ -1,7 +1,7 @@
 package com.wix.mediaplatform.dto.job;
 
 
-public class ExtractArchiveSpecification {
+public class ExtractArchiveSpecification implements Specification {
 
     public Source source;
 

@@ -11,12 +11,12 @@ public class ExtractArchiveJob extends Job {
     private RestResponse result;
 
     @Override
-    public Specification getSpecification() {
-        return null;
+    public ExtractArchiveSpecification getSpecification() {
+        return specification;
     }
 
     @Override
     public RestResponse getResult() {
-        return null;
+        return result;
     }
 }
