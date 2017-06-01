@@ -3,9 +3,9 @@ package com.wix.mediaplatform.dto.job;
 
 public class ExtractArchiveSpecification implements Specification {
 
-    public Source source;
+    private Source source;
 
-    public Destination destination;
+    private Destination destination;
 
     public ExtractArchiveSpecification() {
     }
