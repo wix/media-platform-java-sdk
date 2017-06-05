@@ -13,7 +13,7 @@ import com.wix.mediaplatform.image.parser.ImageUrlParser;
 
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.wix.mediaplatform.image.StringToken.*;
 
 public class Image {
@@ -30,7 +30,7 @@ public class Image {
 
     private Frame frame;
 
-    private Map<String, Option> options = newHashMap();
+    private Map<String, Option> options = newTreeMap();
 
     public Image(String url) {
         ImageUrlParser.parse(this, url);

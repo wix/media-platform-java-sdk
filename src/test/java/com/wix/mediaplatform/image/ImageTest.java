@@ -20,7 +20,7 @@ public class ImageTest {
                 .jpeg(10)
                 .toUrl();
 
-        assertThat(url, is("//test.com/file.png/v1/crop/w_100,h_200,x_1,y_2,scl_3.0,br_10,q_10,con_10,sat_10,hue_10,blur_10,usm_10.00_10.00_10.00/file.png"));
+        assertThat(url, is("//test.com/file.png/v1/crop/w_100,h_200,x_1,y_2,scl_3.0,blur_10,br_10,con_10,hue_10,q_10,sat_10,usm_10.00_10.00_10.00/file.png"));
     }
 
     @Test
@@ -36,7 +36,7 @@ public class ImageTest {
                 .jpeg(10)
                 .toUrl();
 
-        assertThat(url, is("//test.com/images/file.png/v1/crop/w_100,h_200,x_1,y_2,scl_3.0,br_10,q_10,con_10,sat_10,hue_10,blur_10,usm_10.00_10.00_10.00/file.png#w_1000,h_2000,mt_image/png"));
+        assertThat(url, is("//test.com/images/file.png/v1/crop/w_100,h_200,x_1,y_2,scl_3.0,blur_10,br_10,con_10,hue_10,q_10,sat_10,usm_10.00_10.00_10.00/file.png#w_1000,h_2000,mt_image/png"));
     }
 
     @Test
