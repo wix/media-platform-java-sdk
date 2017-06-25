@@ -4,10 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
-import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
-import com.wix.mediaplatform.dto.response.ListFilesResponse;
-import com.wix.mediaplatform.dto.response.RestResponse;
-import com.wix.mediaplatform.dto.response.SearchJobsResponse;
+import com.wix.mediaplatform.dto.response.*;
 
 import java.lang.reflect.Type;
 
@@ -20,4 +17,5 @@ public class Types {
     public static final Type JOB_REST_RESPONSE = new TypeToken<RestResponse<Job>>(){}.getType();
     public static final Type JOBS_REST_RESPONSE = new TypeToken<RestResponse<Job[]>>(){}.getType();
     public static final Type SEARCH_JOBS_REST_RESPONSE = new TypeToken<RestResponse<SearchJobsResponse>>(){}.getType();
+    public static final Type TRANSCODE_JOBS_REST_RESPONSE = new TypeToken<RestResponse<TranscodeJobsResponse>>(){}.getType();
 }

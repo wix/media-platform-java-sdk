@@ -21,6 +21,7 @@ public class Main {
         Demo demo = new Demo(mediaPlatform);
 
         try {
+            demo.transcodeFile();
             demo.importFile();
             demo.uploadImage();
             demo.listJobs();

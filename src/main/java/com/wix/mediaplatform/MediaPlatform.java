@@ -23,6 +23,7 @@ public class MediaPlatform {
     private final FileManager fileManager;
     private final JobManager jobManager;
     private final ArchiveManager archiveManager;
+    private final TranscodeManager transcodeManager;
 
     public MediaPlatform(String domain, String appId, String sharedSecret, HttpClient httpClient) {
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
@@ -36,6 +37,7 @@ public class MediaPlatform {
         this.fileManager = new FileManager(configuration, authenticatedHTTPClient, fileUploader);
         this.jobManager = new JobManager(configuration, authenticatedHTTPClient);
         this.archiveManager = new ArchiveManager(configuration, authenticatedHTTPClient);
+        this.transcodeManager = new TranscodeManager(configuration, authenticatedHTTPClient);
     }
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
@@ -52,6 +54,10 @@ public class MediaPlatform {
 
     public JobManager jobManager() {
         return jobManager;
+    }
+
+    public TranscodeManager transcodeManager() {
+        return transcodeManager;
     }
 
     public ArchiveManager archiveManager() {

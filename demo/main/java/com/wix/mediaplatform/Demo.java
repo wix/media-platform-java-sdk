@@ -1,15 +1,14 @@
 package com.wix.mediaplatform;
 
 import com.google.gson.Gson;
-import com.wix.mediaplatform.dto.job.Destination;
-import com.wix.mediaplatform.dto.job.FileImportJob;
-import com.wix.mediaplatform.dto.job.Job;
-import com.wix.mediaplatform.dto.job.Source;
+import com.wix.mediaplatform.dto.job.*;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
 import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.request.SearchJobsRequest;
+import com.wix.mediaplatform.dto.request.TranscodeRequest;
 import com.wix.mediaplatform.dto.response.SearchJobsResponse;
+import com.wix.mediaplatform.dto.response.TranscodeJobsResponse;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.image.Image;
 
@@ -75,6 +74,32 @@ class Demo {
                 .setType(FileImportJob.job_type)
                 .setPageSize(3)
         );
+
+        System.out.println(gson.toJson(response));
+    }
+
+    void transcodeFile() throws IOException, UnauthorizedException, URISyntaxException {
+        String id = UUID.randomUUID().toString();
+
+        File file = new File(this.getClass().getClassLoader().getResource("files/video.mp4").getFile());
+
+        FileDescriptor fileDescriptor = mediaPlatform.fileManager()
+                .uploadFile("/demo/upload/" + id + ".video.mp4",
+                        "video/mp4",
+                        "video.mp4",
+                        file, "private")[0];
+
+        TranscodeRequest transcodeRequest = new TranscodeRequest()
+                .addSource(new Source().setPath(fileDescriptor.getPath()) )
+                .addSpecification( new TranscodeSpecification()
+                    .setDestination(new Destination()
+                            .setDirectory("/demo/encodes/" + id + "/")
+                            .setAcl("public"))
+                    .setQualityRange( new QualityRange()
+                        .setMinimum("240p")
+                            .setMaximum("1440p")));
+
+        TranscodeJobsResponse response = mediaPlatform.transcodeManager().transcodeVideo(transcodeRequest);
 
         System.out.println(gson.toJson(response));
     }
