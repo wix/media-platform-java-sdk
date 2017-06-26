@@ -7,10 +7,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
@@ -74,8 +71,12 @@ public class AuthenticatedHTTPClient {
 
         HttpResponse response = httpClient.execute(request);
 
-        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
-            throw new UnauthorizedException();
+        int statusCode = response.getStatusLine().getStatusCode();
+        if ((statusCode >= 400) && statusCode < 500) {
+            tryToCloseResponse(response);
+            if (statusCode == 401 || statusCode == 403) {
+                throw new UnauthorizedException();
+            }
         }
 
         if (responseType == null) {
@@ -92,6 +93,7 @@ public class AuthenticatedHTTPClient {
         HttpResponse response = httpClient.execute(request);
 
         if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+            tryToCloseResponse(response);
             throw new IOException(response.toString());
         }
 
@@ -139,10 +141,12 @@ public class AuthenticatedHTTPClient {
 
     private void assertResponseStatus(HttpResponse response) throws UnauthorizedException, IOException {
         if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
+            tryToCloseResponse(response);
             throw new UnauthorizedException();
         }
 
         if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+            tryToCloseResponse(response);
             throw new IOException(response.toString());
         }
     }
@@ -156,5 +160,11 @@ public class AuthenticatedHTTPClient {
         }
 
         return builder.toString();
+    }
+
+    private void tryToCloseResponse(HttpResponse response) throws IOException {
+        if (response instanceof CloseableHttpResponse) {
+            ((CloseableHttpResponse) response).close();
+        }
     }
 }
