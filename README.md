@@ -121,6 +121,28 @@ FileMetadata fileMetadata = mediaPlatform.fileManager().getFileMetadataById("fil
 mediaPlatform.fileManager().deleteFileById("file id");
 ```
 
+## Transcode API
+
+[Transcode API Documentation](https://support.wixmp.com/en/article/video-transcoding-5054232)
+
+Initiate a transcode job
+
+```java
+TranscodeRequest transcodeRequest = new TranscodeRequest()
+    .addSource(new Source().setPath("/demo/video.mp4") )
+    .addSpecification( new TranscodeSpecification()
+        .setDestination(new Destination()
+            .setDirectory("/demo/encodes/")
+            .setAcl("public"))
+        .setQualityRange( new QualityRange()
+            .setMinimum("240p")
+            .setMaximum("1440p")));
+
+TranscodeJobResult response = mediaPlatform.transcodeManager().transcodeVideo(transcodeRequest);
+
+System.out.println(gson.toJson(response));
+```
+
 ## Archive Extraction
 
 Instead of uploading numerous files one by one, it is possible to upload a single zip file
