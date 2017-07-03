@@ -9,6 +9,8 @@ public class ExtractArchiveRequest {
 
     private Destination destination;
 
+    private ExtractedFilesReport extractedFilesReport = null;
+
     public ExtractArchiveRequest() {
     }
 
@@ -19,6 +21,11 @@ public class ExtractArchiveRequest {
 
     public ExtractArchiveRequest setDestination(Destination destination) {
         this.destination = destination;
+        return this;
+    }
+
+    public ExtractArchiveRequest setExtractedFilesReport(ExtractedFilesReport extractedFilesReport) {
+        this.extractedFilesReport = extractedFilesReport;
         return this;
     }
 }
