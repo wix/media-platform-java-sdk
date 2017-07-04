@@ -157,4 +157,55 @@ public class SearchJobsRequest {
         acs,
         des
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SearchJobsRequest that = (SearchJobsRequest) o;
+
+        if (nextPageToken != null ? !nextPageToken.equals(that.nextPageToken) : that.nextPageToken != null)
+            return false;
+        if (pageSize != null ? !pageSize.equals(that.pageSize) : that.pageSize != null) return false;
+        if (orderBy != that.orderBy) return false;
+        if (orderDirection != that.orderDirection) return false;
+        if (issuer != null ? !issuer.equals(that.issuer) : that.issuer != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (status != null ? !status.equals(that.status) : that.status != null) return false;
+        if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
+        if (fileId != null ? !fileId.equals(that.fileId) : that.fileId != null) return false;
+        return path != null ? path.equals(that.path) : that.path == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = nextPageToken != null ? nextPageToken.hashCode() : 0;
+        result = 31 * result + (pageSize != null ? pageSize.hashCode() : 0);
+        result = 31 * result + (orderBy != null ? orderBy.hashCode() : 0);
+        result = 31 * result + (orderDirection != null ? orderDirection.hashCode() : 0);
+        result = 31 * result + (issuer != null ? issuer.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
+        result = 31 * result + (fileId != null ? fileId.hashCode() : 0);
+        result = 31 * result + (path != null ? path.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchJobsRequest{" +
+                "nextPageToken='" + nextPageToken + '\'' +
+                ", pageSize=" + pageSize +
+                ", orderBy=" + orderBy +
+                ", orderDirection=" + orderDirection +
+                ", issuer='" + issuer + '\'' +
+                ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
+                ", groupId='" + groupId + '\'' +
+                ", fileId='" + fileId + '\'' +
+                ", path='" + path + '\'' +
+                '}';
+    }
 }
