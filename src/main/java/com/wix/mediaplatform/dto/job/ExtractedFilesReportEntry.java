@@ -4,6 +4,7 @@ package com.wix.mediaplatform.dto.job;
  * Created by alonne on 04/07/2017.
  */
 public class ExtractedFilesReportEntry {
+
     private String path;
 
     public String getPath() {

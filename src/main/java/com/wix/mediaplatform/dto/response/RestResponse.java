@@ -15,19 +15,19 @@ public class RestResponse<T> {
         return code;
     }
 
-    public void throwForErrorCode() throws MediaPlatformException {
-        MediaPlatformException exception = ExceptionFactory.CreateException(this);
-        if (exception != null) {
-            throw exception;
-        }
-    }
-
     public String getMessage() {
         return message;
     }
 
     public T getPayload() {
         return payload;
+    }
+
+    public void throwForErrorCode() throws MediaPlatformException {
+        MediaPlatformException exception = ExceptionFactory.CreateException(this);
+        if (exception != null) {
+            throw exception;
+        }
     }
 
     @Override

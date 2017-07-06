@@ -56,11 +56,8 @@ public class FileUploader {
         return restResponse.getPayload();
     }
 
-    public FileDescriptor[] uploadFile(String path,
-                                       String mimeType,
-                                       String fileName,
-                                       File source,
-                                       @Nullable String acl) throws IOException, MediaPlatformException, URISyntaxException {
+    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, File source,
+                                       @Nullable String acl) throws MediaPlatformException, IOException, URISyntaxException {
         UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
                 .setMimeType(mimeType)
                 .setPath(path);
@@ -80,11 +77,8 @@ public class FileUploader {
         return restResponse.getPayload();
     }
 
-    public FileDescriptor[] uploadFile(String path,
-                                       String mimeType,
-                                       String fileName,
-                                       InputStream source,
-                                       @Nullable String acl) throws IOException, MediaPlatformException, URISyntaxException {
+    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source,
+                                       @Nullable String acl) throws MediaPlatformException, IOException, URISyntaxException {
         UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
                 .setMimeType(mimeType)
                 .setPath(path);
@@ -115,9 +109,7 @@ public class FileUploader {
         return restResponse.getPayload();
     }
 
-    private MultipartEntityBuilder prepareForm(String path,
-                                               String mimeType,
-                                               @Nullable String acl,
+    private MultipartEntityBuilder prepareForm(String path, String mimeType, @Nullable String acl,
                                                GetUploadUrlResponse uploadUrlResponse) {
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
         multipartEntityBuilder.setLaxMode();

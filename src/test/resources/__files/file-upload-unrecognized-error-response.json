@@ -1,5 +1,5 @@
 {
   "message": "This is some error the SDK doesn't know about",
-  "code": 2,
+  "code": 123423,
   "payload": null
 }

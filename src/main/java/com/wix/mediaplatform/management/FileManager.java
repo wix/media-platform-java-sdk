@@ -12,7 +12,6 @@ import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
 import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.MediaPlatformException;
-import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.jetbrains.annotations.Nullable;
 
@@ -112,13 +111,13 @@ public class FileManager {
         return restResponse.getPayload();
     }
 
-    public void deleteFileByPath(String path) throws UnauthorizedException, IOException, URISyntaxException {
+    public void deleteFileByPath(String path) throws MediaPlatformException, IOException, URISyntaxException {
         Map<String, String> params = newHashMap();
         params.put("path", path);
         authenticatedHttpClient.delete(baseUrl + "/files", params, null);
     }
 
-    public void deleteFileById(String fileId) throws UnauthorizedException, IOException, URISyntaxException {
+    public void deleteFileById(String fileId) throws MediaPlatformException, IOException, URISyntaxException {
         authenticatedHttpClient.delete(baseUrl + "/files/" + fileId, null, null);
     }
 }
