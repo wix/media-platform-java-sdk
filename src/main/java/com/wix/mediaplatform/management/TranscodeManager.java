@@ -30,7 +30,6 @@ public class TranscodeManager {
                 null,
                 TRANSCODE_JOBS_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 }

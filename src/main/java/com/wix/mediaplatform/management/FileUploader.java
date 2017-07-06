@@ -52,7 +52,6 @@ public class FileUploader {
                 params,
                 GET_UPLOAD_URL_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
@@ -73,7 +72,6 @@ public class FileUploader {
                 form,
                 FILE_DESCRIPTORS_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
@@ -94,7 +92,6 @@ public class FileUploader {
                 form,
                 FILE_DESCRIPTORS_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
@@ -105,7 +102,6 @@ public class FileUploader {
                 null,
                 JOB_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 

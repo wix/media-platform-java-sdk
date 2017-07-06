@@ -2,6 +2,8 @@ package com.wix.mediaplatform.http;
 
 import com.google.gson.Gson;
 import com.wix.mediaplatform.authentication.Authenticator;
+import com.wix.mediaplatform.dto.response.RestResponse;
+import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -38,7 +40,7 @@ public class AuthenticatedHTTPClient {
         this.gson = gson;
     }
 
-    public <T> T get(String url, @Nullable Map<String, String> params, Type responseType) throws IOException, URISyntaxException, UnauthorizedException {
+    public <T> T get(String url, @Nullable Map<String, String> params, Type responseType) throws IOException, URISyntaxException, MediaPlatformException {
 
         String authHeader = authenticator.getHeader();
 
@@ -51,10 +53,10 @@ public class AuthenticatedHTTPClient {
 
         assertResponseStatus(response);
 
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        return getGsonResponse(response, responseType);
     }
 
-    public <T> T post(String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+    public <T> T post(String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, MediaPlatformException, URISyntaxException {
 
         String authHeader = authenticator.getHeader();
 
@@ -82,10 +84,11 @@ public class AuthenticatedHTTPClient {
         if (responseType == null) {
             return null;
         }
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+
+        return getGsonResponse(response, responseType);
     }
 
-    public <T> T post(String url, HttpEntity form, Type responseType) throws IOException {
+    public <T> T post(String url, HttpEntity form, Type responseType) throws IOException, MediaPlatformException {
         HttpPost request = new HttpPost(url);
         request.addHeader(ACCEPT_JSON);
         request.setEntity(form);
@@ -97,10 +100,10 @@ public class AuthenticatedHTTPClient {
             throw new IOException(response.toString());
         }
 
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        return getGsonResponse(response, responseType);
     }
 
-    public <T> T put(String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+    public <T> T put(String url, Object payload, @Nullable Map<String, String> params, Type responseType) throws IOException, MediaPlatformException, URISyntaxException {
 
         String authHeader = authenticator.getHeader();
 
@@ -117,10 +120,10 @@ public class AuthenticatedHTTPClient {
 
         assertResponseStatus(response);
 
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+        return getGsonResponse(response, responseType);
     }
 
-    public <T> T delete(String url, @Nullable Map<String, String> params, @Nullable Type responseType) throws IOException, UnauthorizedException, URISyntaxException {
+    public <T> T delete(String url, @Nullable Map<String, String> params, @Nullable Type responseType) throws IOException, MediaPlatformException, URISyntaxException {
 
         String authHeader = authenticator.getHeader();
 
@@ -136,8 +139,22 @@ public class AuthenticatedHTTPClient {
         if (responseType == null) {
             return null;
         }
-        return gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8), responseType);
+
+        return getGsonResponse(response, responseType);
     }
+
+    private <T> T getGsonResponse(HttpResponse response, Type responseType) throws IOException, MediaPlatformException {
+        T gsonResponse = gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8),
+                responseType);
+
+        if (gsonResponse instanceof RestResponse) {
+            RestResponse restResponse = (RestResponse)gsonResponse;
+            restResponse.throwForErrorCode();
+        }
+
+        return gsonResponse;
+    }
+
 
     private void assertResponseStatus(HttpResponse response) throws UnauthorizedException, IOException {
         if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {

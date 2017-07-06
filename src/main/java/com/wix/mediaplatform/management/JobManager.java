@@ -37,7 +37,6 @@ public class JobManager {
                 null,
                 JOB_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
@@ -47,7 +46,6 @@ public class JobManager {
                 null,
                 JOBS_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
@@ -62,7 +60,6 @@ public class JobManager {
                 params,
                 SEARCH_JOBS_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 }

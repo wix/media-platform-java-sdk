@@ -69,7 +69,6 @@ public class FileManager {
                 null,
                 FILE_DESCRIPTOR_REST_RESPONSE);
 
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
@@ -81,7 +80,6 @@ public class FileManager {
                 baseUrl + "/files",
                 params,
                 FILE_DESCRIPTOR_REST_RESPONSE);
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
@@ -91,7 +89,6 @@ public class FileManager {
                 baseUrl + "/files/" + fileId + "/metadata",
                 null,
                 FILE_METADATA_REST_RESPONSE);
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
@@ -107,7 +104,6 @@ public class FileManager {
                 params,
                 FILE_LIST_REST_RESPONSE
         );
-        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 

@@ -7,7 +7,7 @@ public enum ErrorCode {
     ok(0),
     fileAlreadyExists(1);
 
-    private int value;
+    private final int value;
 
     ErrorCode(int value) {
         this.value = value;

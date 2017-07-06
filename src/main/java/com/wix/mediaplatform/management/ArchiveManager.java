@@ -33,7 +33,6 @@ public class ArchiveManager {
                 extractArchiveRequest,
                 null,
                 JOB_REST_RESPONSE);
-        restResponse.throwForErrorCode();
 
         return restResponse.getPayload();
     }

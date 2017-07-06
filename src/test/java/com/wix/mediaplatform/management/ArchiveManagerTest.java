@@ -12,7 +12,6 @@ import com.wix.mediaplatform.dto.job.Source;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
 import com.wix.mediaplatform.dto.request.ExtractedFilesReport;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
