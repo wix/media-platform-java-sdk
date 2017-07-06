@@ -75,6 +75,6 @@ public class ArchiveManagerTest extends BaseTest {
 
         assertThat(responseExtractedFilesReport.getDestination().getDirectory(), is("/report_dir"));
         assertThat(responseExtractedFilesReport.getDestination().getAcl(), is("public"));
-        assertThat(responseExtractedFilesReport.getFormat(), is("json"));
+        assertThat(responseExtractedFilesReport.getFormat(), is(ExtractedFilesReport.Format.json));
     }
 }

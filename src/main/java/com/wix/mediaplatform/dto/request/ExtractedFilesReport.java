@@ -6,14 +6,24 @@ import com.wix.mediaplatform.dto.job.Destination;
  * Created by alonne on 03/07/2017.
  */
 public class ExtractedFilesReport {
-    public static class Format {
-        public static final String json = "json";
-        public static final String csv = "csv";
+    public enum Format {
+        json("json"),
+        csv("csv");
+
+        private final String value;
+
+        Format(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
     private Destination destination;
 
-    private String format;
+    private ExtractedFilesReport.Format format;
 
 
     public ExtractedFilesReport() {
@@ -28,11 +38,11 @@ public class ExtractedFilesReport {
         return this;
     }
 
-    public String getFormat() {
+    public ExtractedFilesReport.Format getFormat() {
         return format;
     }
 
-    public ExtractedFilesReport setFormat(String format) {
+    public ExtractedFilesReport setFormat(ExtractedFilesReport.Format format) {
         this.format = format;
         return this;
     }
