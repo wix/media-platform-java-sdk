@@ -11,6 +11,7 @@ import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
 import com.wix.mediaplatform.dto.response.RestResponse;
+import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.jetbrains.annotations.Nullable;
@@ -38,62 +39,64 @@ public class FileManager {
         this.fileUploader = fileUploader;
     }
 
-    public GetUploadUrlResponse getUploadUrl() throws UnauthorizedException, IOException, URISyntaxException {
+    public GetUploadUrlResponse getUploadUrl() throws MediaPlatformException, IOException, URISyntaxException {
         return fileUploader.getUploadUrl(null);
     }
 
-    public GetUploadUrlResponse getUploadUrl(UploadUrlRequest uploadUrlRequest) throws UnauthorizedException, IOException, URISyntaxException {
+    public GetUploadUrlResponse getUploadUrl(UploadUrlRequest uploadUrlRequest) throws MediaPlatformException, IOException, URISyntaxException {
         return fileUploader.getUploadUrl(uploadUrlRequest);
     }
 
-    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source) throws UnauthorizedException, IOException, URISyntaxException {
+    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source) throws MediaPlatformException, IOException, URISyntaxException {
         return fileUploader.uploadFile(path, mimeType, fileName, source, null);
     }
 
-    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source, String acl) throws UnauthorizedException, IOException, URISyntaxException {
+    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source, String acl) throws MediaPlatformException, IOException, URISyntaxException {
         return fileUploader.uploadFile(path, mimeType, fileName, source, acl);
     }
 
-    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, File source, String acl) throws UnauthorizedException, IOException, URISyntaxException {
+    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, File source, String acl) throws MediaPlatformException, IOException, URISyntaxException {
         return fileUploader.uploadFile(path, mimeType, fileName, source, acl);
     }
 
-    public Job importFile(ImportFileRequest importFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+    public Job importFile(ImportFileRequest importFileRequest) throws MediaPlatformException, IOException, URISyntaxException {
         return fileUploader.importFile(importFileRequest);
     }
 
-    public FileDescriptor createFile(CreateFileRequest createFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+    public FileDescriptor createFile(CreateFileRequest createFileRequest) throws MediaPlatformException, IOException, URISyntaxException {
         RestResponse<FileDescriptor> restResponse = authenticatedHttpClient.post(
                 baseUrl + "/files",
                 createFileRequest,
                 null,
                 FILE_DESCRIPTOR_REST_RESPONSE);
 
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
     @Nullable
-    public FileDescriptor getFile(String path) throws UnauthorizedException, IOException, URISyntaxException {
+    public FileDescriptor getFile(String path) throws MediaPlatformException, IOException, URISyntaxException {
         Map<String, String> params = newHashMap();
         params.put("path", path);
         RestResponse<FileDescriptor> restResponse = authenticatedHttpClient.get(
                 baseUrl + "/files",
                 params,
                 FILE_DESCRIPTOR_REST_RESPONSE);
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
     @Nullable
-    public FileMetadata getFileMetadataById(String fileId) throws UnauthorizedException, IOException, URISyntaxException {
+    public FileMetadata getFileMetadataById(String fileId) throws MediaPlatformException, IOException, URISyntaxException {
         RestResponse<FileMetadata> restResponse = authenticatedHttpClient.get(
                 baseUrl + "/files/" + fileId + "/metadata",
                 null,
                 FILE_METADATA_REST_RESPONSE);
-
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
-    public ListFilesResponse listFiles(String path, @Nullable ListFilesRequest listFilesRequest) throws UnauthorizedException, IOException, URISyntaxException {
+    public ListFilesResponse listFiles(String path, @Nullable ListFilesRequest listFilesRequest) throws MediaPlatformException, IOException, URISyntaxException {
         Map<String, String> params = newHashMap();
         if (listFilesRequest != null) {
                 params.putAll(listFilesRequest.toParams());
@@ -105,6 +108,7 @@ public class FileManager {
                 params,
                 FILE_LIST_REST_RESPONSE
         );
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 

@@ -5,7 +5,7 @@ import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.request.SearchJobsRequest;
 import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.dto.response.SearchJobsResponse;
-import com.wix.mediaplatform.exception.UnauthorizedException;
+import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 
 import java.io.IOException;
@@ -31,25 +31,27 @@ public class JobManager {
         this.authenticatedHTTPClient = authenticatedHTTPClient;
     }
 
-    public Job getJob(String jobId) throws UnauthorizedException, IOException, URISyntaxException {
+    public Job getJob(String jobId) throws MediaPlatformException, IOException, URISyntaxException {
         RestResponse<Job> restResponse = authenticatedHTTPClient.get(
                 apiBaseUrl + "/jobs/" + jobId,
                 null,
                 JOB_REST_RESPONSE);
 
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
-    public Job[] getJobGroup(String groupId) throws UnauthorizedException, IOException, URISyntaxException {
+    public Job[] getJobGroup(String groupId) throws MediaPlatformException, IOException, URISyntaxException {
         RestResponse<Job[]> restResponse = authenticatedHTTPClient.get(
                 apiBaseUrl + "/jobs/groups/" + groupId,
                 null,
                 JOBS_REST_RESPONSE);
 
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
-    public SearchJobsResponse searchJobs(SearchJobsRequest searchJobsRequest) throws UnauthorizedException, IOException, URISyntaxException {
+    public SearchJobsResponse searchJobs(SearchJobsRequest searchJobsRequest) throws MediaPlatformException, IOException, URISyntaxException {
         Map<String, String> params = newHashMap();
         if (searchJobsRequest != null) {
             params.putAll(searchJobsRequest.toParams());
@@ -60,6 +62,7 @@ public class JobManager {
                 params,
                 SEARCH_JOBS_REST_RESPONSE);
 
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 }

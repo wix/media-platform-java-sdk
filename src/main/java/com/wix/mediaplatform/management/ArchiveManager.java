@@ -4,7 +4,7 @@ import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
 import com.wix.mediaplatform.dto.response.RestResponse;
-import com.wix.mediaplatform.exception.UnauthorizedException;
+import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 
 import java.io.IOException;
@@ -27,12 +27,13 @@ public class ArchiveManager {
         this.baseUrl = "https://" + configuration.getDomain() + "/_api";
     }
 
-    public Job extractArchive(ExtractArchiveRequest extractArchiveRequest) throws UnauthorizedException, IOException, URISyntaxException {
+    public Job extractArchive(ExtractArchiveRequest extractArchiveRequest) throws MediaPlatformException, IOException, URISyntaxException {
         RestResponse<Job> restResponse = authenticatedHTTPClient.post(
                 baseUrl + "/archive/extract",
                 extractArchiveRequest,
                 null,
                 JOB_REST_RESPONSE);
+        restResponse.throwForErrorCode();
 
         return restResponse.getPayload();
     }

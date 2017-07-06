@@ -1,5 +1,8 @@
 package com.wix.mediaplatform.dto.response;
 
+import com.wix.mediaplatform.exception.ExceptionFactory;
+import com.wix.mediaplatform.exception.MediaPlatformException;
+
 public class RestResponse<T> {
 
     private int code;
@@ -10,6 +13,13 @@ public class RestResponse<T> {
 
     public int getCode() {
         return code;
+    }
+
+    public void throwForErrorCode() throws MediaPlatformException {
+        MediaPlatformException exception = ExceptionFactory.CreateException(this);
+        if (exception != null) {
+            throw exception;
+        }
     }
 
     public String getMessage() {

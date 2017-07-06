@@ -7,7 +7,7 @@ import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.response.RestResponse;
-import com.wix.mediaplatform.exception.UnauthorizedException;
+import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
@@ -40,7 +40,8 @@ public class FileUploader {
         this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/_api/upload/url";
     }
 
-    public GetUploadUrlResponse getUploadUrl(@Nullable UploadUrlRequest uploadUrlRequest) throws IOException, UnauthorizedException, URISyntaxException {
+    public GetUploadUrlResponse getUploadUrl(@Nullable UploadUrlRequest uploadUrlRequest) throws IOException,
+            MediaPlatformException, URISyntaxException {
         Map<String, String> params = null;
         if (uploadUrlRequest != null) {
             params = uploadUrlRequest.toParams();
@@ -51,10 +52,15 @@ public class FileUploader {
                 params,
                 GET_UPLOAD_URL_REST_RESPONSE);
 
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
-    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, File source, @Nullable String acl) throws IOException, UnauthorizedException, URISyntaxException {
+    public FileDescriptor[] uploadFile(String path,
+                                       String mimeType,
+                                       String fileName,
+                                       File source,
+                                       @Nullable String acl) throws IOException, MediaPlatformException, URISyntaxException {
         UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
                 .setMimeType(mimeType)
                 .setPath(path);
@@ -70,10 +76,15 @@ public class FileUploader {
                 form,
                 FILE_DESCRIPTORS_REST_RESPONSE);
 
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
-    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source, @Nullable String acl) throws IOException, UnauthorizedException, URISyntaxException {
+    public FileDescriptor[] uploadFile(String path,
+                                       String mimeType,
+                                       String fileName,
+                                       InputStream source,
+                                       @Nullable String acl) throws IOException, MediaPlatformException, URISyntaxException {
         UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
                 .setMimeType(mimeType)
                 .setPath(path);
@@ -89,20 +100,25 @@ public class FileUploader {
                 form,
                 FILE_DESCRIPTORS_REST_RESPONSE);
 
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
-    public Job importFile(ImportFileRequest importFileRequest) throws UnauthorizedException, IOException, URISyntaxException {
+    public Job importFile(ImportFileRequest importFileRequest) throws MediaPlatformException, IOException, URISyntaxException {
         RestResponse<Job> restResponse = authenticatedHTTPClient.post(
                 apiBaseUrl + "/import/file",
                 importFileRequest,
                 null,
                 JOB_REST_RESPONSE);
 
+        restResponse.throwForErrorCode();
         return restResponse.getPayload();
     }
 
-    private MultipartEntityBuilder prepareForm(String path, String mimeType, @Nullable String acl, GetUploadUrlResponse uploadUrlResponse) {
+    private MultipartEntityBuilder prepareForm(String path,
+                                               String mimeType,
+                                               @Nullable String acl,
+                                               GetUploadUrlResponse uploadUrlResponse) {
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
         multipartEntityBuilder.setLaxMode();
         multipartEntityBuilder.setCharset(UTF_8);

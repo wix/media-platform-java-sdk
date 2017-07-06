@@ -10,6 +10,8 @@ import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
+import com.wix.mediaplatform.exception.FileAlreadyExistsException;
+import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Before;
 import org.junit.Rule;
@@ -65,6 +67,38 @@ public class FileUploaderTest extends BaseTest {
         FileDescriptor[] files = fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
 
         assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test(expected = FileAlreadyExistsException.class)
+    public void uploadFileAlreadyExists() throws Exception {
+        stubFor(get(urlEqualTo("/_api/upload/url?path=%2Fa%2Fnew.txt&mimeType=text%2Fplain"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-already-exists-response.json")));
+
+        File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
+        fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
+    }
+
+    @Test(expected = MediaPlatformException.class)
+    public void uploadFileUnrecognizedError() throws Exception {
+        stubFor(get(urlEqualTo("/_api/upload/url?path=%2Fa%2Fnew.txt&mimeType=text%2Fplain"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-unrecognized-error-response.json")));
+
+        File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
+        fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
     }
 
     @Test
