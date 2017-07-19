@@ -5,14 +5,65 @@ import com.wix.mediaplatform.dto.response.RestResponse;
 import java.util.Arrays;
 
 public abstract class Job {
+    public enum Type {
+        TRANSCODE("urn:job:av.transcode"),
+        PACKAGE("urn:job:av.package"),
+        ARCHIVE_CREATE("urn:job:archive.create"),
+        ARCHIVE_EXTRACT("urn:job:archive.extract"),
+        FILE_IMPORT("urn:job:import.file"),
+        REPLICATION_ENABLE("urn:job:replication.enable"),
+        REPLICATION_DISABLE("urn:job:replication.disable");
+
+        private final String value;
+
+        Type(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static Type fromString(String typeString) {
+            for (Type type: Type.values()) {
+                if (type.getValue().equals(typeString)) {
+                    return type;
+                }
+            }
+
+            throw new IllegalArgumentException("Invalid value for job type: " + typeString);
+        }
+    }
+
+    public enum Status {
+        pending("pending"),
+        working("working"),
+        success("success"),
+        error("error");
+
+        private final String value;
+
+        Status(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static Status fromString(String typeString) {
+            return Status.valueOf(typeString);
+        }
+
+    }
 
     private String id;
 
-    private String type;
+    private Type type;
 
     private String issuer;
 
-    private String status;
+    private Status status;
 
     private String groupId;
 
@@ -23,7 +74,7 @@ public abstract class Job {
     }
 
     public String getType() {
-        return type;
+        return type.getValue();
     }
 
     public String getIssuer() {
@@ -31,7 +82,7 @@ public abstract class Job {
     }
 
     public String getStatus() {
-        return status;
+        return status.name();
     }
 
     public String getGroupId() {

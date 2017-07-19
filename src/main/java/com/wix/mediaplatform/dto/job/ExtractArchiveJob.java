@@ -4,7 +4,7 @@ import com.wix.mediaplatform.dto.response.RestResponse;
 
 public class ExtractArchiveJob extends Job {
 
-    public static final String job_type = "urn:job:archive.extract";
+    public static final Job.Type job_type = Type.ARCHIVE_EXTRACT;
 
     private ExtractArchiveSpecification specification;
 

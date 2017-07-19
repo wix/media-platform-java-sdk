@@ -34,13 +34,14 @@ public class FileManagerTest extends BaseTest {
         stubFor(post(urlEqualTo("/_api/files"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-descriptor-response.json")));
+                        .withBodyFile("create-file-response.json")));
 
         FileDescriptor fileDescriptor = fileManager.createFile(new CreateFileRequest()
-                .setPath("/")
+                .setPath("/newDirectory")
         );
 
         assertThat(fileDescriptor.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
+        assertThat(fileDescriptor.getType(), is(FileDescriptor.Type.DIRECTORY.getValue()));
     }
 
     @Test
@@ -48,7 +49,7 @@ public class FileManagerTest extends BaseTest {
         stubFor(get(urlEqualTo("/_api/files?path=%2Ffile.txt"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-descriptor-response.json")));
+                        .withBodyFile("get-file-response.json")));
 
         FileDescriptor file = fileManager.getFile("/file.txt");
 

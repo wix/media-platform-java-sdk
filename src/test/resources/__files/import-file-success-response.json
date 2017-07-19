@@ -4,10 +4,9 @@
   "payload":{
     "status":"success",
     "specification":{
-      "sourceUrl":"string",
+      "sourceUrl":"http://source.url/filename.txt",
       "destination":{
-        "directory":"string",
-        "path":"string",
+        "directory":"/fish",
         "acl":"public"
       }
     },
@@ -18,13 +17,13 @@
       "code": 0,
       "message": "OK",
       "payload": {
-        "id": "string",
-        "hash": "string",
-        "path": "string",
-        "mimeType": "string",
-        "type": "string",
+        "id": "123",
+        "hash": "456",
+        "path": "/fish/filename.txt",
+        "mimeType": "text/plain",
+        "type": "-",
         "size": 100,
-        "acl": "private"
+        "acl": "public"
       }
     },
     "id":"71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f",

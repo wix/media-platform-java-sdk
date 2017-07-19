@@ -1,12 +1,14 @@
 package com.wix.mediaplatform.dto.job;
 
+import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+
 public class Destination {
 
     private String path;
 
     private String directory;
 
-    private String acl = "private";
+    private FileDescriptor.Acl acl = FileDescriptor.Acl.PRIVATE;
 
     public Destination() {
     }
@@ -24,6 +26,11 @@ public class Destination {
     }
 
     public Destination setAcl(String acl) {
+        this.acl = FileDescriptor.Acl.fromString(acl);
+        return this;
+    }
+
+    public Destination setAcl(FileDescriptor.Acl acl) {
         this.acl = acl;
         return this;
     }
@@ -37,7 +44,7 @@ public class Destination {
     }
 
     public String getAcl() {
-        return acl;
+        return acl.getValue();
     }
 
     @Override

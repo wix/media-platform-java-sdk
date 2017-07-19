@@ -4,7 +4,7 @@ import com.wix.mediaplatform.dto.response.RestResponse;
 
 public class TranscodeJob extends Job {
 
-    public static final String job_type = "urn:job:av.transcode";
+    public static final Job.Type job_type = Job.Type.TRANSCODE;
 
     private TranscodeSpecification specification;
 

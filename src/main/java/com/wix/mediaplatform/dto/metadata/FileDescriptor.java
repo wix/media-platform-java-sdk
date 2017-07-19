@@ -3,6 +3,55 @@ package com.wix.mediaplatform.dto.metadata;
 import java.util.Date;
 
 public class FileDescriptor {
+    public enum Acl {
+        PUBLIC("public"),
+        PRIVATE("private");
+
+        private final String value;
+
+        Acl(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static Acl fromString(String aclString) {
+            for (Acl acl: Acl.values()) {
+                if (acl.value.equals(aclString)) {
+                    return acl;
+                }
+            }
+
+            throw new IllegalArgumentException("Invalid value for acl: " + aclString);
+        }
+    }
+
+    public enum Type {
+        FILE("-"),
+        DIRECTORY("d");
+
+        private final String value;
+
+        Type(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static Type fromString(String typeString) {
+            for (Type type: Type.values()) {
+                if (type.value.equals(typeString)) {
+                    return type;
+                }
+            }
+
+            throw new IllegalArgumentException("Invalid value for file type: " + typeString);
+        }
+    }
 
     private String id;
 
@@ -12,11 +61,11 @@ public class FileDescriptor {
 
     private String mimeType;
 
-    private String type;
+    private Type type;
 
     private long size;
 
-    private String acl;
+    private Acl acl;
 
     private Date dateCreated;
 
@@ -42,7 +91,7 @@ public class FileDescriptor {
     }
 
     public String getType() {
-        return type;
+        return type.getValue();
     }
 
     public long getSize() {
@@ -50,7 +99,7 @@ public class FileDescriptor {
     }
 
     public String getAcl() {
-        return acl;
+        return acl.getValue();
     }
 
     public Date getDateCreated() {

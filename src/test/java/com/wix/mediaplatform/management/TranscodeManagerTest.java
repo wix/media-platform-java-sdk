@@ -5,10 +5,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.job.Destination;
-import com.wix.mediaplatform.dto.job.QualityRange;
-import com.wix.mediaplatform.dto.job.Source;
-import com.wix.mediaplatform.dto.job.TranscodeSpecification;
+import com.wix.mediaplatform.dto.job.*;
 import com.wix.mediaplatform.dto.request.TranscodeRequest;
 import com.wix.mediaplatform.dto.response.TranscodeJobsResponse;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
@@ -56,6 +53,10 @@ public class TranscodeManagerTest extends BaseTest {
         TranscodeJobsResponse response = transcodeManager.transcodeVideo(transcodeRequest);
 
         assertThat(response.getGroupId(), is("fb79405a16434aab87ccbd1384563033"));
+        for (Job job: response.getJobs()) {
+            assertThat(job instanceof TranscodeJob, is(true));
+        }
+
     }
 
 }

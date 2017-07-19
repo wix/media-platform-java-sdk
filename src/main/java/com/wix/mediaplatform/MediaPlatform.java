@@ -8,9 +8,9 @@ import com.wix.mediaplatform.dto.job.ExtractArchiveJob;
 import com.wix.mediaplatform.dto.job.FileImportJob;
 import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.job.TranscodeJob;
+import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
-import com.wix.mediaplatform.gson.FileMetadataJsonDeserializer;
-import com.wix.mediaplatform.gson.RuntimeTypeAdapterFactory;
+import com.wix.mediaplatform.gson.*;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.management.*;
 import org.apache.http.client.HttpClient;
@@ -67,10 +67,13 @@ public class MediaPlatform {
     public static Gson getGson(boolean pretty) {
         GsonBuilder builder = new GsonBuilder()
                 .registerTypeAdapter(FileMetadata.class, new FileMetadataJsonDeserializer())
+                .registerTypeAdapter(FileDescriptor.Acl.class, new FileAclJsonDeserializer())
+                .registerTypeAdapter(FileDescriptor.Type.class, new FileTypeJsonDeserializer())
+                .registerTypeAdapter(Job.Type.class, new JobTypeJsonDeserializer())
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Job.class, "type")
-                        .registerSubtype(FileImportJob.class, FileImportJob.job_type)
-                        .registerSubtype(ExtractArchiveJob.class, ExtractArchiveJob.job_type)
-                        .registerSubtype(TranscodeJob.class, TranscodeJob.job_type));
+                        .registerSubtype(FileImportJob.class, FileImportJob.job_type.getValue())
+                        .registerSubtype(ExtractArchiveJob.class, ExtractArchiveJob.job_type.getValue())
+                        .registerSubtype(TranscodeJob.class, TranscodeJob.job_type.getValue()));
 
         if (pretty) {
             builder.setPrettyPrinting();

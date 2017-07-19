@@ -1,16 +1,18 @@
 package com.wix.mediaplatform.dto.request;
 
+import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+
 public class CreateFileRequest {
 
     private String path;
 
     private String mimeType = "application/vnd.wix-media.dir";
 
-    private String type = "d";
+    private FileDescriptor.Type type = FileDescriptor.Type.DIRECTORY;
 
     private long size;
 
-    private String acl = "public";
+    private FileDescriptor.Acl acl = FileDescriptor.Acl.PUBLIC;
 
     public CreateFileRequest() {
     }
@@ -26,6 +28,11 @@ public class CreateFileRequest {
     }
 
     public CreateFileRequest setType(String type) {
+        this.type = FileDescriptor.Type.fromString(type);
+        return this;
+    }
+
+    public CreateFileRequest setType(FileDescriptor.Type type) {
         this.type = type;
         return this;
     }
@@ -36,6 +43,11 @@ public class CreateFileRequest {
     }
 
     public CreateFileRequest setAcl(String acl) {
+        this.acl = FileDescriptor.Acl.fromString(acl);
+        return this;
+    }
+
+    public CreateFileRequest setAcl(FileDescriptor.Acl acl) {
         this.acl = acl;
         return this;
     }

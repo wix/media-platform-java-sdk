@@ -5,14 +5,14 @@ import com.wix.mediaplatform.dto.response.RestResponse;
 
 public class FileImportJob extends Job {
 
-    public static final String job_type = "urn:job:import.file";
+    public static final Job.Type job_type = Type.FILE_IMPORT;
 
     private FileImportSpecification specification;
 
     private RestResponse<FileDescriptor> result;
 
     @Override
-    public Specification getSpecification() {
+    public FileImportSpecification getSpecification() {
         return specification;
     }
 

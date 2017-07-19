@@ -4,10 +4,9 @@
   "payload":{
     "status":"pending",
     "specification":{
-      "sourceUrl":"string",
+      "sourceUrl":"http://source.url/filename.txt",
       "destination":{
-        "directory":"string",
-        "path":"string",
+        "directory":"/fish",
         "acl":"public"
       }
     },

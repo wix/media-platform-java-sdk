@@ -6,10 +6,13 @@ import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.job.Destination;
+import com.wix.mediaplatform.dto.job.FileImportJob;
+import com.wix.mediaplatform.dto.job.FileImportSpecification;
 import com.wix.mediaplatform.dto.job.Job;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
+import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.FileAlreadyExistsException;
 import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
@@ -109,13 +112,19 @@ public class FileUploaderTest extends BaseTest {
                         .withBodyFile("import-file-pending-response.json")));
 
         ImportFileRequest importFileRequest = new ImportFileRequest()
-                .setSourceUrl("http://source.url")
+                .setSourceUrl("http://source.url/filename.txt")
                 .setDestination(new Destination()
                         .setAcl("public")
                         .setDirectory("/fish"));
-        Job job = fileUploader.importFile(importFileRequest);
+        FileImportJob job = (FileImportJob) fileUploader.importFile(importFileRequest);
+        FileImportSpecification specification = job.getSpecification();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
+        assertThat(job.getStatus(), is(Job.Status.pending.getValue()));
+        assertThat(job.getType(), is(Job.Type.FILE_IMPORT.getValue()));
+        assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
+        assertThat(specification.getDestination().getAcl(), is("public"));
+        assertThat(specification.getDestination().getDirectory(), is("/fish"));
     }
 
     @Test
@@ -126,12 +135,30 @@ public class FileUploaderTest extends BaseTest {
                         .withBodyFile("import-file-success-response.json")));
 
         ImportFileRequest importFileRequest = new ImportFileRequest()
-                .setSourceUrl("http://source.url")
+                .setSourceUrl("http://source.url/filename.ext")
                 .setDestination(new Destination()
                         .setAcl("public")
                         .setDirectory("/fish"));
-        Job job = fileUploader.importFile(importFileRequest);
+        FileImportJob job = (FileImportJob) fileUploader.importFile(importFileRequest);
+        FileImportSpecification specification = job.getSpecification();
+        RestResponse<FileDescriptor> result = job.getResult();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
+        assertThat(job.getStatus(), is(Job.Status.success.getValue()));
+        assertThat(job.getType(), is(Job.Type.FILE_IMPORT.getValue()));
+
+        assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
+        assertThat(specification.getDestination().getAcl(), is("public"));
+        assertThat(specification.getDestination().getDirectory(), is("/fish"));
+
+        assertThat(result.getCode(), is(0));
+        assertThat(result.getPayload().getId(), is("123"));
+        assertThat(result.getPayload().getHash(), is("456"));
+        assertThat(result.getPayload().getPath(), is("/fish/filename.txt"));
+        assertThat(result.getPayload().getMimeType(), is("text/plain"));
+        assertThat(result.getPayload().getType(), is(FileDescriptor.Type.FILE.getValue()));
+        assertThat(result.getPayload().getSize(), is(100l));
+        assertThat(result.getPayload().getAcl(), is(FileDescriptor.Acl.PUBLIC.getValue()));
+
     }
 }
