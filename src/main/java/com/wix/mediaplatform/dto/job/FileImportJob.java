@@ -17,7 +17,7 @@ public class FileImportJob extends Job {
     }
 
     @Override
-    public RestResponse getResult() {
+    public RestResponse<FileDescriptor> getResult() {
         return result;
     }
 }

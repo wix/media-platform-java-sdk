@@ -1,7 +1,7 @@
 package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.job.FileImportJob;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.request.UploadUrlRequest;
@@ -95,8 +95,8 @@ public class FileUploader {
         return restResponse.getPayload();
     }
 
-    public Job importFile(ImportFileRequest importFileRequest) throws MediaPlatformException, IOException, URISyntaxException {
-        RestResponse<Job> restResponse = authenticatedHTTPClient.post(
+    public FileImportJob importFile(ImportFileRequest importFileRequest) throws MediaPlatformException, IOException, URISyntaxException {
+        RestResponse<FileImportJob> restResponse = authenticatedHTTPClient.post(
                 apiBaseUrl + "/import/file",
                 importFileRequest,
                 null,

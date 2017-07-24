@@ -116,7 +116,7 @@ public class FileUploaderTest extends BaseTest {
                 .setDestination(new Destination()
                         .setAcl("public")
                         .setDirectory("/fish"));
-        FileImportJob job = (FileImportJob) fileUploader.importFile(importFileRequest);
+        FileImportJob job = fileUploader.importFile(importFileRequest);
         FileImportSpecification specification = job.getSpecification();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
@@ -139,7 +139,7 @@ public class FileUploaderTest extends BaseTest {
                 .setDestination(new Destination()
                         .setAcl("public")
                         .setDirectory("/fish"));
-        FileImportJob job = (FileImportJob) fileUploader.importFile(importFileRequest);
+        FileImportJob job = fileUploader.importFile(importFileRequest);
         FileImportSpecification specification = job.getSpecification();
         RestResponse<FileDescriptor> result = job.getResult();
 
