@@ -9,7 +9,7 @@ public final class ExceptionFactory {
 
     private ExceptionFactory() {}
 
-    public static MediaPlatformException CreateException(RestResponse restResponse) {
+    public static MediaPlatformException createException(RestResponse restResponse) {
         int code = restResponse.getCode();
         if (code >= ErrorCode.values().length) {
             return new MediaPlatformException(String.format("Error %d", code));

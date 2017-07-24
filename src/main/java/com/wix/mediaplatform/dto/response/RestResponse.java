@@ -24,7 +24,7 @@ public class RestResponse<T> {
     }
 
     public void throwForErrorCode() throws MediaPlatformException {
-        MediaPlatformException exception = ExceptionFactory.CreateException(this);
+        MediaPlatformException exception = ExceptionFactory.createException(this);
         if (exception != null) {
             throw exception;
         }
