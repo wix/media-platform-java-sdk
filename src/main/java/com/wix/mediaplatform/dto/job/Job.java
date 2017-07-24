@@ -5,6 +5,73 @@ import com.wix.mediaplatform.dto.response.RestResponse;
 import java.util.Arrays;
 
 public abstract class Job {
+
+    private String id;
+
+    private Type type;
+
+    private String issuer;
+
+    private Status status;
+
+    private String groupId;
+
+    private Source[] sources;
+
+    private String dateCreated;
+
+    private String dateUpdated;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getType() {
+        return type.getValue();
+    }
+
+    public String getIssuer() {
+        return issuer;
+    }
+
+    public String getStatus() {
+        return status.name();
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public Source[] getSources() {
+        return sources;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public String getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public abstract Specification getSpecification();
+
+    public abstract RestResponse getResult();
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                ", issuer='" + issuer + '\'' +
+                ", status=" + status +
+                ", groupId='" + groupId + '\'' +
+                ", sources=" + Arrays.toString(sources) +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", dateUpdated='" + dateUpdated + '\'' +
+                '}';
+    }
+
     public enum Type {
         TRANSCODE("urn:job:av.transcode"),
         PACKAGE("urn:job:av.package"),
@@ -54,60 +121,5 @@ public abstract class Job {
         public static Status fromString(String typeString) {
             return Status.valueOf(typeString);
         }
-
-    }
-
-    private String id;
-
-    private Type type;
-
-    private String issuer;
-
-    private Status status;
-
-    private String groupId;
-
-    private Source[] sources;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getType() {
-        return type.getValue();
-    }
-
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public String getStatus() {
-        return status.name();
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public Source[] getSources() {
-        return sources;
-    }
-
-    public abstract Specification getSpecification();
-
-    public abstract RestResponse getResult();
-
-    @Override
-    public String toString() {
-        return "Job{" +
-                "id='" + id + '\'' +
-                ", type='" + type + '\'' +
-                ", issuer='" + issuer + '\'' +
-                ", status='" + status + '\'' +
-                ", groupId='" + groupId + '\'' +
-                ", sources=" + Arrays.toString(sources) +
-                ", specification=" + getSpecification() +
-                ", result=" + getResult() +
-                '}';
     }
 }

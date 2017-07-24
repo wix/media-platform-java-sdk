@@ -155,7 +155,6 @@ public class AuthenticatedHTTPClient {
         return gsonResponse;
     }
 
-
     private void assertResponseStatus(HttpResponse response) throws UnauthorizedException, IOException {
         if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
             tryToCloseResponse(response);
