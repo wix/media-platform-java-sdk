@@ -145,18 +145,24 @@ public class AuthenticatedHTTPClient {
             assertResponseStatus(response);
             throw ex;
         }
+        finally {
+            tryToCloseResponse(response);
+        }
     }
 
 
     private void assertResponseStatus(HttpResponse response) throws IOException, MediaPlatformException {
-        if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
-            tryToCloseResponse(response);
-            throw new UnauthorizedException();
-        }
+        try {
+            if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
+                throw new UnauthorizedException();
+            }
 
-        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+            if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+                throw new MediaPlatformException(response.toString());
+            }
+        }
+        finally {
             tryToCloseResponse(response);
-            throw new MediaPlatformException(response.toString());
         }
     }
 
