@@ -1,6 +1,8 @@
 package com.wix.mediaplatform.http;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.MediaPlatformException;
@@ -51,8 +53,6 @@ public class AuthenticatedHTTPClient {
 
         HttpResponse response = httpClient.execute(request);
 
-        assertResponseStatus(response);
-
         return getGsonResponse(response, responseType);
     }
 
@@ -73,15 +73,8 @@ public class AuthenticatedHTTPClient {
 
         HttpResponse response = httpClient.execute(request);
 
-        int statusCode = response.getStatusLine().getStatusCode();
-        if ((statusCode >= 400) && statusCode < 500) {
-            tryToCloseResponse(response);
-            if (statusCode == 401 || statusCode == 403) {
-                throw new UnauthorizedException();
-            }
-        }
-
         if (responseType == null) {
+            assertResponseStatus(response);
             return null;
         }
 
@@ -94,11 +87,6 @@ public class AuthenticatedHTTPClient {
         request.setEntity(form);
 
         HttpResponse response = httpClient.execute(request);
-
-        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
-            tryToCloseResponse(response);
-            throw new IOException(response.toString());
-        }
 
         return getGsonResponse(response, responseType);
     }
@@ -118,8 +106,6 @@ public class AuthenticatedHTTPClient {
 
         HttpResponse response = httpClient.execute(request);
 
-        assertResponseStatus(response);
-
         return getGsonResponse(response, responseType);
     }
 
@@ -134,9 +120,8 @@ public class AuthenticatedHTTPClient {
 
         HttpResponse response = httpClient.execute(request);
 
-        assertResponseStatus(response);
-
         if (responseType == null) {
+            assertResponseStatus(response);
             return null;
         }
 
@@ -144,18 +129,26 @@ public class AuthenticatedHTTPClient {
     }
 
     private <T> T getGsonResponse(HttpResponse response, Type responseType) throws IOException, MediaPlatformException {
-        T gsonResponse = gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8),
-                responseType);
+        try {
+            T gsonResponse = gson.fromJson(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8),
+                    responseType);
 
-        if (gsonResponse instanceof RestResponse) {
-            RestResponse restResponse = (RestResponse)gsonResponse;
-            restResponse.throwForErrorCode();
+            if (gsonResponse instanceof RestResponse) {
+                RestResponse restResponse = (RestResponse) gsonResponse;
+                restResponse.throwForErrorCode();
+            }
+
+            assertResponseStatus(response);
+            return gsonResponse;
         }
-
-        return gsonResponse;
+        catch (JsonIOException|JsonSyntaxException ex) {
+            assertResponseStatus(response);
+            throw ex;
+        }
     }
 
-    private void assertResponseStatus(HttpResponse response) throws UnauthorizedException, IOException {
+
+    private void assertResponseStatus(HttpResponse response) throws IOException, MediaPlatformException {
         if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
             tryToCloseResponse(response);
             throw new UnauthorizedException();
@@ -163,7 +156,7 @@ public class AuthenticatedHTTPClient {
 
         if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
             tryToCloseResponse(response);
-            throw new IOException(response.toString());
+            throw new MediaPlatformException(response.toString());
         }
     }
 
