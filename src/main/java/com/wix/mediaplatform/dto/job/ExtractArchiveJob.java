@@ -8,7 +8,7 @@ public class ExtractArchiveJob extends Job {
 
     private ExtractArchiveSpecification specification;
 
-    private RestResponse result;
+    private RestResponse<ExtractArchiveJobResult> result;
 
     @Override
     public ExtractArchiveSpecification getSpecification() {
@@ -16,7 +16,5 @@ public class ExtractArchiveJob extends Job {
     }
 
     @Override
-    public RestResponse getResult() {
-        return result;
-    }
+    public RestResponse<ExtractArchiveJobResult> getResult() { return result; }
 }

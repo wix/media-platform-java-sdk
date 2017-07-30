@@ -1,7 +1,7 @@
 package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.job.ExtractArchiveJob;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
 import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.MediaPlatformException;
@@ -27,8 +27,8 @@ public class ArchiveManager {
         this.baseUrl = "https://" + configuration.getDomain() + "/_api";
     }
 
-    public Job extractArchive(ExtractArchiveRequest extractArchiveRequest) throws MediaPlatformException, IOException, URISyntaxException {
-        RestResponse<Job> restResponse = authenticatedHTTPClient.post(
+    public ExtractArchiveJob extractArchive(ExtractArchiveRequest extractArchiveRequest) throws MediaPlatformException, IOException, URISyntaxException {
+        RestResponse<ExtractArchiveJob> restResponse = authenticatedHTTPClient.post(
                 baseUrl + "/archive/extract",
                 extractArchiveRequest,
                 null,
