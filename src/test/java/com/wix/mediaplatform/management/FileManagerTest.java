@@ -69,6 +69,18 @@ public class FileManagerTest extends BaseTest {
     }
 
     @Test
+    public void getFileMetadataByPathImage() throws Exception {
+        stubFor(get(urlEqualTo("/_api/files/metadata?path=%2Fimages%2Fanimals%2Fcat.jpg"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-metadata-image-response.json")));
+
+        FileMetadata file = fileManager.getFileMetadataByPath("/images/animals/cat.jpg");
+
+        assertThat(file.getFileDescriptor().getId(), is("2145ae56cd5c47c79c05d4cfef5f1078"));
+    }
+
+    @Test
     public void getFileMetadataByIdVideo() throws Exception {
         stubFor(get(urlEqualTo("/_api/files/id/metadata"))
                 .willReturn(aResponse()
