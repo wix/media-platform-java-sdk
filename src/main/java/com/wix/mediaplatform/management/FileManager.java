@@ -92,6 +92,19 @@ public class FileManager {
         return restResponse.getPayload();
     }
 
+
+    @Nullable
+    public FileMetadata getFileMetadataByPath(String path) throws MediaPlatformException, IOException, URISyntaxException {
+        Map<String, String> params = newHashMap();
+        params.put("path", path);
+
+        RestResponse<FileMetadata> restResponse = authenticatedHttpClient.get(
+                baseUrl + "/files/metadata",
+                params,
+                FILE_METADATA_REST_RESPONSE);
+        return restResponse.getPayload();
+    }
+
     public ListFilesResponse listFiles(String path, @Nullable ListFilesRequest listFilesRequest) throws MediaPlatformException, IOException, URISyntaxException {
         Map<String, String> params = newHashMap();
         if (listFilesRequest != null) {
