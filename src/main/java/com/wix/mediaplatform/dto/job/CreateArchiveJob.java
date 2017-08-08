@@ -4,11 +4,11 @@ import com.wix.mediaplatform.dto.response.RestResponse;
 
 public class CreateArchiveJob extends Job {
 
-    public static final String job_type = "urn:job:archive.create";
+    public static final Job.Type job_type = Type.ARCHIVE_CREATE;
 
     private CreateArchiveSpecification specification;
 
-    private RestResponse result;
+    private RestResponse<Job> result;
 
     @Override
     public CreateArchiveSpecification getSpecification() {
@@ -16,7 +16,7 @@ public class CreateArchiveJob extends Job {
     }
 
     @Override
-    public RestResponse getResult() {
+    public RestResponse<Job> getResult() {
         return result;
     }
 }

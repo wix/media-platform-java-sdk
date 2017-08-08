@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
-import com.wix.mediaplatform.dto.job.ExtractArchiveJob;
-import com.wix.mediaplatform.dto.job.FileImportJob;
-import com.wix.mediaplatform.dto.job.Job;
-import com.wix.mediaplatform.dto.job.TranscodeJob;
+import com.wix.mediaplatform.dto.job.*;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.gson.*;
@@ -73,6 +70,7 @@ public class MediaPlatform {
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Job.class, "type")
                         .registerSubtype(FileImportJob.class, FileImportJob.job_type.getValue())
                         .registerSubtype(ExtractArchiveJob.class, ExtractArchiveJob.job_type.getValue())
+                        .registerSubtype(CreateArchiveJob.class, CreateArchiveJob.job_type.getValue())
                         .registerSubtype(TranscodeJob.class, TranscodeJob.job_type.getValue()));
 
         if (pretty) {

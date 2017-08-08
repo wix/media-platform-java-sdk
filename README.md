@@ -153,7 +153,7 @@ It is possible to create an archive from several files
 ```java
 ExtractArchiveRequest extractArchiveRequest = new ExtractArchiveRequest()
         .setSource(new Source().setFileId("file id"))
-        .setDestination(new Destination().setAcl("public").setPath("/demo/archive.zip")).setArchiveType("zip");
+        .setDestination(new Destination().setAcl("public").setPath("/demo/archive.zip").setAcl("private")).setArchiveType("zip");
 Job job = mediaPlatform.archiveManager().extractArchive(extractArchiveRequest);
 ```
 

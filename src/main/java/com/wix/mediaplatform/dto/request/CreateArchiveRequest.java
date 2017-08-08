@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class CreateArchiveRequest {
 
-    private ArrayList<Source> sources;
+    private ArrayList<Source> sources = new ArrayList<>();
 
     private Destination destination;
 

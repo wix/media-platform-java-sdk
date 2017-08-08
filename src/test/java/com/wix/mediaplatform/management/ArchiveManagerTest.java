@@ -49,7 +49,7 @@ public class ArchiveManagerTest extends BaseTest {
 
         CreateArchiveRequest createArchiveRequest = new CreateArchiveRequest()
                 .addSource(new Source().setFileId("file id"))
-                .setDestination(new Destination().setPath("/fish/file.zip"))
+                .setDestination(new Destination().setPath("/fish/file.zip").setAcl("private"))
                 .setArchiveType("zip");
         Job job = archiveManager.createArchive(createArchiveRequest);
 
