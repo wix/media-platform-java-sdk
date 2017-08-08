@@ -1,10 +1,14 @@
 package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.dto.job.CreateArchiveJob;
+import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.request.CreateArchiveRequest;
 import com.wix.mediaplatform.dto.job.ExtractArchiveJob;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
 import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.MediaPlatformException;
+import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 
 import java.io.IOException;
@@ -25,6 +29,16 @@ public class ArchiveManager {
         this.authenticatedHTTPClient = authenticatedHTTPClient;
 
         this.baseUrl = "https://" + configuration.getDomain() + "/_api";
+    }
+
+    public CreateArchiveJob createArchive(CreateArchiveRequest createArchiveRequest) throws MediaPlatformException, IOException, URISyntaxException {
+        RestResponse<CreateArchiveJob> restResponse = authenticatedHTTPClient.post(
+                baseUrl + "/archive/create",
+                createArchiveRequest,
+                null,
+                JOB_REST_RESPONSE);
+
+        return restResponse.getPayload();
     }
 
     public ExtractArchiveJob extractArchive(ExtractArchiveRequest extractArchiveRequest) throws MediaPlatformException, IOException, URISyntaxException {

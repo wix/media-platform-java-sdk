@@ -5,6 +5,10 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
+import com.wix.mediaplatform.dto.job.Destination;
+import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.job.Source;
+import com.wix.mediaplatform.dto.request.CreateArchiveRequest;
 import com.wix.mediaplatform.dto.job.*;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
@@ -34,6 +38,22 @@ public class ArchiveManagerTest extends BaseTest {
     @Before
     public void setup() {
         WireMock.reset();
+    }
+
+    @Test
+    public void createArchive() throws Exception {
+        stubFor(post(urlEqualTo("/_api/archive/create"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("create-archive-pending-response.json")));
+
+        CreateArchiveRequest createArchiveRequest = new CreateArchiveRequest()
+                .addSource(new Source().setFileId("file id"))
+                .setDestination(new Destination().setPath("/fish/file.zip"))
+                .setArchiveType("zip");
+        Job job = archiveManager.createArchive(createArchiveRequest);
+
+        assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
     }
 
     @Test

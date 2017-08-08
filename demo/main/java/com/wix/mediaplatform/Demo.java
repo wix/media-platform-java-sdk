@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.wix.mediaplatform.dto.job.*;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
+import com.wix.mediaplatform.dto.request.CreateArchiveRequest;
 import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.request.SearchJobsRequest;
 import com.wix.mediaplatform.dto.request.TranscodeRequest;
@@ -104,6 +105,26 @@ class Demo {
         System.out.println(gson.toJson(response));
     }
 
+    void createArchive() throws IOException, UnauthorizedException, URISyntaxException {
+
+        String id = UUID.randomUUID().toString();
+
+        File file = new File(this.getClass().getClassLoader().getResource("files/document.xlsx").getFile());
+        FileDescriptor fileDescriptor = mediaPlatform.fileManager()
+                .uploadFile("/demo/upload/" + id + ".document.xlsx",
+                        "application/vnd.ms-excel",
+                        "document.xlsx",
+                        file, "private")[0];
+
+        CreateArchiveRequest createArchiveRequest = new CreateArchiveRequest()
+                .addSource(new Source().setFileId(fileDescriptor.getId()))
+                .setDestination(new Destination().setAcl("public").setPath("/demo/archives/document.xlsx.zip"))
+                .setArchiveType("zip");
+        Job job = mediaPlatform.archiveManager().createArchive(createArchiveRequest);
+
+        System.out.println(gson.toJson(job));
+    }
+    
     void extractArchive() throws IOException, UnauthorizedException, URISyntaxException {
 
         String id = UUID.randomUUID().toString();
