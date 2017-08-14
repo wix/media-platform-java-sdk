@@ -143,7 +143,21 @@ TranscodeJobResult response = mediaPlatform.transcodeManager().transcodeVideo(tr
 System.out.println(gson.toJson(response));
 ```
 
-## Archive Extraction
+## Archive Functions
+[Archive API Documentation](https://support.wixmp.com/en/article/archive-service)
+
+### Archive Creation
+
+It is possible to create an archive from several files
+
+```java
+ExtractArchiveRequest extractArchiveRequest = new ExtractArchiveRequest()
+        .setSource(new Source().setFileId("file id"))
+        .setDestination(new Destination().setAcl("public").setPath("/demo/archive.zip").setAcl("private")).setArchiveType("zip");
+Job job = mediaPlatform.archiveManager().extractArchive(extractArchiveRequest);
+```
+
+### Archive Extraction
 
 Instead of uploading numerous files one by one, it is possible to upload a single zip file
 and order the Media Platform to extract its content to a destination directory. 
