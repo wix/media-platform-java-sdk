@@ -3,7 +3,9 @@
 [![Build Status][travis-image]][travis-url] 
 [![MVN version][mvn-image]][mvn-url]
 
-[Wix Media Platform][wixmp-url] is a collection of services for storing, serving, uploading, and managing media files and any files in general
+[Wix Media Platform][wixmp-url] is an end-to-end solution for all modern web media management, handling images, video and audio in the most efficient way on the market. From upload, storage, metadata management and all the way to delivery, Wix Media Platform takes care of all possible media workflows.
+
+
 
 # Java SDK
 
@@ -25,7 +27,7 @@ The respective JavaScript (for the Browser and Node.js) package can be found [he
 
 ## Instantiating the Media Platform
 
-First, if you haven't done so yet, register at [Wix Media Platform][wixmp-url], create your organization, project and application.
+First, if you haven't done so yet, register at [Wix Media Platform][wixmp-url], create your [organization, project][org-and-project-start] and [application][application-start].
 
 ```java
 MediaPlatform mediaPlatform = new MediaPlatform(
@@ -36,6 +38,7 @@ MediaPlatform mediaPlatform = new MediaPlatform(
 ```
 
 ## File Upload
+[File Upload API Documentation](https://support.wixmp.com/en/article/file-management#upload-file)
 
 ```java
 File file = new File(...);
@@ -52,15 +55,15 @@ GetUploadUrlResponse getUploadUrlResponse = mediaPlatform.fileManager().getUploa
 
 ## Jobs
 
-The Jobs API forms the basis for all long running asynchronous operations in the platform.
+The [Jobs API][jobs-api] forms the basis for all long running asynchronous operations in the platform.
 
 ### Job Lifecycle
 
 A job is created by a service that performs a long running operation, such as video transcode or file import.
 
-1. On job creation it is queued for execution and assumes the 'pending' status.
-2. When the job execution commences, the job status changes to 'working'
-3. On job completion the job assumes one of the following statuses: 'success' or 'error' and the 'result' property is populated
+1. When a job is created, it is queued for execution, and its status is initially set to 'pending'.
+2. Once the job execution commences, the job status is updated to 'working'.
+3. On job completion, the job status is updated to either 'success' or 'error', and the 'result' property is populated (prior to the job's completion, the 'result' field is null).
 
 ### Get Job
 
@@ -69,7 +72,7 @@ job = mediaPlatform.jobManager().getJob("job id");
 ```
 
 ## File Import
-
+[File Import API documentation](https://support.wixmp.com/en/article/file-import)
 ```java
 ImportFileRequest importFileRequest = new ImportFileRequest()
         .setSourceUrl("from URL")
@@ -100,8 +103,11 @@ String url = image.toUrl();
 ```
 
 ## File Metadata & Management
+[File Management API Documentation](https://support.wixmp.com/en/article/file-management)
 
-Wix Media Platform exposes a comprehensive set of APIs tailored for the management of files.
+[File Metadata API Documentation](https://support.wixmp.com/en/article/file-metadata)
+
+Wix Media Platform provides a comprehensive set of APIs tailored for management of previously uploaded files.
 
 ### List Files
 
@@ -195,3 +201,6 @@ It offers computing, storage and application services for web, mobile and backen
 [npm-url]: https://npmjs.org/package/media-platform-js-sdk
 [travis-image]: https://travis-ci.org/wix/media-platform-java-sdk.svg?branch=master
 [travis-url]: https://travis-ci.org/wix/media-platform-java-sdk
+[org-and-project-start]: https://support.wixmp.com/en/article/creating-your-organization-and-project
+[application-start]: https://support.wixmp.com/en/article/creating-your-first-application
+[jobs-api]: https://support.wixmp.com/en/article/jobs
