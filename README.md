@@ -53,6 +53,26 @@ Generates a signed URL and token, required for uploading from the browser
 GetUploadUrlResponse getUploadUrlResponse = mediaPlatform.fileManager().getUploadUrl();
 ```
 
+## File Import
+[File Import API documentation](https://support.wixmp.com/en/article/file-import)
+```java
+ImportFileRequest importFileRequest = new ImportFileRequest()
+        .setSourceUrl("from URL")
+        .setDestination(new Destination()
+                .setPath("/to/file.ext")
+                .setAcl("private||public"));
+Job job = mediaPlatform.fileManager().importFile(importFileRequest);
+```
+
+## Download a Secure File
+[File Download API documentation](https://support.wixmp.com/en/article/file-download)
+
+File access can be restricted by setting the acl to 'private'. In order to access these files, a secure URL must be generated
+
+```java
+String signedUrl = mediaPlatform.fileDownloader().getDownloadUrl("path/to/file.ext");
+```
+
 ## Jobs
 
 The [Jobs API][jobs-api] forms the basis for all long running asynchronous operations in the platform.
@@ -68,26 +88,12 @@ A job is created by a service that performs a long running operation, such as vi
 ### Get Job
 
 ```java
-job = mediaPlatform.jobManager().getJob("job id");
+job = mediaPlatform.jobManager().getJob("jobId");
 ```
-
-## File Import
-[File Import API documentation](https://support.wixmp.com/en/article/file-import)
-```java
-ImportFileRequest importFileRequest = new ImportFileRequest()
-        .setSourceUrl("from URL")
-        .setDestination(new Destination()
-                .setPath("/to/file.ext")
-                .setAcl("private||public"));
-Job job = mediaPlatform.fileManager().importFile(importFileRequest);
-```
-
-## Secure File URL
-
-File access can be restricted by setting the acl to 'private', in order to access them a secure URL must be generated
+### Get Job Group
 
 ```java
-String signedUrl = mediaPlatform.fileDownloader().getDownloadUrl("path/to/file.ext");
+jobGroup = mediaPlatform.jobManager().getJobGroup("jobGroupId");
 ```
 
 ## Image Consumption
@@ -109,7 +115,7 @@ String url = image.toUrl();
 
 Wix Media Platform provides a comprehensive set of APIs tailored for management of previously uploaded files.
 
-### List Files
+### List Files in a Directory
 
 ```java
 ListFilesResponse response = mediaPlatform.fileManager().listFiles("directory path");
@@ -125,28 +131,6 @@ FileMetadata fileMetadata = mediaPlatform.fileManager().getFileMetadataById("fil
 
 ```java
 mediaPlatform.fileManager().deleteFileById("file id");
-```
-
-## Transcode API
-
-[Transcode API Documentation](https://support.wixmp.com/en/article/video-transcoding-5054232)
-
-Initiate a transcode job
-
-```java
-TranscodeRequest transcodeRequest = new TranscodeRequest()
-    .addSource(new Source().setPath("/demo/video.mp4") )
-    .addSpecification( new TranscodeSpecification()
-        .setDestination(new Destination()
-            .setDirectory("/demo/encodes/")
-            .setAcl("public"))
-        .setQualityRange( new QualityRange()
-            .setMinimum("240p")
-            .setMaximum("1440p")));
-
-TranscodeJobResult response = mediaPlatform.transcodeManager().transcodeVideo(transcodeRequest);
-
-System.out.println(gson.toJson(response));
 ```
 
 ## Archive Functions
@@ -173,6 +157,28 @@ ExtractArchiveRequest extractArchiveRequest = new ExtractArchiveRequest()
         .setSource(new Source().setFileId("file id"))
         .setDestination(new Destination().setAcl("public").setDirectory("/demo/extracted"));
 Job job = mediaPlatform.archiveManager().extractArchive(extractArchiveRequest);
+```
+
+## Transcoding
+
+[Transcode API Documentation](https://support.wixmp.com/en/article/video-transcoding-5054232)
+
+Initiate a transcode request
+
+```java
+TranscodeRequest transcodeRequest = new TranscodeRequest()
+    .addSource(new Source().setPath("/demo/video.mp4") )
+    .addSpecification( new TranscodeSpecification()
+        .setDestination(new Destination()
+            .setDirectory("/demo/encodes/")
+            .setAcl("public"))
+        .setQualityRange( new QualityRange()
+            .setMinimum("240p")
+            .setMaximum("1440p")));
+
+TranscodeJobResult response = mediaPlatform.transcodeManager().transcodeVideo(transcodeRequest);
+
+System.out.println(gson.toJson(response));
 ```
 
 ## Reporting Issues
