@@ -5,8 +5,6 @@
 
 [Wix Media Platform][wixmp-url] is an end-to-end solution for all modern web media management, handling images, video and audio in the most efficient way on the market. From upload, storage, metadata management and all the way to delivery, Wix Media Platform takes care of all possible media workflows.
 
-
-
 # Java SDK
 
 This artifact is a Java library, compatible with Java 7+.
@@ -198,7 +196,6 @@ Our powerful technology makes it simple for everyone to create a beautiful websi
 
 [Google Cloud Platform](https://cloud.google.com/) enables developers to build, test and deploy applications on Google’s reliable infrastructure.
 It offers computing, storage and application services for web, mobile and backend solutions.
-
 
 [wix-url]: https://www.wix.com/
 [wixmp-url]: https://gcp.wixmp.com/
