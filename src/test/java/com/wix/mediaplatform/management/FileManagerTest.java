@@ -36,9 +36,9 @@ public class FileManagerTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("create-file-response.json")));
 
-        FileDescriptor fileDescriptor = fileManager.createFile(new CreateFileRequest()
-                .setPath("/newDirectory")
-        );
+        CreateFileRequest createFileRequest = new CreateFileRequest().setPath("/newDirectory");
+
+        FileDescriptor fileDescriptor = fileManager.createFile(createFileRequest);
 
         assertThat(fileDescriptor.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
         assertThat(fileDescriptor.getType(), is(FileDescriptor.Type.DIRECTORY.getValue()));
