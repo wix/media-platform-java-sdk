@@ -28,25 +28,27 @@ public class FileDownloader {
     }
 
     public String getDownloadUrl(String path, @Nullable DownloadUrlRequest downloadUrlRequest) {
-        Map<String, Object> additionalClaims = newHashMap();
-        additionalClaims.put("path", path);
+        Map<String, Object> payload = newHashMap();
+        payload.put("path", path);
         Token token = new Token();
         if (downloadUrlRequest != null) {
             if (downloadUrlRequest.getTtl() != null) {
                 token.setExpiration((System.currentTimeMillis() / 1000L) + downloadUrlRequest.getTtl());
             }
             if (downloadUrlRequest.getOnExpireRedirectTo() != null) {
-                additionalClaims.put("onExpireRedirectTo", downloadUrlRequest.getOnExpireRedirectTo());
+                payload.put("onExpireRedirectTo", downloadUrlRequest.getOnExpireRedirectTo());
             }
             if (downloadUrlRequest.getAttachment() != null) {
                 Map<String, Object> attachment = newHashMap();
-                additionalClaims.put("attachment", attachment);
+                payload.put("attachment", attachment);
                 if (downloadUrlRequest.getAttachment().getFilename() != null) {
                     attachment.put("filename", downloadUrlRequest.getAttachment().getFilename());
                 }
             }
         }
 
+        Map<String, Object> additionalClaims = newHashMap();
+        additionalClaims.put("payload", payload);
         token.setIssuer(NS.APPLICATION + configuration.getAppId())
                 .setSubject(NS.APPLICATION + configuration.getAppId())
                 .addVerb(VERB.FILE_DOWNLOAD)
