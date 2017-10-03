@@ -8,6 +8,24 @@ import static org.hamcrest.core.Is.is;
 public class ImageTest {
 
     @Test
+    public void fill() throws Exception {
+        String url = new Image("//test.com/file.png/v1/fill/w_709,h_400/file.png")
+                .fill(100, 200)
+                .toUrl();
+
+        assertThat(url, is("//test.com/file.png/v1/fill/w_100,h_200/file.png"));
+    }
+
+    @Test
+    public void fit() throws Exception {
+        String url = new Image("//test.com/file.png/v1/fill/w_709,h_400/file.png")
+                .fill(100, 200)
+                .toUrl();
+
+        assertThat(url, is("//test.com/file.png/v1/fill/w_100,h_200/file.png"));
+    }
+
+    @Test
     public void crop() throws Exception {
         String url = new Image("//test.com/file.png/v1/crop/w_709,h_400,x_1,y_2,scl_1,q_75,usm_0.5_0.2_0.0/file.png")
                 .crop(100, 200, 1, 2, 3)
