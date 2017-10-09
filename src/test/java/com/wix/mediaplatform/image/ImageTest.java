@@ -19,10 +19,10 @@ public class ImageTest {
     @Test
     public void fit() throws Exception {
         String url = new Image("//test.com/file.png/v1/fill/w_709,h_400/file.png")
-                .fill(100, 200)
+                .fit(100, 200)
                 .toUrl();
 
-        assertThat(url, is("//test.com/file.png/v1/fill/w_100,h_200/file.png"));
+        assertThat(url, is("//test.com/file.png/v1/fit/w_100,h_200/file.png"));
     }
 
     @Test
