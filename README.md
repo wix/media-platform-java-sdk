@@ -26,18 +26,31 @@ The respective JavaScript (for the Browser and Node.js) package can be found [he
 ## Instantiating the Media Platform
 
 First, if you haven't done so yet, register at [Wix Media Platform][wixmp-url], create your [organization, project][org-and-project-start] and [application][application-start].
+__Parameters__:
+- `domain` (String) - the project host url as appears in the application page
+- `appId` (String) - the application id as appears in the application page
+- `sharedSecret` (String) - the application's shared secret as appears in the application page
 
 ```java
-MediaPlatform mediaPlatform = new MediaPlatform(
-    "<project host as appears in the application page>",
-    "<application id as appears in the application page>",
-    "<shared secret as appears in the application page>"
-);
+MediaPlatform mediaPlatform = new MediaPlatform("domain", "appId", "secret");
 ```
 
-## File Upload
-[File Upload API Documentation](https://support.wixmp.com/en/article/file-management#upload-file)
+## File Management
+[File Management API Documentation](https://support.wixmp.com/en/article/file-management)
+This API provides the basic set of file operations available in Wix Media Platform, such as upload, list and delete.
+> Please note: for every File Management action, your application needs to have the relevant [permissions](https://support.wixmp.com/en/article/about-permissions). Add the application to a security group or create a permission that applies to it.
 
+### File Upload
+[File Upload API Documentation](https://support.wixmp.com/en/article/file-management#upload-file)
+Requests an upload url and upload token from the application, and performs a `POST` request to that url with the relevant file information.
+__Parameters__:
+- `path` (string) - destination path of the file in Wix Media PLatform file manager.
+- `mimeType` (string) - mimetype of the uploaded file.
+- `file` (file | inputStream) - the file to be uploaded.
+//TODO: waiting for a new function without the "file_name.ext" param
+
+__Return value__:
+An array of [FileDescriptor](https://support.wixmp.com/en/article/file-management#filedescriptor-object) objects.
 ```java
 File file = new File(...);
 FileDescriptor[] files = mediaPlatform.fileManager().uploadFile("/destination_path/file_name.ext", "mime_type", "file_name.ext", file, "private||public");
@@ -45,14 +58,16 @@ FileDescriptor[] files = mediaPlatform.fileManager().uploadFile("/destination_pa
 
 ### Get Upload URL
 
-Generates a signed URL and token, required for uploading from the browser
+Generates a signed URL and token, required for uploading from the browser.
 
 ```java
 GetUploadUrlResponse getUploadUrlResponse = mediaPlatform.fileManager().getUploadUrl();
 ```
 
-## File Import
+### File Import
 [File Import API documentation](https://support.wixmp.com/en/article/file-import)
+Creates a [job](https://support.wixmp.com/en/article/jobs) that imports an existing file from an external url.
+
 ```java
 ImportFileRequest importFileRequest = new ImportFileRequest()
         .setSourceUrl("from URL")
@@ -62,13 +77,87 @@ ImportFileRequest importFileRequest = new ImportFileRequest()
 Job job = mediaPlatform.fileManager().importFile(importFileRequest);
 ```
 
-## Download a Secure File
+### Download a Secure File
 [File Download API documentation](https://support.wixmp.com/en/article/file-download)
 
-File access can be restricted by setting the acl to 'private'. In order to access these files, a secure URL must be generated
+File access can be restricted by setting the acl to 'private'. In order to access these files, a secure URL must be generated.
 
 ```java
 String signedUrl = mediaPlatform.fileDownloader().getDownloadUrl("path/to/file.ext");
+```
+
+### List Files in a Directory
+Retrieves a list of the files in the directory by sending a GET request.
+__Parameters__: `path` (string) - the path of the required directory.
+__Return value__: the payload of the http response.
+```java
+ListFilesResponse response = mediaPlatform.fileManager().listFiles("directory path");
+```
+
+### Get File Descriptor
+[Get File API Documentation](https://support.wixmp.com/en/article/file-management#get-file)
+Retrieves a file's fileDescriptor object by path.
+__Parameters__: `path` (string) - the path of the required file.
+__Return value__: [fileDescriptor](https://support.wixmp.com/en/article/file-management#filedescriptor-object) object.
+```java
+FileDescriptor fileDescriptor = mediaPlatform.fileManager().getFile("/path/");
+```
+
+### Get File Metadata
+[File Metadata API Documentation](https://support.wixmp.com/en/article/file-metadata)
+Retrieves a file's metadata object, either by file ID or by path.
+__Parameters__: `fileId` (string) - the file ID of the required file.
+__Return value__: file metadata object.
+```java
+FileMetadata fileMetadata = mediaPlatform.fileManager().getFileMetadataById("file id");
+```
+__Parameters__: `path` (string) - the path of the required file.
+__Return value__: file metadata object.
+```java
+FileMetadata fileMetadata = mediaPlatform.fileManager().getFileMetadataByPath("path");
+```
+
+### Delete File
+[Delete File API Documentation](https://support.wixmp.com/en/article/file-management#delete-file)
+Deletes a file by either file ID or path.
+__Parameters__: `fileId` (string) - the file ID of the file to be deleted.
+__Return value__: null.
+```java
+mediaPlatform.fileManager().deleteFileById("file id");
+```
+
+__Parameters__: path (string) - the path of the file to be deleted.
+__Return value__: null.
+```java
+mediaPlatform.fileManager().deleteFileByPath("path");
+```
+
+## Archive Functions
+[Archive API Documentation](https://support.wixmp.com/en/article/archive-service)
+
+### Archive Creation
+
+In order to archive several files in WixMP to a zip|tar etc. file, create a createArchiveRequest, and than pass it as a parameter to the createArchive method:
+
+```java
+CreateArchiveRequest createArchiveRequest = new CreateArchiveRequest()
+        .setSource(new Source().setFileId("file id"))
+        .setDestination(new Destination().setPath("/fish/file.zip").setAcl("private"))
+        .setArchiveType("zip");
+Job job = mediaPlatform.archiveManager.createArchive(createArchiveRequest);
+```
+
+### Archive Extraction
+
+Instead of uploading multiple files separately, you can upload a single zip file
+and later extract its content to a destination directory.
+Create an extractArchiveRequest, and than pass it as a parameter to the createArchive method:
+
+```java
+ExtractArchiveRequest extractArchiveRequest = new ExtractArchiveRequest()
+        .setSource(new Source().setFileId("file id"))
+        .setDestination(new Destination().setAcl("public").setDirectory("/demo/extracted"));
+Job job = mediaPlatform.archiveManager().extractArchive(extractArchiveRequest);
 ```
 
 ## Jobs
@@ -84,19 +173,34 @@ A job is created by a service that performs a long running operation, such as vi
 3. On job completion, the job status is updated to either 'success' or 'error', and the 'result' property is populated (prior to the job's completion, the 'result' field is null).
 
 ### Get Job
-
+__Parameters__: `jobId` (string) - the ID of the requested job.
+__Return value__: [job](https://support.wixmp.com/en/article/jobs#the-job-object) object.
 ```java
 job = mediaPlatform.jobManager().getJob("jobId");
 ```
 ### Get Job Group
-
+__Parameters__: jobGroupId (string) - the ID of the requested job group.
+__Return value__: An array of [job](https://support.wixmp.com/en/article/jobs#the-job-object) objects.
 ```java
-jobGroup = mediaPlatform.jobManager().getJobGroup("jobGroupId");
+Job[] jobGroup = mediaPlatform.jobManager().getJobGroup("jobGroupId");
 ```
 
-## Image Consumption
+## Image Service
+[Image Service API Documentation](https://support.wixmp.com/en/article/image-service-3835799)
+The SDK enables generating image URLs and manipulating images.
 
-The SDK provides a programmatic facility to generate image URLs
+###Image Class
+An istance of this class is required for all image-related actions.
+You can create an instance of this class by passing one of the following as the parameter:
+- an [image FileMetadata](https://support.wixmp.com/en/article/file-metadata#image-metadata) object
+- a [FileDescriptor](https://support.wixmp.com/en/article/file-management#filedescriptor-object) object
+- the image's url (string)
+```java
+Image image1 = new Image(fileMetadata);
+Image image2 = new Image(fileDescriptor);
+Image image3 = new Image("url");
+```
+The Image class has the following methods:
 
 ```java
 Image image = new Image(fileDescriptor).setHost("images service host");
@@ -106,62 +210,13 @@ image.crop(width, height, x, y, scale);
 String url = image.toUrl(); 
 ```
 
-## File Metadata & Management
-[File Management API Documentation](https://support.wixmp.com/en/article/file-management)
-
-[File Metadata API Documentation](https://support.wixmp.com/en/article/file-metadata)
-
-Wix Media Platform provides a comprehensive set of APIs tailored for management of previously uploaded files.
-
-### List Files in a Directory
-
-```java
-ListFilesResponse response = mediaPlatform.fileManager().listFiles("directory path");
-```
-
-### Get File Metadata
-
-```java
-FileMetadata fileMetadata = mediaPlatform.fileManager().getFileMetadataById("file id");
-```
-
-### Delete File
-
-```java
-mediaPlatform.fileManager().deleteFileById("file id");
-```
-
-## Archive Functions
-[Archive API Documentation](https://support.wixmp.com/en/article/archive-service)
-
-### Archive Creation
-
-It is possible to create an archive from several files
-
-```java
-ExtractArchiveRequest extractArchiveRequest = new ExtractArchiveRequest()
-        .setSource(new Source().setFileId("file id"))
-        .setDestination(new Destination().setAcl("public").setPath("/demo/archive.zip").setAcl("private")).setArchiveType("zip");
-Job job = mediaPlatform.archiveManager().extractArchive(extractArchiveRequest);
-```
-
-### Archive Extraction
-
-Instead of uploading numerous files one by one, it is possible to upload a single zip file
-and order the Media Platform to extract its content to a destination directory. 
-
-```java
-ExtractArchiveRequest extractArchiveRequest = new ExtractArchiveRequest()
-        .setSource(new Source().setFileId("file id"))
-        .setDestination(new Destination().setAcl("public").setDirectory("/demo/extracted"));
-Job job = mediaPlatform.archiveManager().extractArchive(extractArchiveRequest);
-```
 
 ## Transcoding
 
 [Transcode API Documentation](https://support.wixmp.com/en/article/video-transcoding-5054232)
+After uploading a video to your project, you can have it transcoded in order to enable adaptive video playback on any browser or internet-connected device.
 
-Initiate a transcode request
+To initiate a transcode job, create a transcodeRequest, and pass it as a parameter to the transcodeVideo method:
 
 ```java
 TranscodeRequest transcodeRequest = new TranscodeRequest()
