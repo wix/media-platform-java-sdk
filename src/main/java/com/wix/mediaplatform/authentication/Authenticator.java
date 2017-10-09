@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+import java.util.List;
 
 public class Authenticator {
 
@@ -34,6 +35,24 @@ public class Authenticator {
         Token token = new Token()
                 .setIssuer(NS.APPLICATION + configuration.getAppId())
                 .setSubject(NS.APPLICATION + configuration.getAppId());
+
+        return getHeader(token);
+    }
+
+    /**
+     * @param verbs a list of verbs to which the token will be limited
+     * @return A limited authorization header
+     * @throws IllegalArgumentException must provide at least one verb, otherwise the token will not be limited...
+     */
+    public String getHeader(List<String> verbs) {
+        if (verbs.size() < 1) {
+            throw new IllegalArgumentException("must provide at least one verb");
+        }
+
+        Token token = new Token()
+                .setIssuer(NS.APPLICATION + configuration.getAppId())
+                .setSubject(NS.APPLICATION + configuration.getAppId())
+                .setVerbs(verbs);
 
         return getHeader(token);
     }

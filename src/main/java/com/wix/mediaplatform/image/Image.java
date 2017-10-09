@@ -4,9 +4,7 @@ import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.image.encoder.JPEG;
 import com.wix.mediaplatform.image.filter.*;
-import com.wix.mediaplatform.image.framing.Crop;
-import com.wix.mediaplatform.image.framing.Frame;
-import com.wix.mediaplatform.image.framing.SmartCrop;
+import com.wix.mediaplatform.image.framing.*;
 import com.wix.mediaplatform.image.parser.FileDescriptorParser;
 import com.wix.mediaplatform.image.parser.FileMetadataParser;
 import com.wix.mediaplatform.image.parser.ImageUrlParser;
@@ -71,6 +69,16 @@ public class Image {
 
     public Image smartCrop(int width, int height) {
         this.frame = new SmartCrop(width, height);
+        return this;
+    }
+
+    public Image fit(int width, int height) {
+        this.frame = new Fit(width, height);
+        return this;
+    }
+
+    public Image fill(int width, int height) {
+        this.frame = new Fill(width, height);
         return this;
     }
 
