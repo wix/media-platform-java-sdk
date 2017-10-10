@@ -6,19 +6,19 @@ import com.wix.mediaplatform.dto.metadata.FileDescriptor;
  * Created by alonne on 30/07/2017.
  */
 public class CreateArchiveJobResult {
-    private FileDescriptor reportFileDescriptor;
+    private FileDescriptor createdFileDescriptor;
 
     public CreateArchiveJobResult() {
     }
 
-    public FileDescriptor getReportFileDescriptor() {
-        return reportFileDescriptor;
+    public FileDescriptor getCreatedFileDescriptor() {
+        return createdFileDescriptor;
     }
 
     @Override
     public String toString() {
         return "CreateArchiveJobResult{" +
-                "reportFileDescriptor=" + reportFileDescriptor +
+                "createdFileDescriptor=" + createdFileDescriptor +
                 '}';
     }
 }
