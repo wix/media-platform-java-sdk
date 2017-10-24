@@ -11,6 +11,7 @@ This artifact is a Java library, compatible with Java 7+.
 Its documentation can be found in the [Wiki tab](https://github.com/wix/media-platform-java-sdk/wiki).
 
 ## Installation
+In Maven, place the following within your \<dependencies> tag in your pom.xml file:
 
 ```xml
 <dependency>
