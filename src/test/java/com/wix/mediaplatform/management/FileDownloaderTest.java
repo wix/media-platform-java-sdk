@@ -27,6 +27,7 @@ public class FileDownloaderTest extends BaseTest {
     public void getDownloadUrlWithOptions() throws Exception {
         DownloadUrlRequest downloadUrlRequest = new DownloadUrlRequest()
                 .setOnExpireRedirectTo("url")
+                .setSiteMediaToken("tokentokentoken")
                 .setAttachment(new Attachment()
                         .setFilename("fish"));
         String url = fileDownloader.getDownloadUrl("/file.txt", downloadUrlRequest);
