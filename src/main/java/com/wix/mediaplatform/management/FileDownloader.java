@@ -38,9 +38,6 @@ public class FileDownloader {
             if (downloadUrlRequest.getOnExpireRedirectTo() != null) {
                 payload.put("onExpireRedirectTo", downloadUrlRequest.getOnExpireRedirectTo());
             }
-            if (downloadUrlRequest.getSiteMediaToken() != null) {
-                payload.put("siteMediaToken", downloadUrlRequest.getSiteMediaToken());
-            }
             if (downloadUrlRequest.getAttachment() != null) {
                 Map<String, Object> attachment = newHashMap();
                 payload.put("attachment", attachment);

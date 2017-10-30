@@ -8,8 +8,6 @@ public class DownloadUrlRequest {
 
     private String onExpireRedirectTo;
 
-    private String siteMediaToken;
-
     public DownloadUrlRequest() {
     }
 
@@ -37,15 +35,6 @@ public class DownloadUrlRequest {
 
     public DownloadUrlRequest setOnExpireRedirectTo(String onExpireRedirectTo) {
         this.onExpireRedirectTo = onExpireRedirectTo;
-        return this;
-    }
-
-    public String getSiteMediaToken() {
-        return siteMediaToken;
-    }
-
-    public DownloadUrlRequest setSiteMediaToken(String siteMediaToken) {
-        this.siteMediaToken = siteMediaToken;
         return this;
     }
 }
