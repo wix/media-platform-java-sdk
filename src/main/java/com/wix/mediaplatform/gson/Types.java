@@ -2,6 +2,7 @@ package com.wix.mediaplatform.gson;
 
 import com.google.gson.reflect.TypeToken;
 import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.live.LiveStream;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.dto.response.*;
@@ -18,4 +19,6 @@ public class Types {
     public static final Type JOBS_REST_RESPONSE = new TypeToken<RestResponse<Job[]>>(){}.getType();
     public static final Type SEARCH_JOBS_REST_RESPONSE = new TypeToken<RestResponse<SearchJobsResponse>>(){}.getType();
     public static final Type TRANSCODE_JOBS_REST_RESPONSE = new TypeToken<RestResponse<TranscodeJobsResponse>>(){}.getType();
+    public static final Type LIVE_STREAM_RESPONSE = new TypeToken<RestResponse<LiveStream>>(){}.getType();
+    public static final Type LIVE_STREAM_LIST_RESPONSE = new TypeToken<RestResponse<LiveStream[]>>(){}.getType();
 }

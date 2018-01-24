@@ -1,0 +1,113 @@
+{
+  "code": 0,
+  "message": "OK",
+  "payload": [{
+    "reconnectTimeout": null,
+    "protocol": "rtmp",
+    "connectTimeout": null,
+    "success": true,
+    "dateUpdated": "2018-01-24T12:43:44Z",
+    "enforcedStreamParams": {
+      "paramsRange": {
+        "maxValues": {
+          "width": 1280,
+          "bitrate": 3000000,
+          "height": 720
+        }
+      }
+    },
+    "projectId": "wixmp-3dbd5cb16bb136182e099f78",
+    "errorMessage": null,
+    "streamType": "event",
+    "dateCreated": "2018-01-24T12:43:44Z",
+    "state": "created",
+    "streamerId": "2087713661271029439",
+    "publishEndpoint": {
+      "url": "rtmp://35.205.151.174/event/wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY4MDE0MjQsInN0cmVhbUlkIjoid2l4bXAtM2RiZDVjYjE2YmIxMzYxODJlMDk5Zjc4X1IzUGxPak5NIn0.Is-pMz5DM2r7Cfg8XsFjDGu42vXTkMoM0TfxVILAHkY",
+      "geo": null,
+      "protocol": "rtmp"
+    },
+    "stateNotifyUrl": {
+      "customPayload": {
+        "user_id": "0abec0a5-f791-42ab-83a9-ea45cfbfb4d7",
+        "title": "My Live Video",
+        "ref_item_id": "c3ab3f52ef8c4724b31b8d813c053e4a",
+        "ws2": "JWT.eyJraWQiOiJrdU42YlJQRCIsImFsZyI6IlJTMjU2In0.eyJkYXRhIjoie1widXNlckd1aWRcIjpcIjBhYmVjMGE1LWY3OTEtNDJhYi04M2E5LWVhNDVjZmJmYjRkN1wiLFwidXNlck5hbWVcIjpcImxlb25nMDJcIixcImNvbG9yc1wiOnt9LFwidWNkXCI6XCIyMDE3LTEwLTE3VDExOjM2OjQ0LjAwMCswMDAwXCIsXCJ3eHNcIjpmYWxzZSxcImV3eGRcIjp0cnVlLFwicm1iXCI6dHJ1ZSxcImx2bGRcIjpcIjIwMTgtMDEtMjRUMTI6MDE6NDcuODEyKzAwMDBcIixcImxhdGhcIjpcIjIwMTgtMDEtMjRUMTI6MDE6NDYuMTY5KzAwMDBcIixcInd4ZXhwXCI6XCIyMDE4LTA0LTAxVDEyOjAxOjQ2LjE2OSswMDAwXCJ9IiwiaWF0IjoxNTE2Nzk1MzA3LCJleHAiOjE1MjI1ODQxMDZ9.VEMYuQ0Y-nfdh6a94YJPBsi0pblpGjKb0k3d_6Xx-bt1J0mJ_Aogqv-dzvDCWtIVq5WWG-1H1mNu-O7r3T8i7zD90xgCPjDUNEN4hWUXFgka26PfSZLBZxPjxCB9QLssWEi4HJQVfm9kZaczihLk1qVoZ7mJzjgv66fChTaP__X61WZVLu6b9r0lAY35AtA813_NVl2l-p_pN2qp5ctCkubKcoshW69P9IRCJP7X4kUgmwJtEyxiwEW2rWFWeQwCe-c1i2baRXY2qz_BYXFdqUJCc1LqLneNHR35JamQfyoxRhRYG57r7JN2AOpbFi2stVk51DwlvDMZn1d9xnNTTA",
+        "ws": "",
+        "list_id": "087beab745c54fa787060682d79af8aa"
+      },
+      "callbackUrl": "http://wix-catalog-service.appspot.com/catalog/items/live/stream/notification"
+    },
+    "duration": 0,
+    "maxPublishDuration": 10800,
+    "probeResult": null,
+    "id": "wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM",
+    "playbackUrls": [
+      {
+        "path": "//prod-live-europe-west1.wixmp.com/live_streams/wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM/wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM_.m3u8",
+        "packageName": "hls"
+      }
+    ],
+    "dvr": {
+      "destination": {
+        "directory": null,
+        "path": "/stream/vod-meta.wix.com/c3ab3f52ef8c4724b31b8d813c053e4a/live-recording.mp4",
+        "acl": "public"
+      }
+    }
+  },{
+    "reconnectTimeout": null,
+    "protocol": "rtmp",
+    "connectTimeout": null,
+    "success": true,
+    "dateUpdated": "2018-01-24T12:43:44Z",
+    "enforcedStreamParams": {
+      "paramsRange": {
+        "maxValues": {
+          "width": 1280,
+          "bitrate": 3000000,
+          "height": 720
+        }
+      }
+    },
+    "projectId": "wixmp-3dbd5cb16bb136182e099f78",
+    "errorMessage": null,
+    "streamType": "event",
+    "dateCreated": "2018-01-24T12:43:44Z",
+    "state": "created",
+    "streamerId": "2087713661271029439",
+    "publishEndpoint": {
+      "url": "rtmp://35.205.151.174/event/wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY4MDE0MjQsInN0cmVhbUlkIjoid2l4bXAtM2RiZDVjYjE2YmIxMzYxODJlMDk5Zjc4X1IzUGxPak5NIn0.Is-pMz5DM2r7Cfg8XsFjDGu42vXTkMoM0TfxVILAHkY",
+      "geo": null,
+      "protocol": "rtmp"
+    },
+    "stateNotifyUrl": {
+      "customPayload": {
+        "user_id": "0abec0a5-f791-42ab-83a9-ea45cfbfb4d7",
+        "title": "My Live Video",
+        "ref_item_id": "c3ab3f52ef8c4724b31b8d813c053e4a",
+        "ws2": "JWT.eyJraWQiOiJrdU42YlJQRCIsImFsZyI6IlJTMjU2In0.eyJkYXRhIjoie1widXNlckd1aWRcIjpcIjBhYmVjMGE1LWY3OTEtNDJhYi04M2E5LWVhNDVjZmJmYjRkN1wiLFwidXNlck5hbWVcIjpcImxlb25nMDJcIixcImNvbG9yc1wiOnt9LFwidWNkXCI6XCIyMDE3LTEwLTE3VDExOjM2OjQ0LjAwMCswMDAwXCIsXCJ3eHNcIjpmYWxzZSxcImV3eGRcIjp0cnVlLFwicm1iXCI6dHJ1ZSxcImx2bGRcIjpcIjIwMTgtMDEtMjRUMTI6MDE6NDcuODEyKzAwMDBcIixcImxhdGhcIjpcIjIwMTgtMDEtMjRUMTI6MDE6NDYuMTY5KzAwMDBcIixcInd4ZXhwXCI6XCIyMDE4LTA0LTAxVDEyOjAxOjQ2LjE2OSswMDAwXCJ9IiwiaWF0IjoxNTE2Nzk1MzA3LCJleHAiOjE1MjI1ODQxMDZ9.VEMYuQ0Y-nfdh6a94YJPBsi0pblpGjKb0k3d_6Xx-bt1J0mJ_Aogqv-dzvDCWtIVq5WWG-1H1mNu-O7r3T8i7zD90xgCPjDUNEN4hWUXFgka26PfSZLBZxPjxCB9QLssWEi4HJQVfm9kZaczihLk1qVoZ7mJzjgv66fChTaP__X61WZVLu6b9r0lAY35AtA813_NVl2l-p_pN2qp5ctCkubKcoshW69P9IRCJP7X4kUgmwJtEyxiwEW2rWFWeQwCe-c1i2baRXY2qz_BYXFdqUJCc1LqLneNHR35JamQfyoxRhRYG57r7JN2AOpbFi2stVk51DwlvDMZn1d9xnNTTA",
+        "ws": "",
+        "list_id": "087beab745c54fa787060682d79af8aa"
+      },
+      "callbackUrl": "http://wix-catalog-service.appspot.com/catalog/items/live/stream/notification"
+    },
+    "duration": 0,
+    "maxPublishDuration": 10800,
+    "probeResult": null,
+    "id": "wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM",
+    "playbackUrls": [
+      {
+        "path": "//prod-live-europe-west1.wixmp.com/live_streams/wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM/wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM_.m3u8",
+        "packageName": "hls"
+      }
+    ],
+    "dvr": {
+      "destination": {
+        "directory": null,
+        "path": "/stream/vod-meta.wix.com/c3ab3f52ef8c4724b31b8d813c053e4a/live-recording.mp4",
+        "acl": "public"
+      }
+    }
+  }]
+}

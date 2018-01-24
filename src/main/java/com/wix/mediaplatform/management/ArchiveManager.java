@@ -2,13 +2,11 @@ package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.job.CreateArchiveJob;
-import com.wix.mediaplatform.dto.job.Job;
-import com.wix.mediaplatform.dto.request.CreateArchiveRequest;
 import com.wix.mediaplatform.dto.job.ExtractArchiveJob;
+import com.wix.mediaplatform.dto.request.CreateArchiveRequest;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
 import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.MediaPlatformException;
-import com.wix.mediaplatform.exception.UnauthorizedException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 
 import java.io.IOException;
