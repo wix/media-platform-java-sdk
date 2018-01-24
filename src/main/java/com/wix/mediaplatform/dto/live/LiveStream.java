@@ -35,7 +35,7 @@ public class LiveStream {
 
     private State state;
 
-    private StateNotification stateNotifyUrl;
+    private StateNotification stateNotification;
 
     private Type streamType;
 
@@ -197,12 +197,12 @@ public class LiveStream {
         return this;
     }
 
-    public StateNotification getStateNotifyUrl() {
-        return stateNotifyUrl;
+    public StateNotification getStateNotification() {
+        return stateNotification;
     }
 
-    public LiveStream setStateNotifyUrl(StateNotification stateNotifyUrl) {
-        this.stateNotifyUrl = stateNotifyUrl;
+    public LiveStream setStateNotification(StateNotification stateNotification) {
+        this.stateNotification = stateNotification;
         return this;
     }
 
