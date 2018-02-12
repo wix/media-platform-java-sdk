@@ -7,6 +7,7 @@ import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.dto.request.CreateFileRequest;
+import com.wix.mediaplatform.dto.request.ListFilesRequest;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Rule;
@@ -100,6 +101,24 @@ public class FileManagerTest extends BaseTest {
                         .withBodyFile("list-files-response.json")));
 
         ListFilesResponse response = fileManager.listFiles("/", null);
+
+        assertThat(response.getFiles().length, is(2));
+    }
+
+    @Test
+    public void listFilesWithAllParams() throws Exception {
+        stubFor(get(urlEqualTo("/_api/files/ls_dir?path=%2F&r=yes&nextPageToken=fish&pageSize=200&orderBy=name&orderDirection=acs&type=-"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("list-files-response.json")));
+
+        ListFilesResponse response = fileManager.listFiles("/", new ListFilesRequest().ascending()
+                .setNextPageToken("fish")
+                .setRecursive(true)
+                .setPageSize(200)
+                .setType(FileDescriptor.Type.FILE)
+                .setOrderBy(ListFilesRequest.OrderBy.name)
+        );
 
         assertThat(response.getFiles().length, is(2));
     }

@@ -38,8 +38,18 @@ public class Image {
         FileDescriptorParser.parse(this, fileDescriptor);
     }
 
+    public Image(FileDescriptor fileDescriptor, String host) {
+        FileDescriptorParser.parse(this, fileDescriptor);
+        this.setHost(host);
+    }
+
     public Image(FileMetadata fileMetadata) {
         FileMetadataParser.parse(this, fileMetadata);
+    }
+
+    public Image(FileMetadata fileMetadata, String host) {
+        FileMetadataParser.parse(this, fileMetadata);
+        this.setHost(host);
     }
 
     public Image setHost(String host) {
