@@ -118,7 +118,7 @@ public class FileManagerTest extends BaseTest {
 
     @Test
     public void listFilesWithAllParams() throws Exception {
-        stubFor(get(urlEqualTo("/_api/files/ls_dir?path=%2F&r=yes&nextPageToken=fish&pageSize=200&orderBy=name&orderDirection=acs&type=-"))
+        stubFor(get(urlEqualTo("/_api/files/ls_dir?nextPageToken=fish&orderBy=name&orderDirection=acs&pageSize=200&path=%2F&r=yes&type=-"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("list-files-response.json")));

@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.wix.mediaplatform.gson.Types.*;
 
 public class FileManager {
@@ -112,7 +113,7 @@ public class FileManager {
     }
 
     public ListFilesResponse listFiles(String path, @Nullable ListFilesRequest listFilesRequest) throws MediaPlatformException, IOException, URISyntaxException {
-        Map<String, String> params = newHashMap();
+        Map<String, String> params = newTreeMap();
         if (listFilesRequest != null) {
                 params.putAll(listFilesRequest.toParams());
         }
