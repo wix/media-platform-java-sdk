@@ -5,6 +5,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.dto.response.RestResponse;
+import com.wix.mediaplatform.exception.FileNotExistsException;
 import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import org.apache.http.Header;
@@ -159,6 +160,10 @@ public class AuthenticatedHTTPClient {
 
             if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
                 throw new MediaPlatformException(response.toString());
+            }
+
+            if (response.getStatusLine().getStatusCode() == 404) {
+                throw new FileNotExistsException(response.toString());
             }
         }
         finally {
