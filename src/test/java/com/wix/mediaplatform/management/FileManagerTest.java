@@ -9,6 +9,7 @@ import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.dto.request.CreateFileRequest;
 import com.wix.mediaplatform.dto.request.ListFilesRequest;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
+import com.wix.mediaplatform.exception.FileNotFoundException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,6 +56,16 @@ public class FileManagerTest extends BaseTest {
         FileDescriptor file = fileManager.getFile("/file.txt");
 
         assertThat(file.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void getFileNotFound() throws Exception {
+        stubFor(get(urlEqualTo("/_api/files?path=%2Ffile.txt"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withStatus(404)));
+
+        fileManager.getFile("/file.txt");
     }
 
     @Test

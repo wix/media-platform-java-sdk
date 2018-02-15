@@ -11,7 +11,9 @@ import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
 import com.wix.mediaplatform.dto.response.RestResponse;
+import com.wix.mediaplatform.exception.FileNotFoundException;
 import com.wix.mediaplatform.exception.MediaPlatformException;
+import com.wix.mediaplatform.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,15 +74,19 @@ public class FileManager {
         return restResponse.getPayload();
     }
 
-    @Nullable
     public FileDescriptor getFile(String path) throws MediaPlatformException, IOException, URISyntaxException {
         Map<String, String> params = newHashMap();
         params.put("path", path);
-        RestResponse<FileDescriptor> restResponse = authenticatedHttpClient.get(
-                baseUrl + "/files",
-                params,
-                FILE_DESCRIPTOR_REST_RESPONSE);
-        return restResponse.getPayload();
+        try {
+            RestResponse<FileDescriptor> restResponse = authenticatedHttpClient.get(
+                    baseUrl + "/files",
+                    params,
+                    FILE_DESCRIPTOR_REST_RESPONSE);
+
+            return restResponse.getPayload();
+        } catch (ResourceNotFoundException e) {
+            throw new FileNotFoundException(e.getMessage());
+        }
     }
 
     @Nullable
