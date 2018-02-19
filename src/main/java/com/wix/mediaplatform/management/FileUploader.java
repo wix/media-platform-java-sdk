@@ -60,6 +60,10 @@ public class FileUploader {
         UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
                 .setMimeType(mimeType)
                 .setPath(path);
+        if (acl != null) {
+            uploadUrlRequest.setAcl(acl);
+        }
+
         GetUploadUrlResponse uploadUrlResponse = getUploadUrl(uploadUrlRequest);
 
         MultipartEntityBuilder multipartEntityBuilder = prepareForm(path, mimeType, acl, uploadUrlResponse);
@@ -80,6 +84,10 @@ public class FileUploader {
         UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
                 .setMimeType(mimeType)
                 .setPath(path);
+        if (acl != null) {
+            uploadUrlRequest.setAcl(acl);
+        }
+
         GetUploadUrlResponse uploadUrlResponse = getUploadUrl(uploadUrlRequest);
 
         MultipartEntityBuilder multipartEntityBuilder = prepareForm(path, mimeType, acl, uploadUrlResponse);
