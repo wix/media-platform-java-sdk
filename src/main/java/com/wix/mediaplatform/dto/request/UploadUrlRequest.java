@@ -4,7 +4,7 @@ import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Maps.newTreeMap;
 
 public class UploadUrlRequest {
 
@@ -50,7 +50,7 @@ public class UploadUrlRequest {
     }
 
     public Map<String, String> toParams() {
-        Map<String, String> params = newHashMap();
+        Map<String, String> params = newTreeMap();
         if (mimeType != null) {
             params.put("mimeType", mimeType);
         }
