@@ -10,6 +10,8 @@ public class Configuration {
 
     private final String sharedSecret;
 
+    private final String baseUrl;
+
     public Configuration(String domain, String appId, String sharedSecret) {
         validateDomain(domain);
         validateAppId(appId);
@@ -18,6 +20,15 @@ public class Configuration {
         this.domain = domain;
         this.appId = appId;
         this.sharedSecret = sharedSecret;
+
+        this.baseUrl = "https://" + domain;
+    }
+
+    public Configuration(String scheme, String domain, String appId, String sharedSecret) {
+        this.domain = domain;
+        this.appId = appId;
+        this.sharedSecret = sharedSecret;
+        this.baseUrl = scheme + "://" + domain;
     }
 
     public String getDomain() {
@@ -30,6 +41,10 @@ public class Configuration {
 
     public String getSharedSecret() {
         return sharedSecret;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
     private void validateDomain(String domain) {

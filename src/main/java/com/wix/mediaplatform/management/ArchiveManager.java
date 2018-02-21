@@ -16,17 +16,14 @@ import static com.wix.mediaplatform.gson.Types.JOB_REST_RESPONSE;
 
 public class ArchiveManager {
 
-    private final Configuration configuration;
-
     private final AuthenticatedHTTPClient authenticatedHTTPClient;
 
     private final String baseUrl;
 
     public ArchiveManager(Configuration configuration, AuthenticatedHTTPClient authenticatedHTTPClient) {
-        this.configuration = configuration;
         this.authenticatedHTTPClient = authenticatedHTTPClient;
 
-        this.baseUrl = "https://" + configuration.getDomain() + "/_api";
+        this.baseUrl = configuration.getBaseUrl() + "/_api";
     }
 
     public CreateArchiveJob createArchive(CreateArchiveRequest createArchiveRequest) throws MediaPlatformException, IOException, URISyntaxException {

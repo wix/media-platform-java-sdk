@@ -22,10 +22,24 @@ public class MediaPlatform {
     private final ArchiveManager archiveManager;
     private final TranscodeManager transcodeManager;
 
+    public MediaPlatform(Configuration configuration) {
+        Gson gson = getGson(false);
+        Authenticator authenticator = new Authenticator(configuration);
+        AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, getHttpClient(),
+                gson);
+
+        FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient);
+        this.fileDownloader = new FileDownloader(configuration, authenticator);
+        this.fileManager = new FileManager(configuration, authenticatedHTTPClient, fileUploader);
+        this.jobManager = new JobManager(configuration, authenticatedHTTPClient);
+        this.archiveManager = new ArchiveManager(configuration, authenticatedHTTPClient);
+        this.transcodeManager = new TranscodeManager(configuration, authenticatedHTTPClient);
+    }
+
     public MediaPlatform(String domain, String appId, String sharedSecret, HttpClient httpClient) {
         Configuration configuration = new Configuration(domain, appId, sharedSecret);
-        Gson gson = getGson(false);
 
+        Gson gson = getGson(false);
         Authenticator authenticator = new Authenticator(configuration);
         AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
 

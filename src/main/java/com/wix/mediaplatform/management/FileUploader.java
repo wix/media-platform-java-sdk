@@ -35,9 +35,9 @@ public class FileUploader {
 
         this.authenticatedHTTPClient = authenticatedHTTPClient;
 
-        this.apiBaseUrl = "https://" + configuration.getDomain() + "/_api";
+        this.apiBaseUrl = configuration.getBaseUrl() + "/_api";
 
-        this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/_api/upload/url";
+        this.uploadUrlEndpoint = configuration.getBaseUrl() + "/_api/upload/url";
     }
 
     public GetUploadUrlResponse getUploadUrl(@Nullable UploadUrlRequest uploadUrlRequest) throws IOException,

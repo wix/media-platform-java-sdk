@@ -36,7 +36,7 @@ public class FileManager {
     public FileManager(Configuration configuration, AuthenticatedHTTPClient authenticatedHttpClient, FileUploader fileUploader) {
         this.authenticatedHttpClient = authenticatedHttpClient;
 
-        this.baseUrl = "https://" + configuration.getDomain() + "/_api";
+        this.baseUrl = configuration.getBaseUrl() + "/_api";
 
         this.fileUploader = fileUploader;
     }

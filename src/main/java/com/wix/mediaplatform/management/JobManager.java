@@ -17,16 +17,12 @@ import static com.wix.mediaplatform.gson.Types.*;
 
 public class JobManager {
 
-    private final Configuration configuration;
-
     private final AuthenticatedHTTPClient authenticatedHTTPClient;
 
     private final String apiBaseUrl;
 
     public JobManager(Configuration configuration, AuthenticatedHTTPClient authenticatedHTTPClient) {
-        this.configuration = configuration;
-
-        this.apiBaseUrl = "https://" + configuration.getDomain() + "/_api";
+        this.apiBaseUrl = configuration.getBaseUrl() + "/_api";
 
         this.authenticatedHTTPClient = authenticatedHTTPClient;
     }
