@@ -117,9 +117,9 @@ public class FileDescriptor {
                 ", hash='" + hash + '\'' +
                 ", path='" + path + '\'' +
                 ", mimeType='" + mimeType + '\'' +
-                ", job_type='" + type + '\'' +
+                ", type=" + type +
                 ", size=" + size +
-                ", acl='" + acl + '\'' +
+                ", acl=" + acl +
                 ", dateCreated=" + dateCreated +
                 ", dateUpdated=" + dateUpdated +
                 '}';
