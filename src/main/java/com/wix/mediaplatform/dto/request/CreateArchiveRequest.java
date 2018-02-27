@@ -1,5 +1,6 @@
 package com.wix.mediaplatform.dto.request;
 
+import com.wix.mediaplatform.dto.job.ArchiveSource;
 import com.wix.mediaplatform.dto.job.Destination;
 import com.wix.mediaplatform.dto.job.Source;
 
@@ -23,6 +24,11 @@ public class CreateArchiveRequest {
 
 
     public CreateArchiveRequest addSource(Source source) {
+        this.sources.add(source);
+        return this;
+    }
+
+    public CreateArchiveRequest addSource(ArchiveSource source) {
         this.sources.add(source);
         return this;
     }
