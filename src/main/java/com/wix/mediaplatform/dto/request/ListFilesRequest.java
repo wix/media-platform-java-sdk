@@ -88,7 +88,7 @@ public class ListFilesRequest {
 
     public enum OrderBy {
         name,
-        date
+        dateUpdated
     }
 
     public enum OrderDirection {
