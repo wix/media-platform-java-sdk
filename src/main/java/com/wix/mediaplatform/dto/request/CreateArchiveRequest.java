@@ -22,6 +22,11 @@ public class CreateArchiveRequest {
         return this;
     }
 
+    public CreateArchiveRequest setArchiveSources(ArrayList<ArchiveSource> sources) {
+        this.sources.clear();
+        this.sources.addAll(sources);
+        return this;
+    }
 
     public CreateArchiveRequest addSource(Source source) {
         this.sources.add(source);
