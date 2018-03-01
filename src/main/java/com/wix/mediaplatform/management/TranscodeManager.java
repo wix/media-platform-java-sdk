@@ -20,10 +20,11 @@ public class TranscodeManager {
     public TranscodeManager(Configuration configuration, AuthenticatedHTTPClient authenticatedHttpClient) {
         this.authenticatedHttpClient = authenticatedHttpClient;
 
-        this.baseUrl = "https://" + configuration.getDomain() + "/_api";
+        this.baseUrl = configuration.getBaseUrl() + "/_api";
     }
 
-    public TranscodeJobsResponse transcodeVideo(TranscodeRequest transcodeRequest) throws MediaPlatformException, IOException, URISyntaxException {
+    public TranscodeJobsResponse transcodeVideo(TranscodeRequest transcodeRequest) throws MediaPlatformException,
+            IOException, URISyntaxException {
         RestResponse<TranscodeJobsResponse> restResponse = authenticatedHttpClient.post(
                 baseUrl + "/av/transcode",
                 transcodeRequest,

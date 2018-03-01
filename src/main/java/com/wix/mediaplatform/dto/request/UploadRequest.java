@@ -1,5 +1,7 @@
 package com.wix.mediaplatform.dto.request;
 
+import com.wix.mediaplatform.dto.metadata.FileDescriptor;
+
 public class UploadRequest {
 
     private String mimeType = "application/octet-stream";
@@ -24,6 +26,11 @@ public class UploadRequest {
 
     public UploadRequest setAcl(String acl) {
         this.acl = acl;
+        return this;
+    }
+
+    public UploadRequest setAcl(FileDescriptor.Acl acl) {
+        this.acl = acl.getValue();
         return this;
     }
 }

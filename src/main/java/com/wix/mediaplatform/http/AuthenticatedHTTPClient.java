@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.MediaPlatformException;
+import com.wix.mediaplatform.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.exception.UnauthorizedException;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -150,11 +151,14 @@ public class AuthenticatedHTTPClient {
         }
     }
 
-
     private void assertResponseStatus(HttpResponse response) throws IOException, MediaPlatformException {
         try {
             if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
                 throw new UnauthorizedException();
+            }
+
+            if (response.getStatusLine().getStatusCode() == 404) {
+                throw new ResourceNotFoundException(response.toString());
             }
 
             if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {

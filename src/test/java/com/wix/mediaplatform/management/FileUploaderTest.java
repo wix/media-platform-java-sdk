@@ -57,7 +57,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test
     public void uploadFile() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?path=%2Fa%2Fnew.txt&mimeType=text%2Fplain"))
+        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-upload-url-response.json")));
@@ -72,9 +72,26 @@ public class FileUploaderTest extends BaseTest {
         assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
     }
 
+    @Test
+    public void uploadFilePrivate() throws Exception {
+        stubFor(get(urlEqualTo("/_api/upload/url?acl=private&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-response.json")));
+
+        File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
+        FileDescriptor[] files = fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, "private");
+
+        assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
     @Test(expected = FileAlreadyExistsException.class)
     public void uploadFileAlreadyExists() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?path=%2Fa%2Fnew.txt&mimeType=text%2Fplain"))
+        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-upload-url-response.json")));
@@ -90,7 +107,7 @@ public class FileUploaderTest extends BaseTest {
 
     @Test(expected = MediaPlatformException.class)
     public void uploadFileUnrecognizedError() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?path=%2Fa%2Fnew.txt&mimeType=text%2Fplain"))
+        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-upload-url-response.json")));

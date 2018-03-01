@@ -7,7 +7,9 @@ import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.dto.request.CreateFileRequest;
+import com.wix.mediaplatform.dto.request.ListFilesRequest;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
+import com.wix.mediaplatform.exception.FileNotFoundException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,6 +58,16 @@ public class FileManagerTest extends BaseTest {
         assertThat(file.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
     }
 
+    @Test(expected = FileNotFoundException.class)
+    public void getFileNotFound() throws Exception {
+        stubFor(get(urlEqualTo("/_api/files?path=%2Ffile.txt"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withStatus(404)));
+
+        fileManager.getFile("/file.txt");
+    }
+
     @Test
     public void getFileMetadataByIdImage() throws Exception {
         stubFor(get(urlEqualTo("/_api/files/id/metadata"))
@@ -100,6 +112,24 @@ public class FileManagerTest extends BaseTest {
                         .withBodyFile("list-files-response.json")));
 
         ListFilesResponse response = fileManager.listFiles("/", null);
+
+        assertThat(response.getFiles().length, is(2));
+    }
+
+    @Test
+    public void listFilesWithAllParams() throws Exception {
+        stubFor(get(urlEqualTo("/_api/files/ls_dir?nextPageToken=fish&orderBy=name&orderDirection=acs&pageSize=200&path=%2F&r=yes&type=-"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("list-files-response.json")));
+
+        ListFilesResponse response = fileManager.listFiles("/", new ListFilesRequest().ascending()
+                .setNextPageToken("fish")
+                .setRecursive(true)
+                .setPageSize(200)
+                .setType(FileDescriptor.Type.FILE)
+                .setOrderBy(ListFilesRequest.OrderBy.name)
+        );
 
         assertThat(response.getFiles().length, is(2));
     }

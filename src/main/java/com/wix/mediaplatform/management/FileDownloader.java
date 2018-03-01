@@ -56,6 +56,6 @@ public class FileDownloader {
 
         String signedToken = authenticator.encode(token);
 
-        return "https://" + configuration.getDomain() + "/_api/download/file?downloadToken=" + signedToken;
+        return configuration.getBaseUrl() + "/_api/download/file?downloadToken=" + signedToken;
     }
 }

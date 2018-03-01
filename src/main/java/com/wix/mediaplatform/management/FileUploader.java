@@ -35,9 +35,9 @@ public class FileUploader {
 
         this.authenticatedHTTPClient = authenticatedHTTPClient;
 
-        this.apiBaseUrl = "https://" + configuration.getDomain() + "/_api";
+        this.apiBaseUrl = configuration.getBaseUrl() + "/_api";
 
-        this.uploadUrlEndpoint = "https://" + configuration.getDomain() + "/_api/upload/url";
+        this.uploadUrlEndpoint = configuration.getBaseUrl() + "/_api/upload/url";
     }
 
     public GetUploadUrlResponse getUploadUrl(@Nullable UploadUrlRequest uploadUrlRequest) throws IOException,
@@ -60,6 +60,10 @@ public class FileUploader {
         UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
                 .setMimeType(mimeType)
                 .setPath(path);
+        if (acl != null) {
+            uploadUrlRequest.setAcl(acl);
+        }
+
         GetUploadUrlResponse uploadUrlResponse = getUploadUrl(uploadUrlRequest);
 
         MultipartEntityBuilder multipartEntityBuilder = prepareForm(path, mimeType, acl, uploadUrlResponse);
@@ -80,6 +84,10 @@ public class FileUploader {
         UploadUrlRequest uploadUrlRequest = new UploadUrlRequest()
                 .setMimeType(mimeType)
                 .setPath(path);
+        if (acl != null) {
+            uploadUrlRequest.setAcl(acl);
+        }
+
         GetUploadUrlResponse uploadUrlResponse = getUploadUrl(uploadUrlRequest);
 
         MultipartEntityBuilder multipartEntityBuilder = prepareForm(path, mimeType, acl, uploadUrlResponse);

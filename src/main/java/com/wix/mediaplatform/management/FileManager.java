@@ -11,7 +11,9 @@ import com.wix.mediaplatform.dto.request.UploadUrlRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
 import com.wix.mediaplatform.dto.response.ListFilesResponse;
 import com.wix.mediaplatform.dto.response.RestResponse;
+import com.wix.mediaplatform.exception.FileNotFoundException;
 import com.wix.mediaplatform.exception.MediaPlatformException;
+import com.wix.mediaplatform.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.wix.mediaplatform.gson.Types.*;
 
 public class FileManager {
@@ -33,7 +36,7 @@ public class FileManager {
     public FileManager(Configuration configuration, AuthenticatedHTTPClient authenticatedHttpClient, FileUploader fileUploader) {
         this.authenticatedHttpClient = authenticatedHttpClient;
 
-        this.baseUrl = "https://" + configuration.getDomain() + "/_api";
+        this.baseUrl = configuration.getBaseUrl() + "/_api";
 
         this.fileUploader = fileUploader;
     }
@@ -72,15 +75,19 @@ public class FileManager {
         return restResponse.getPayload();
     }
 
-    @Nullable
     public FileDescriptor getFile(String path) throws MediaPlatformException, IOException, URISyntaxException {
         Map<String, String> params = newHashMap();
         params.put("path", path);
-        RestResponse<FileDescriptor> restResponse = authenticatedHttpClient.get(
-                baseUrl + "/files",
-                params,
-                FILE_DESCRIPTOR_REST_RESPONSE);
-        return restResponse.getPayload();
+        try {
+            RestResponse<FileDescriptor> restResponse = authenticatedHttpClient.get(
+                    baseUrl + "/files",
+                    params,
+                    FILE_DESCRIPTOR_REST_RESPONSE);
+
+            return restResponse.getPayload();
+        } catch (ResourceNotFoundException e) {
+            throw new FileNotFoundException(e.getMessage());
+        }
     }
 
     @Nullable
@@ -106,7 +113,7 @@ public class FileManager {
     }
 
     public ListFilesResponse listFiles(String path, @Nullable ListFilesRequest listFilesRequest) throws MediaPlatformException, IOException, URISyntaxException {
-        Map<String, String> params = newHashMap();
+        Map<String, String> params = newTreeMap();
         if (listFilesRequest != null) {
                 params.putAll(listFilesRequest.toParams());
         }

@@ -53,6 +53,24 @@ public class ArchiveManagerTest extends BaseTest {
         assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
     }
 
+
+    @Test
+    public void createArchiveFromArchiveSource() throws Exception {
+        stubFor(post(urlEqualTo("/_api/archive/create"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("create-archive-pending-response.json")));
+
+        CreateArchiveRequest createArchiveRequest = new CreateArchiveRequest()
+                .addSource(new ArchiveSource().setPathInArchive("/foo"))
+                .setDestination(new Destination().setPath("/fish/file.zip").setAcl("private"))
+                .setArchiveType("zip");
+        Job job = archiveManager.createArchive(createArchiveRequest);
+
+        assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
+    }
+
+
     @Test
     public void extractArchive() throws Exception {
         stubFor(post(urlEqualTo("/_api/archive/extract"))
