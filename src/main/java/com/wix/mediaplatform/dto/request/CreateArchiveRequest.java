@@ -5,6 +5,7 @@ import com.wix.mediaplatform.dto.job.Destination;
 import com.wix.mediaplatform.dto.job.Source;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CreateArchiveRequest {
 
@@ -46,5 +47,16 @@ public class CreateArchiveRequest {
     public CreateArchiveRequest setArchiveType(String archiveType) {
         this.archiveType = archiveType;
         return this;
+    }
+
+    public String getArchiveType() {
+        return archiveType;
+    }
+
+    public Destination getDestination() {
+        return destination;
+    }
+    public List<Source> getSources() {
+        return sources;
     }
 }
