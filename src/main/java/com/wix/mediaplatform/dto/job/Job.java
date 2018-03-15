@@ -58,36 +58,44 @@ public abstract class Job {
 
     public abstract RestResponse getResult();
 
-    public void setId(String id) {
+    public Job setId(String id) {
         this.id = id;
+        return this;
     }
 
-    public void setType(Type type) {
+    public Job setType(Type type) {
         this.type = type;
+        return this;
     }
 
-    public void setIssuer(String issuer) {
+    public Job setIssuer(String issuer) {
         this.issuer = issuer;
+        return this;
     }
 
-    public void setStatus(Status status) {
+    public Job setStatus(Status status) {
         this.status = status;
+        return this;
     }
 
-    public void setGroupId(String groupId) {
+    public Job setGroupId(String groupId) {
         this.groupId = groupId;
+        return this;
     }
 
-    public void setSources(Source[] sources) {
+    public Job setSources(Source[] sources) {
         this.sources = sources;
+        return this;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public Job setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
+        return this;
     }
 
-    public void setDateUpdated(String dateUpdated) {
+    public Job setDateUpdated(String dateUpdated) {
         this.dateUpdated = dateUpdated;
+        return this;
     }
 
     @Override
