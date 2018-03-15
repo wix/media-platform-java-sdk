@@ -58,6 +58,38 @@ public abstract class Job {
 
     public abstract RestResponse getResult();
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setSources(Source[] sources) {
+        this.sources = sources;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void setDateUpdated(String dateUpdated) {
+        this.dateUpdated = dateUpdated;
+    }
+
     @Override
     public String toString() {
         return "Job{" +
