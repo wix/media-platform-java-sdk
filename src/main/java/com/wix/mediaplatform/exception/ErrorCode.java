@@ -1,11 +1,14 @@
 package com.wix.mediaplatform.exception;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by alonne on 06/07/2017.
  */
 public enum ErrorCode {
     ok(0),
-    fileAlreadyExists(1);
+    fileAlreadyExists(1),
+    notFound(404);
 
     private final int value;
 
@@ -15,5 +18,17 @@ public enum ErrorCode {
 
     public int getValue() {
         return value;
+    }
+
+    @Nullable
+    public static ErrorCode find(int code) {
+
+        for (ErrorCode c : ErrorCode.values()) {
+            if (c.value == code) {
+                return c;
+            }
+        }
+
+        return null;
     }
 }

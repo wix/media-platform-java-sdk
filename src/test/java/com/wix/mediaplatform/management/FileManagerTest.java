@@ -63,7 +63,8 @@ public class FileManagerTest extends BaseTest {
         stubFor(get(urlEqualTo("/_api/files?path=%2Ffile.txt"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withStatus(404)));
+                        .withStatus(404)
+                        .withBodyFile("get-file-not-found-response.json")));
 
         fileManager.getFile("/file.txt");
     }

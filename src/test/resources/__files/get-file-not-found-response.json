@@ -1,0 +1,5 @@
+{
+  "code": 404,
+  "message": "file XXX not found",
+  "payload":  null
+}

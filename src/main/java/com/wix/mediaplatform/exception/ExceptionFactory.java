@@ -11,16 +11,18 @@ public final class ExceptionFactory {
 
     public static MediaPlatformException createException(RestResponse restResponse) {
         int code = restResponse.getCode();
-        if (code >= ErrorCode.values().length) {
+        ErrorCode errorCode = ErrorCode.find(code);
+        if (errorCode == null) {
             return new MediaPlatformException(String.format("Error %d", code));
         }
-        ErrorCode errorCode = ErrorCode.values()[code];
 
         switch (errorCode) {
             case ok:
                 return null;
             case fileAlreadyExists:
                 return new FileAlreadyExistsException();
+            case notFound:
+                return new ResourceNotFoundException(restResponse.getMessage());
             default:
                 return new MediaPlatformException(String.format("Error %d", code));
         }
