@@ -1,8 +1,12 @@
 package com.wix.mediaplatform.dto.metadata;
 
+import com.wix.mediaplatform.dto.lifecycle.Lifecycle;
+
 import java.util.Date;
 
 public class FileDescriptor {
+
+
     public enum Acl {
         PUBLIC("public"),
         PRIVATE("private");
@@ -71,6 +75,8 @@ public class FileDescriptor {
 
     private Date dateUpdated;
 
+    private Lifecycle lifecycle;
+
     public FileDescriptor() {
     }
 
@@ -108,6 +114,10 @@ public class FileDescriptor {
 
     public Date getDateUpdated() {
         return dateUpdated;
+    }
+
+    public Lifecycle getLifecycle() {
+        return lifecycle;
     }
 
     @Override

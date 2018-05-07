@@ -84,7 +84,7 @@ public class FileUploaderTest extends BaseTest {
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-response.json")));
+                        .withBodyFile("file-upload-with-lifecycle-response.json")));
 
         File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
         Lifecycle lifecycle = new Lifecycle().setAction(DELETE).setAge(100);
