@@ -2,6 +2,7 @@ package com.wix.mediaplatform.management;
 
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.lifecycle.Lifecycle;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.dto.request.CreateFileRequest;
@@ -51,6 +52,10 @@ public class FileManager {
 
     public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source) throws MediaPlatformException, IOException, URISyntaxException {
         return fileUploader.uploadFile(path, mimeType, fileName, source, null);
+    }
+
+    public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source, String acl, Lifecycle lifecycle) throws MediaPlatformException, IOException, URISyntaxException {
+        return fileUploader.uploadFile(path, mimeType, fileName, source, acl, lifecycle);
     }
 
     public FileDescriptor[] uploadFile(String path, String mimeType, String fileName, InputStream source, String acl) throws MediaPlatformException, IOException, URISyntaxException {

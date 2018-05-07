@@ -9,6 +9,7 @@ import com.wix.mediaplatform.dto.job.Destination;
 import com.wix.mediaplatform.dto.job.FileImportJob;
 import com.wix.mediaplatform.dto.job.FileImportSpecification;
 import com.wix.mediaplatform.dto.job.Job;
+import com.wix.mediaplatform.dto.lifecycle.Lifecycle;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.ImportFileRequest;
 import com.wix.mediaplatform.dto.response.GetUploadUrlResponse;
@@ -21,9 +22,11 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileInputStream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.wix.mediaplatform.dto.lifecycle.Lifecycle.Action.DELETE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -35,7 +38,7 @@ public class FileUploaderTest extends BaseTest {
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
     private Authenticator authenticator = new Authenticator(configuration);
     private AuthenticatedHTTPClient AuthenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
-    private FileUploader fileUploader = new FileUploader(configuration, AuthenticatedHTTPClient);
+    private FileUploader fileUploader = new FileUploader(configuration, AuthenticatedHTTPClient, gson);
 
     @Before
     public void setup() {
@@ -68,6 +71,24 @@ public class FileUploaderTest extends BaseTest {
 
         File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
         FileDescriptor[] files = fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
+
+        assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void uploadFileWithLifecycle() throws Exception {
+        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-response.json")));
+
+        File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
+        Lifecycle lifecycle = new Lifecycle().setAction(DELETE).setAge(100);
+        FileDescriptor[] files = fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", new FileInputStream(file), null, lifecycle);
 
         assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
     }

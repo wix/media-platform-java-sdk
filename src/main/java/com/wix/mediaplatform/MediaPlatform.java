@@ -28,7 +28,7 @@ public class MediaPlatform {
         AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, getHttpClient(),
                 gson);
 
-        FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient);
+        FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient, gson);
         this.fileDownloader = new FileDownloader(configuration, authenticator);
         this.fileManager = new FileManager(configuration, authenticatedHTTPClient, fileUploader);
         this.jobManager = new JobManager(configuration, authenticatedHTTPClient);
@@ -43,7 +43,7 @@ public class MediaPlatform {
         Authenticator authenticator = new Authenticator(configuration);
         AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
 
-        FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient);
+        FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient, gson);
         this.fileDownloader = new FileDownloader(configuration, authenticator);
         this.fileManager = new FileManager(configuration, authenticatedHTTPClient, fileUploader);
         this.jobManager = new JobManager(configuration, authenticatedHTTPClient);

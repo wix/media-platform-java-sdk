@@ -27,7 +27,7 @@ public class FileManagerTest extends BaseTest {
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
     private Authenticator authenticator = new Authenticator(configuration);
     private AuthenticatedHTTPClient authenticatedHttpClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
-    private FileUploader fileUploader = new FileUploader(configuration, authenticatedHttpClient);
+    private FileUploader fileUploader = new FileUploader(configuration, authenticatedHttpClient, gson);
 
     private FileManager fileManager = new FileManager(configuration, authenticatedHttpClient, fileUploader);
 
