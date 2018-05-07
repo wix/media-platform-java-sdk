@@ -77,6 +77,51 @@ public class FileDescriptor {
 
     private Lifecycle lifecycle;
 
+    public FileDescriptor setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public FileDescriptor setPath(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public FileDescriptor setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+        return this;
+    }
+
+    public FileDescriptor setType(Type type) {
+        this.type = type;
+        return this;
+    }
+
+    public FileDescriptor setSize(long size) {
+        this.size = size;
+        return this;
+    }
+
+    public FileDescriptor setAcl(Acl acl) {
+        this.acl = acl;
+        return this;
+    }
+
+    public FileDescriptor setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+        return this;
+    }
+
+    public FileDescriptor setDateUpdated(Date dateUpdated) {
+        this.dateUpdated = dateUpdated;
+        return this;
+    }
+
+    public FileDescriptor setLifecycle(Lifecycle lifecycle) {
+        this.lifecycle = lifecycle;
+        return this;
+    }
+
     public FileDescriptor() {
     }
 
