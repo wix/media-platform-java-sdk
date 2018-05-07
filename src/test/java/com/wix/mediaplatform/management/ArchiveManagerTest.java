@@ -6,6 +6,7 @@ import com.wix.mediaplatform.BaseTest;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.job.*;
+import com.wix.mediaplatform.dto.lifecycle.Lifecycle;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.request.CreateArchiveRequest;
 import com.wix.mediaplatform.dto.request.ExtractArchiveRequest;
@@ -18,6 +19,7 @@ import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.wix.mediaplatform.dto.lifecycle.Lifecycle.Action.DELETE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -53,6 +55,22 @@ public class ArchiveManagerTest extends BaseTest {
         assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
     }
 
+
+    @Test
+    public void createArchiveWithLifecycle() throws Exception {
+        stubFor(post(urlEqualTo("/_api/archive/create"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("create-archive-pending-response.json")));
+
+        CreateArchiveRequest createArchiveRequest = new CreateArchiveRequest()
+                .addSource(new Source().setFileId("file id"))
+                .setDestination(new Destination().setPath("/fish/file.zip").setAcl("private").setLifecycle(new Lifecycle().setAction(DELETE).setAge(100)))
+                .setArchiveType("zip");
+        Job job = archiveManager.createArchive(createArchiveRequest);
+
+        assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
+    }
 
     @Test
     public void createArchiveFromArchiveSource() throws Exception {

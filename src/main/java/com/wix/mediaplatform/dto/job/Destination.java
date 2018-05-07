@@ -1,5 +1,6 @@
 package com.wix.mediaplatform.dto.job;
 
+import com.wix.mediaplatform.dto.lifecycle.Lifecycle;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 
 public class Destination {
@@ -9,6 +10,8 @@ public class Destination {
     private String directory;
 
     private FileDescriptor.Acl acl = FileDescriptor.Acl.PRIVATE;
+
+    private Lifecycle lifecycle;
 
     public Destination() {
     }
@@ -52,7 +55,8 @@ public class Destination {
         return "Destination{" +
                 "path='" + path + '\'' +
                 ", directory='" + directory + '\'' +
-                ", acl='" + acl + '\'' +
+                ", acl=" + acl +
+                ", lifecycle=" + lifecycle +
                 '}';
     }
 
@@ -65,7 +69,8 @@ public class Destination {
 
         if (path != null ? !path.equals(that.path) : that.path != null) return false;
         if (directory != null ? !directory.equals(that.directory) : that.directory != null) return false;
-        return acl != null ? acl.equals(that.acl) : that.acl == null;
+        if (acl != that.acl) return false;
+        return lifecycle != null ? lifecycle.equals(that.lifecycle) : that.lifecycle == null;
     }
 
     @Override
@@ -73,6 +78,16 @@ public class Destination {
         int result = path != null ? path.hashCode() : 0;
         result = 31 * result + (directory != null ? directory.hashCode() : 0);
         result = 31 * result + (acl != null ? acl.hashCode() : 0);
+        result = 31 * result + (lifecycle != null ? lifecycle.hashCode() : 0);
         return result;
+    }
+
+    public Lifecycle getLifecycle() {
+        return lifecycle;
+    }
+
+    public Destination setLifecycle(Lifecycle lifecycle) {
+        this.lifecycle = lifecycle;
+        return this;
     }
 }
