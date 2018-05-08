@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.job.*;
+import com.wix.mediaplatform.dto.lifecycle.Lifecycle;
 import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.gson.*;
@@ -82,6 +83,8 @@ public class MediaPlatform {
                 .registerTypeAdapter(FileDescriptor.Acl.class, new FileAclJsonSerializer())
                 .registerTypeAdapter(FileDescriptor.Type.class, new FileTypeJsonDeserializer())
                 .registerTypeAdapter(FileDescriptor.Type.class, new FileTypeJsonSerializer())
+                .registerTypeAdapter(Lifecycle.Action.class, new LifecycleActionJsonDeserializer())
+                .registerTypeAdapter(Lifecycle.Action.class, new LifecycleActionJsonSerializer())
                 .registerTypeAdapter(Job.Type.class, new JobTypeJsonDeserializer())
                 .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Job.class, "type")
                         .registerSubtype(FileImportJob.class, FileImportJob.job_type.getValue())

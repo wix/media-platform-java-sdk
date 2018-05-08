@@ -6,8 +6,8 @@ public class Lifecycle {
 
     public Lifecycle() {}
 
-    public Action getAction() {
-        return action;
+    public String getAction() {
+        return action.getValue();
     }
 
     public Lifecycle setAction(Action action) {
@@ -33,8 +33,18 @@ public class Lifecycle {
             this.action = action;
         }
 
-        public String getAction() {
+        public String getValue() {
             return action;
+        }
+
+        public static Action fromString(String asString) {
+            for (Lifecycle.Action type: Lifecycle.Action .values()) {
+                if (type.getValue().equals(asString)) {
+                    return type;
+                }
+            }
+
+            throw new IllegalArgumentException("Invalid value for job type: " + asString);
         }
     }
 }
