@@ -153,17 +153,19 @@ public class AuthenticatedHTTPClient {
 
     private void assertResponseStatus(HttpResponse response) throws IOException, MediaPlatformException {
         try {
-            if (response.getStatusLine().getStatusCode() == 401 || response.getStatusLine().getStatusCode() == 403) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == 401 || statusCode == 403) {
                 throw new UnauthorizedException();
             }
 
-            if (response.getStatusLine().getStatusCode() == 404) {
+            if (statusCode < 200 || statusCode > 299) {
+                throw new MediaPlatformException(response.toString(), statusCode);
+            }
+
+            if (statusCode == 404) {
                 throw new ResourceNotFoundException(response.toString());
             }
 
-            if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
-                throw new MediaPlatformException(response.toString());
-            }
         }
         finally {
             tryToCloseResponse(response);

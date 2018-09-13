@@ -5,11 +5,19 @@ package com.wix.mediaplatform.exception;
  */
 public class MediaPlatformException extends Exception {
 
-    public MediaPlatformException() {
-        super();
+    private int code;
+
+    public MediaPlatformException() { super(); }
+
+    public MediaPlatformException(String message) { super(message); }
+
+    public MediaPlatformException(String message, int code) {
+        super(message);
+        this.code = code;
     }
 
-    public MediaPlatformException(String message) {
-        super(message);
+    public int getCode() {
+        return code;
     }
+
 }

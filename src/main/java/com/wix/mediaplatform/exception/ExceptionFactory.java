@@ -13,7 +13,7 @@ public final class ExceptionFactory {
         int code = restResponse.getCode();
         ErrorCode errorCode = ErrorCode.find(code);
         if (errorCode == null) {
-            return new MediaPlatformException(String.format("Error %d", code));
+            return new MediaPlatformException(String.format("Error %d", code), code);
         }
 
         switch (errorCode) {
@@ -24,7 +24,7 @@ public final class ExceptionFactory {
             case notFound:
                 return new ResourceNotFoundException(restResponse.getMessage());
             default:
-                return new MediaPlatformException(String.format("Error %d", code));
+                return new MediaPlatformException(String.format("Error %d", code), code);
         }
     }
 }
