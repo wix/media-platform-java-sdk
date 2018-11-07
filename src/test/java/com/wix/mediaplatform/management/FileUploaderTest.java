@@ -3,6 +3,7 @@ package com.wix.mediaplatform.management;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.BaseTest;
+import com.wix.mediaplatform.MediaPlatform;
 import com.wix.mediaplatform.authentication.Authenticator;
 import com.wix.mediaplatform.configuration.Configuration;
 import com.wix.mediaplatform.dto.job.Destination;
@@ -17,7 +18,6 @@ import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.FileAlreadyExistsException;
 import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
-import com.wix.mediaplatform.http.ExponentialBackOffRetryStrategy;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -127,7 +127,7 @@ public class FileUploaderTest extends BaseTest {
 
             fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
         } finally {
-            verify(exactly(ExponentialBackOffRetryStrategy.defaultMaxRetries),
+            verify(exactly(MediaPlatform.MAX_RETRIES),
                     postRequestedFor(urlEqualTo("/_api/upload/file")));
         }
 
