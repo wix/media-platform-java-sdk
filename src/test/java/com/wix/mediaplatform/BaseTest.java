@@ -3,7 +3,6 @@ package com.wix.mediaplatform;
 import com.google.gson.Gson;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.ssl.TrustStrategy;
 
@@ -25,7 +24,7 @@ public abstract class BaseTest {
 //        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
 
         try {
-            this.httpClient = HttpClients.custom()
+            this.httpClient = MediaPlatform.getRetryingHttpClientBuilder()
                     .disableAuthCaching()
                     .disableCookieManagement()
                     .disableConnectionState()
@@ -41,6 +40,7 @@ public abstract class BaseTest {
                             })
                             .build())
                     .build();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

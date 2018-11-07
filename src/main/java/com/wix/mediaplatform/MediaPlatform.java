@@ -10,10 +10,12 @@ import com.wix.mediaplatform.dto.metadata.FileDescriptor;
 import com.wix.mediaplatform.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.gson.*;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.http.ExponentialBackOffRetryStrategy;
 import com.wix.mediaplatform.management.*;
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.jetbrains.annotations.NotNull;
 
 public class MediaPlatform {
 
@@ -99,10 +101,17 @@ public class MediaPlatform {
         return builder.create();
     }
 
-    protected static HttpClient getHttpClient() {
+    public static HttpClient getHttpClient() {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setMaxTotal(100);
         connectionManager.setDefaultMaxPerRoute(50);
-        return HttpClients.createMinimal(connectionManager);
+
+        return getRetryingHttpClientBuilder().setConnectionManager(connectionManager).build();
+    }
+
+    @NotNull
+    public static HttpClientBuilder getRetryingHttpClientBuilder() {
+        ExponentialBackOffRetryStrategy serviceUnavailableStrategy = new ExponentialBackOffRetryStrategy();
+        return HttpClientBuilder.create().setServiceUnavailableRetryStrategy(serviceUnavailableStrategy);
     }
 }

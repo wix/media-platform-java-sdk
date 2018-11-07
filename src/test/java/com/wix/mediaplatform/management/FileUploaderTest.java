@@ -17,28 +17,34 @@ import com.wix.mediaplatform.dto.response.RestResponse;
 import com.wix.mediaplatform.exception.FileAlreadyExistsException;
 import com.wix.mediaplatform.exception.MediaPlatformException;
 import com.wix.mediaplatform.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.http.ExponentialBackOffRetryStrategy;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static com.wix.mediaplatform.dto.lifecycle.Lifecycle.Action.DELETE;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class FileUploaderTest extends BaseTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(PORT));
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
     private Authenticator authenticator = new Authenticator(configuration);
-    private AuthenticatedHTTPClient AuthenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
-    private FileUploader fileUploader = new FileUploader(configuration, AuthenticatedHTTPClient, gson);
+    private AuthenticatedHTTPClient authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
+    private FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient, gson);
 
     @Before
     public void setup() {
@@ -73,6 +79,82 @@ public class FileUploaderTest extends BaseTest {
         FileDescriptor[] files = fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
 
         assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void uploadFileError500OneRetry() throws Exception {
+        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .inScenario("Error500OneRetry")
+                .whenScenarioStateIs(STARTED)
+                .willReturn(aResponse().withStatus(500))
+                .willSetStateTo("afterOneError"));
+
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .inScenario("Error500OneRetry")
+                .whenScenarioStateIs("afterOneError")
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-response.json")));
+
+        File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
+        FileDescriptor[] files = fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
+
+        verify(exactly(2), postRequestedFor(urlEqualTo("/_api/upload/file")));
+        assertThat(files[0].getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void uploadFileError500MaxRetries() throws Exception {
+        try {
+            stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+                    .willReturn(aResponse()
+                            .withHeader("Content-Type", "application/json")
+                            .withBodyFile("get-upload-url-response.json")));
+
+            stubFor(post(urlEqualTo("/_api/upload/file"))
+                    .willReturn(aResponse().withStatus(500)));
+
+            File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
+
+            expectedException.expect(allOf(
+                    instanceOf(MediaPlatformException.class),
+                    hasProperty("code", equalTo(500))));
+
+            fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt", file, null);
+        } finally {
+            verify(exactly(ExponentialBackOffRetryStrategy.defaultMaxRetries),
+                    postRequestedFor(urlEqualTo("/_api/upload/file")));
+        }
+
+    }
+
+    @Test
+    public void uploadFileError401NoRetries() throws Exception {
+        try {
+            stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+                    .willReturn(aResponse()
+                            .withHeader("Content-Type", "application/json")
+                            .withBodyFile("get-upload-url-response.json")));
+
+            stubFor(post(urlEqualTo("/_api/upload/file"))
+                    .willReturn(aResponse().withStatus(401)));
+
+            File file = new File(this.getClass().getClassLoader().getResource("source/image.jpg").getFile());
+
+            expectedException.expect(allOf(
+                    instanceOf(MediaPlatformException.class),
+                    hasProperty("code", equalTo(401))));
+
+            fileUploader.uploadFile("/a/new.txt", "text/plain", "new.txt",
+                    file, null);
+        } finally {
+            verify(exactly(1), postRequestedFor(urlEqualTo("/_api/upload/file")));
+        }
     }
 
     @Test
