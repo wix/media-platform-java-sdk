@@ -7,7 +7,7 @@
 
 # Java SDK
 
-This artifact is a Java library, compatible with Java 7+.  
+This artifact is a Java library, compatible with Java 8+.  
 Its documentation can be found in the [Wiki tab](https://github.com/wix/media-platform-java-sdk/wiki).
 
 ## Installation
@@ -17,7 +17,7 @@ In Maven, place the following within your \<dependencies> tag in your pom.xml fi
 <dependency>
     <groupId>com.wix</groupId>
     <artifactId>media-platform-java-sdk</artifactId>
-    <version>[5.0,6.0)</version>
+    <version>[6.0,7.0)</version>
 </dependency>
 ```
 

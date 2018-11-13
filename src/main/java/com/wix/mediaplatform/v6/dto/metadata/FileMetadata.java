@@ -1,0 +1,44 @@
+package com.wix.mediaplatform.v6.dto.metadata;
+
+import com.wix.mediaplatform.v6.dto.metadata.basic.BasicMetadata;
+import com.wix.mediaplatform.v6.dto.metadata.features.Features;
+import com.wix.mediaplatform.v6.service.FileDescriptor;
+
+public class FileMetadata {
+
+    private FileDescriptor fileDescriptor;
+
+    private BasicMetadata basic;
+
+    private Features features;
+
+    public FileMetadata() {
+    }
+
+    public FileMetadata(FileDescriptor fileDescriptor, BasicMetadata basic, Features features) {
+        this.fileDescriptor = fileDescriptor;
+        this.basic = basic;
+        this.features = features;
+    }
+
+    public FileDescriptor getFileDescriptor() {
+        return fileDescriptor;
+    }
+
+    public BasicMetadata getBasic() {
+        return basic;
+    }
+
+    public Features getFeatures() {
+        return features;
+    }
+
+    @Override
+    public String toString() {
+        return "FileMetadata{" +
+                "fileDescriptor=" + fileDescriptor +
+                ", basic=" + basic +
+                ", features=" + features +
+                '}';
+    }
+}
