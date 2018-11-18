@@ -1,14 +1,15 @@
 package com.wix.mediaplatform.v6.service.live;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EnforcedStreamParams {
 
     private ParamsRange paramsRange;
-    private ArrayList<ParamsOption> paramsOptions;
+
+    private List<ParamsOption> paramsOptions = new ArrayList<>();
 
     public EnforcedStreamParams() {
-        paramsOptions = new ArrayList<ParamsOption>();
     }
 
     public ParamsRange getParamsRange() {
@@ -20,7 +21,7 @@ public class EnforcedStreamParams {
         return this;
     }
 
-    public ArrayList<ParamsOption> getParamsOptions() {
+    public List<ParamsOption> getParamsOptions() {
         return paramsOptions;
     }
 
@@ -29,7 +30,7 @@ public class EnforcedStreamParams {
         return this;
     }
 
-    public EnforcedStreamParams setParamsOptions(ArrayList<ParamsOption> paramsOptions) {
+    public EnforcedStreamParams setParamsOptions(List<ParamsOption> paramsOptions) {
         this.paramsOptions = paramsOptions;
         return this;
     }

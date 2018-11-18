@@ -1,8 +1,11 @@
 package com.wix.mediaplatform.v6.service.live;
 
 public class ParamsOption {
+
     private Integer bitrate;
+
     private Integer height;
+
     private Integer width;
 
     public ParamsOption() {

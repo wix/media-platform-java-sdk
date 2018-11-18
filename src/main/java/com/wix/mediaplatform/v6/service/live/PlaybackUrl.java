@@ -1,7 +1,9 @@
 package com.wix.mediaplatform.v6.service.live;
 
 public class PlaybackUrl {
+
     private String packageName;
+
     private String path;
 
     public PlaybackUrl() {
@@ -23,13 +25,5 @@ public class PlaybackUrl {
     public PlaybackUrl setPath(String path) {
         this.path = path;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "PlaybackUrl{" +
-                "packageName=" + packageName +
-                ",path=" + path +
-                '}';
     }
 }

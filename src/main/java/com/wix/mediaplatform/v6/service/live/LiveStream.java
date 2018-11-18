@@ -1,8 +1,10 @@
 package com.wix.mediaplatform.v6.service.live;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LiveStream {
+
     private Integer connectTimeout;
 
     private String dateCreated;
@@ -21,7 +23,7 @@ public class LiveStream {
 
     private Integer maxPublishDuration;
 
-    private ArrayList<PlaybackUrl> playbackUrls;
+    private List<PlaybackUrl> playbackUrls = new ArrayList<>();
 
     private String probeResult;
 
@@ -43,9 +45,7 @@ public class LiveStream {
 
     private Boolean success;
 
-
     public LiveStream() {
-        playbackUrls = new ArrayList<PlaybackUrl>();
     }
 
     public Integer getConnectTimeout() {
@@ -129,7 +129,7 @@ public class LiveStream {
         return this;
     }
 
-    public ArrayList<PlaybackUrl> getPlaybackUrls() {
+    public List<PlaybackUrl> getPlaybackUrls() {
         return playbackUrls;
     }
 
@@ -234,6 +234,7 @@ public class LiveStream {
     }
 
     public enum State {
+
         created("created"),
         streaming("working"),
         pending_reconnect("pending_reconnect"),
@@ -256,6 +257,7 @@ public class LiveStream {
     }
 
     public enum Protocol {
+
         rtmp("rtmp");
 
         private final String value;
@@ -274,6 +276,7 @@ public class LiveStream {
     }
 
     public enum Type {
+
         live("live"),
         event("event");
 

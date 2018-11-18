@@ -1,7 +1,9 @@
 package com.wix.mediaplatform.v6.service.live;
 
 public class Geo {
+
     private Coordinates coordinates;
+
     private String ipAddress;
 
     public Geo() {
@@ -26,7 +28,9 @@ public class Geo {
     }
 
     public static class Coordinates {
+
         private Float latitude;
+
         private Float longitude;
 
         public Coordinates() {

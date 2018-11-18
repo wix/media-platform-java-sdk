@@ -1,11 +1,12 @@
 package com.wix.mediaplatform.v6.service.live;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class StateNotification {
+
     private String callbackUrl;
 
-    private HashMap<String,String> customPayload;
+    private Map<String,String> customPayload;
 
     public StateNotification() {
     }
@@ -19,11 +20,11 @@ public class StateNotification {
         return this;
     }
 
-    public HashMap<String, String> getCustomPayload() {
+    public Map<String, String> getCustomPayload() {
         return customPayload;
     }
 
-    public StateNotification setCustomPayload(HashMap<String, String> customPayload) {
+    public StateNotification setCustomPayload(Map<String, String> customPayload) {
         this.customPayload = customPayload;
         return this;
     }

@@ -19,7 +19,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class LiveManagerTest extends BaseTest {
+public class LiveServiceTest extends BaseTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(PORT));
@@ -27,7 +27,7 @@ public class LiveManagerTest extends BaseTest {
     private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
     private Authenticator authenticator = new Authenticator(configuration);
     private com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient AuthenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
-    private LiveManager liveManager = new LiveManager(configuration, AuthenticatedHTTPClient);
+    private LiveService liveService = new LiveService(configuration, AuthenticatedHTTPClient);
 
     @Before
     public void setup() {
@@ -41,7 +41,7 @@ public class LiveManagerTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("create-live-stream-response.json")));
 
-        LiveStream liveStream = liveManager.getStream("wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM");
+        LiveStream liveStream = liveService.getStream("wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM");
 
         assertThat(liveStream.getId(), is("wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM"));
     }
@@ -53,7 +53,7 @@ public class LiveManagerTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("list-live-streams-response.json")));
 
-        LiveStream[] liveStreams = liveManager.listStreams();
+        LiveStream[] liveStreams = liveService.listStreams();
 
         assertThat(liveStreams[0].getId(), is("wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM"));
     }
@@ -65,7 +65,7 @@ public class LiveManagerTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("create-live-stream-response.json")));
 
-        LiveStreamRequest liveStreamRequest = new LiveStreamRequest()
+        OpenLiveStreamRequest openLiveStreamRequest = new OpenLiveStreamRequest()
                 .setDigitalVideoRecorder(new DigitalVideoRecorder()
                     .setDestination(new Destination()
                                 .setDirectory("/test/dvr")
@@ -86,7 +86,7 @@ public class LiveManagerTest extends BaseTest {
                     }}))
                 .setReconnectTimeout(3600);
 
-        LiveStream liveStream = liveManager.openStream(liveStreamRequest);
+        LiveStream liveStream = liveService.openStream(openLiveStreamRequest);
 
         assertThat(liveStream.getId(), is("wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM"));
     }

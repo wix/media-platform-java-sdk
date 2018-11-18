@@ -1,7 +1,9 @@
 package com.wix.mediaplatform.v6.service.live;
 
 public class ParamsRange {
+
     private ParamsOption maxValues;
+
     private ParamsOption minValues;
 
     public ParamsRange() {
@@ -24,5 +26,4 @@ public class ParamsRange {
         this.minValues = minValues;
         return this;
     }
-
 }
