@@ -15,7 +15,7 @@ public abstract class MediaPlatformRequest<T> {
     protected String url;
 
     @JsonIgnore
-    protected String method;
+    private String method;
 
     protected MediaPlatformRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String method, String url) {
         this.authenticatedHTTPClient = authenticatedHTTPClient;
@@ -34,6 +34,9 @@ public abstract class MediaPlatformRequest<T> {
                 return response.getPayload();
             case "GET":
                 response = authenticatedHTTPClient.get(url, params());
+                return response.getPayload();
+            case "DELETE":
+                response = authenticatedHTTPClient.delete(url, params());
                 return response.getPayload();
             default:
                 throw new MediaPlatformException("method not supported");

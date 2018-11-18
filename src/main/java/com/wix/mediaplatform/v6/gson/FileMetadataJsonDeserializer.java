@@ -4,12 +4,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.wix.mediaplatform.v6.dto.metadata.FileMetadata;
-import com.wix.mediaplatform.v6.dto.metadata.basic.BasicMetadata;
-import com.wix.mediaplatform.v6.dto.metadata.basic.ImageBasicMetadata;
-import com.wix.mediaplatform.v6.dto.metadata.basic.VideoBasicMetadata;
-import com.wix.mediaplatform.v6.dto.metadata.features.Features;
-import com.wix.mediaplatform.v6.dto.metadata.features.ImageFeatures;
+import com.wix.mediaplatform.v6.metadata.FileMetadata;
+import com.wix.mediaplatform.v6.metadata.basic.BasicMetadata;
+import com.wix.mediaplatform.v6.metadata.basic.ImageBasicMetadata;
+import com.wix.mediaplatform.v6.metadata.basic.VideoBasicMetadata;
+import com.wix.mediaplatform.v6.metadata.features.Features;
+import com.wix.mediaplatform.v6.metadata.features.ImageFeatures;
 import com.wix.mediaplatform.v6.service.FileDescriptor;
 
 import java.lang.reflect.Type;

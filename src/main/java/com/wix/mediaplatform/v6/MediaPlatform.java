@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wix.mediaplatform.v6.auth.Authenticator;
 import com.wix.mediaplatform.v6.configuration.Configuration;
 import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
-import com.wix.mediaplatform.v6.management.JobManager;
-import com.wix.mediaplatform.v6.management.TranscodeManager;
 import com.wix.mediaplatform.v6.service.archive.ArchiveService;
 import com.wix.mediaplatform.v6.service.file.FileDownloader;
 import com.wix.mediaplatform.v6.service.file.FileService;
 import com.wix.mediaplatform.v6.service.file.FileUploader;
+import com.wix.mediaplatform.v6.service.job.JobService;
+import com.wix.mediaplatform.v6.service.transcode.TranscodeService;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,9 +17,9 @@ public class MediaPlatform {
 
     private final FileDownloader fileDownloader;
     private final FileService fileService;
-    private final JobManager jobManager;
+    private final JobService jobService;
     private final ArchiveService archiveService;
-    private final TranscodeManager transcodeManager;
+    private final TranscodeService transcodeService;
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
         this(domain, appId, sharedSecret, null);
@@ -48,8 +48,8 @@ public class MediaPlatform {
         FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient, objectMapper);
         this.fileDownloader = new FileDownloader(configuration, authenticator);
         this.fileService = new FileService(configuration, authenticatedHTTPClient, fileUploader);
-        this.jobManager = new JobManager(configuration, authenticatedHTTPClient);
-        this.transcodeManager = new TranscodeManager(configuration, authenticatedHTTPClient);
+        this.jobService = new JobService(configuration, authenticatedHTTPClient);
+        this.transcodeService = new TranscodeService(configuration, authenticatedHTTPClient);
     }
 
     public FileDownloader fileDownloader() {
@@ -60,12 +60,12 @@ public class MediaPlatform {
         return fileService;
     }
 
-    public JobManager jobManager() {
-        return jobManager;
+    public JobService jobManager() {
+        return jobService;
     }
 
-    public TranscodeManager transcodeManager() {
-        return transcodeManager;
+    public TranscodeService transcodeManager() {
+        return transcodeService;
     }
 
     public ArchiveService archiveManager() {

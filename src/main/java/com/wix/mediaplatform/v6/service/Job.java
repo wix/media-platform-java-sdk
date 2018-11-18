@@ -2,6 +2,7 @@ package com.wix.mediaplatform.v6.service;
 
 import java.util.Arrays;
 
+// todo: register sub types
 public abstract class Job {
 
     private String id;

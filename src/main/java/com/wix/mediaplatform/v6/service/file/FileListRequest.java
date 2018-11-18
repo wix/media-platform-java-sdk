@@ -1,11 +1,17 @@
 package com.wix.mediaplatform.v6.service.file;
 
 import com.google.common.collect.ImmutableMap;
+import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v6.service.FileDescriptor;
+import com.wix.mediaplatform.v6.service.MediaPlatformRequest;
 
 import java.util.Map;
 
-public class FileListRequest {
+// todo: pagination (.next())
+
+public class FileListRequest extends MediaPlatformRequest<FileList> {
+
+    private String path;
 
     private String nextPageToken;
 
@@ -19,89 +25,16 @@ public class FileListRequest {
 
     private Boolean recursive = false;
 
-    public FileListRequest() {
-
+    public FileListRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
+        super(authenticatedHTTPClient, "GET", baseUrl + "/files/ls_dir");
     }
 
-    public FileListRequest(String nextPageToken, Integer pageSize, OrderBy orderBy, OrderDirection orderDirection) {
-        this.nextPageToken = nextPageToken;
-        this.pageSize = pageSize;
-        this.orderBy = orderBy;
-        this.orderDirection = orderDirection;
-    }
-
-    public FileListRequest(String nextPageToken, Integer pageSize, OrderBy orderBy, OrderDirection orderDirection,
-                           FileDescriptor.Type type, Boolean recursive) {
-        this.nextPageToken = nextPageToken;
-        this.pageSize = pageSize;
-        this.orderBy = orderBy;
-        this.orderDirection = orderDirection;
-        this.type = type;
-        this.recursive = recursive;
-    }
-
-    public FileListRequest setNextPageToken(String nextPageToken) {
-        this.nextPageToken = nextPageToken;
-        return this;
-    }
-
-    public FileListRequest setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-        return this;
-    }
-
-    public FileListRequest setOrderBy(OrderBy orderBy) {
-        this.orderBy = orderBy;
-        return this;
-    }
-
-    public FileListRequest ascending() {
-        this.orderDirection = OrderDirection.acs;
-        return this;
-    }
-
-    public FileListRequest descending() {
-        this.orderDirection = OrderDirection.des;
-        return this;
-    }
-
-    public FileListRequest setType(FileDescriptor.Type type) {
-        this.type = type;
-        return this;
-    }
-
-    public FileListRequest setRecursive(Boolean recursive) {
-        this.recursive = recursive;
-        return this;
-    }
-
-    public String getNextPageToken() {
-        return nextPageToken;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public OrderBy getOrderBy() {
-        return orderBy;
-    }
-
-    public OrderDirection getOrderDirection() {
-        return orderDirection;
-    }
-
-    public FileDescriptor.Type getType() {
-        return type;
-    }
-
-    public Boolean getRecursive() {
-        return recursive;
-    }
-
-    public Map<String, String> toParams() {
+    @Override
+    protected Map<String, String> params() {
 
         ImmutableMap.Builder<String, String> b = ImmutableMap.builder();
+
+        b.put("path", path);
 
         if (nextPageToken != null) {
             b.put("nextPageToken", nextPageToken);
@@ -123,6 +56,69 @@ public class FileListRequest {
         }
 
         return b.build();
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public FileListRequest setPath(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public String getNextPageToken() {
+        return nextPageToken;
+    }
+
+    public FileListRequest setNextPageToken(String nextPageToken) {
+        this.nextPageToken = nextPageToken;
+        return this;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public FileListRequest setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+        return this;
+    }
+
+    public OrderBy getOrderBy() {
+        return orderBy;
+    }
+
+    public FileListRequest setOrderBy(OrderBy orderBy) {
+        this.orderBy = orderBy;
+        return this;
+    }
+
+    public OrderDirection getOrderDirection() {
+        return orderDirection;
+    }
+
+    public FileListRequest setOrderDirection(OrderDirection orderDirection) {
+        this.orderDirection = orderDirection;
+        return this;
+    }
+
+    public FileDescriptor.Type getType() {
+        return type;
+    }
+
+    public FileListRequest setType(FileDescriptor.Type type) {
+        this.type = type;
+        return this;
+    }
+
+    public Boolean getRecursive() {
+        return recursive;
+    }
+
+    public FileListRequest setRecursive(Boolean recursive) {
+        this.recursive = recursive;
+        return this;
     }
 
     public enum OrderBy {

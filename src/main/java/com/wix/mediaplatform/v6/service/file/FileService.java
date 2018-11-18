@@ -3,19 +3,8 @@ package com.wix.mediaplatform.v6.service.file;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wix.mediaplatform.v6.auth.Authenticator;
 import com.wix.mediaplatform.v6.configuration.Configuration;
-import com.wix.mediaplatform.v6.exception.MediaPlatformException;
-import com.wix.mediaplatform.v6.gson.Types;
 import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v6.service.MediaPlatformService;
-import com.wix.mediaplatform.v6.service.RestResponse;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Map;
-
-import static com.google.common.collect.Maps.newHashMap;
-import static com.google.common.collect.Maps.newTreeMap;
 
 public class FileService extends MediaPlatformService {
 
@@ -43,6 +32,10 @@ public class FileService extends MediaPlatformService {
         return new ImportFileRequest(authenticatedHTTPClient, baseUrl);
     }
 
+    public CopyFileRequest copyFileRequest() {
+        return new CopyFileRequest(authenticatedHTTPClient, baseUrl);
+    }
+
     public CreateFileRequest createFileRequest()  {
         return new CreateFileRequest(authenticatedHTTPClient, baseUrl);
     }
@@ -63,28 +56,15 @@ public class FileService extends MediaPlatformService {
         return new FileIdMetadataRequest(authenticatedHTTPClient, baseUrl, fileId);
     }
 
-    public FileList listFiles(String path, @Nullable FileListRequest fileListRequest) throws MediaPlatformException, IOException, URISyntaxException {
-        Map<String, String> params = newTreeMap();
-        if (fileListRequest != null) {
-                params.putAll(fileListRequest.toParams());
-        }
-        params.put("path", path);
-
-        RestResponse<FileList> restResponse = authenticatedHttpClient.get(
-                baseUrl + "/files/ls_dir",
-                params,
-                Types.FILE_LIST_REST_RESPONSE
-        );
-        return restResponse.getPayload();
+    public FileListRequest fileListRequest() {
+        return new FileListRequest(authenticatedHTTPClient, baseUrl);
     }
 
-    public void deleteFileByPath(String path) throws MediaPlatformException, IOException, URISyntaxException {
-        Map<String, String> params = newHashMap();
-        params.put("path", path);
-        authenticatedHttpClient.delete(baseUrl + "/files", params, null);
+    public DeleteFileRequest deleteFileRequest() {
+        return new DeleteFileRequest(authenticatedHTTPClient, baseUrl);
     }
 
-    public void deleteFileById(String fileId) throws MediaPlatformException, IOException, URISyntaxException {
-        authenticatedHttpClient.delete(baseUrl + "/files/" + fileId, null, null);
+    public DeleteFileIdRequest deleteFileIdRequest(String fileId) {
+        return new DeleteFileIdRequest(authenticatedHTTPClient, baseUrl, fileId);
     }
 }

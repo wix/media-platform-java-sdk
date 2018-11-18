@@ -4,11 +4,14 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.auth.Authenticator;
 import com.wix.mediaplatform.v6.configuration.Configuration;
-import com.wix.mediaplatform.v6.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.v6.exception.FileNotFoundException;
 import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.v6.metadata.FileMetadata;
 import com.wix.mediaplatform.v6.service.FileDescriptor;
-import com.wix.mediaplatform.v6.service.file.*;
+import com.wix.mediaplatform.v6.service.file.CreateFileRequest;
+import com.wix.mediaplatform.v6.service.file.FileList;
+import com.wix.mediaplatform.v6.service.file.FileListRequest;
+import com.wix.mediaplatform.v6.service.file.FileService;
 import org.junit.Rule;
 import org.junit.Test;
 

@@ -1,9 +1,9 @@
 package com.wix.mediaplatform.v6.image.parser;
 
-import com.wix.mediaplatform.v6.dto.metadata.FileMetadata;
-import com.wix.mediaplatform.v6.dto.metadata.basic.ImageBasicMetadata;
 import com.wix.mediaplatform.v6.image.Image;
 import com.wix.mediaplatform.v6.image.Metadata;
+import com.wix.mediaplatform.v6.metadata.FileMetadata;
+import com.wix.mediaplatform.v6.metadata.basic.ImageBasicMetadata;
 
 public class FileMetadataParser {
 

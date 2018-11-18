@@ -1,12 +1,12 @@
 package com.wix.mediaplatform.v6.image;
 
-import com.wix.mediaplatform.v6.dto.metadata.FileMetadata;
 import com.wix.mediaplatform.v6.image.encoder.JPEG;
 import com.wix.mediaplatform.v6.image.filter.*;
 import com.wix.mediaplatform.v6.image.framing.*;
 import com.wix.mediaplatform.v6.image.parser.FileDescriptorParser;
 import com.wix.mediaplatform.v6.image.parser.FileMetadataParser;
 import com.wix.mediaplatform.v6.image.parser.ImageUrlParser;
+import com.wix.mediaplatform.v6.metadata.FileMetadata;
 import com.wix.mediaplatform.v6.service.FileDescriptor;
 
 import java.util.Map;
