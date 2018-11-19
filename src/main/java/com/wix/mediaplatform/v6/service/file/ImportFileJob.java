@@ -12,6 +12,9 @@ public class ImportFileJob extends Job {
 
     private RestResponse<FileDescriptor> result;
 
+    public ImportFileJob() {
+    }
+
     @Override
     public ImportFileSpecification getSpecification() {
         return specification;

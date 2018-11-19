@@ -1,8 +1,20 @@
 package com.wix.mediaplatform.v6.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.wix.mediaplatform.v6.service.archive.CreateArchiveJob;
+import com.wix.mediaplatform.v6.service.archive.ExtractArchiveJob;
+import com.wix.mediaplatform.v6.service.file.ImportFileJob;
+import com.wix.mediaplatform.v6.service.transcode.TranscodeJob;
 
-// todo: register sub types
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = CreateArchiveJob.class, name = "urn:job:archive.create"),
+        @JsonSubTypes.Type(value = ExtractArchiveJob.class, name = "urn:job:archive.extract"),
+        @JsonSubTypes.Type(value = ImportFileJob.class, name = "urn:job:import.file"),
+        @JsonSubTypes.Type(value = TranscodeJob.class, name = "urn:job:av.transcode"),
+})
 public abstract class Job {
 
     private String id;
@@ -51,6 +63,9 @@ public abstract class Job {
 
     public String getDateUpdated() {
         return dateUpdated;
+    }
+
+    public Job() {
     }
 
     public abstract Specification getSpecification();
@@ -126,7 +141,7 @@ public abstract class Job {
         }
 
         public static Type fromString(String typeString) {
-            for (Type type: Type.values()) {
+            for (Type type : Type.values()) {
                 if (type.getValue().equals(typeString)) {
                     return type;
                 }
@@ -137,6 +152,7 @@ public abstract class Job {
     }
 
     public enum Status {
+
         @JsonProperty("pending")
         pending("pending"),
         @JsonProperty("working")

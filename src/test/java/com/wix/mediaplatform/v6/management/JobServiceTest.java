@@ -3,7 +3,6 @@ package com.wix.mediaplatform.v6.management;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.service.Job;
-import com.wix.mediaplatform.v6.service.job.JobGroup;
 import com.wix.mediaplatform.v6.service.job.JobList;
 import com.wix.mediaplatform.v6.service.job.JobService;
 import org.junit.Before;
@@ -42,9 +41,9 @@ public class JobServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-job-group-response.json")));
 
-        JobGroup group = jobService.jobGroupRequest("71f0d3fde7f348ea89aa1173299146f8").execute();
+        Job[] group = jobService.jobGroupRequest("71f0d3fde7f348ea89aa1173299146f8").execute();
 
-        assertThat(group.getJobs()[0].getId(),
+        assertThat(group[0].getId(),
                 is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
     }
 

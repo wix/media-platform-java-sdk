@@ -31,7 +31,7 @@ public class JobListRequest extends MediaPlatformRequest<JobList> {
     private String path;
 
     public JobListRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "GET", baseUrl + "jobs", JobList.class);
+        super(authenticatedHTTPClient, "GET", baseUrl + "/jobs", JobList.class);
     }
 
     public JobListRequest setNextPageToken(String nextPageToken) {

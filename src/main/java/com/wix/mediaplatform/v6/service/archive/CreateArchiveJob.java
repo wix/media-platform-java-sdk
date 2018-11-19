@@ -11,6 +11,9 @@ public class CreateArchiveJob extends Job {
 
     private RestResponse<CreateArchiveJobResult> result;
 
+    public CreateArchiveJob() {
+    }
+
     @Override
     public CreateArchiveSpecification getSpecification() {
         return specification;
