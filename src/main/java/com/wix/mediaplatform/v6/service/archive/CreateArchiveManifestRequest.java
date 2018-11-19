@@ -20,7 +20,7 @@ public class CreateArchiveManifestRequest extends MediaPlatformRequest<FileDescr
     private String algorithm;
 
     protected CreateArchiveManifestRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST", baseUrl + "/archive/create/manifest");
+        super(authenticatedHTTPClient, "POST", baseUrl + "/archive/create/manifest", FileDescriptor.class);
     }
 
     public String getName() {

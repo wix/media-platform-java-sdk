@@ -7,7 +7,7 @@ import com.wix.mediaplatform.v6.service.MediaPlatformRequest;
 public class JobRequest extends MediaPlatformRequest<Job> {
 
     JobRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, String jobId) {
-        super(authenticatedHTTPClient, "GET", baseUrl + "/jobs/" + jobId);
+        super(authenticatedHTTPClient, "GET", baseUrl + "/jobs/" + jobId, Job.class);
     }
 
 }

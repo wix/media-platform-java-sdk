@@ -4,13 +4,13 @@ import com.wix.mediaplatform.v6.service.Job;
 
 import java.util.Arrays;
 
-public class SearchJobsResponse {
+public class JobList {
 
     private String nextPageToken;
 
     private Job[] jobs;
 
-    public SearchJobsResponse() {
+    public JobList() {
     }
 
     public String getNextPageToken() {
@@ -23,7 +23,7 @@ public class SearchJobsResponse {
 
     @Override
     public String toString() {
-        return "SearchJobsResponse{" +
+        return "JobList{" +
                 "nextPageToken='" + nextPageToken + '\'' +
                 ", jobs=" + Arrays.toString(jobs) +
                 '}';

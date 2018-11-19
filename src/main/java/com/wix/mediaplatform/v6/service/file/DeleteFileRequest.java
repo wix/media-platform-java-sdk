@@ -12,7 +12,7 @@ public class DeleteFileRequest extends MediaPlatformRequest {
     private String path;
 
     DeleteFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "DELETE", baseUrl + "/files");
+        super(authenticatedHTTPClient, "DELETE", baseUrl + "/files", null);
     }
 
     @Override

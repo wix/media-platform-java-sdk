@@ -4,16 +4,17 @@ import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v6.service.MediaPlatformRequest;
 import com.wix.mediaplatform.v6.service.Source;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TranscodeRequest extends MediaPlatformRequest<TranscodeJobGroup> {
 
-    private List<Source> sources;
+    private List<Source> sources = new ArrayList<>();
 
-    private List<TranscodeSpecification> specifications;
+    private List<TranscodeSpecification> specifications = new ArrayList<>();
 
     public TranscodeRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST", baseUrl + "/av/transcode");
+        super(authenticatedHTTPClient, "POST", baseUrl + "/av/transcode", TranscodeJobGroup.class);
     }
 
     public List<Source> getSources() {

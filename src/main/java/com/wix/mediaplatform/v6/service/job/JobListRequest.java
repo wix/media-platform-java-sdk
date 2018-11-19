@@ -8,7 +8,7 @@ import java.util.Map;
 
 // todo: pagination (.next())
 
-public class SearchJobsRequest extends MediaPlatformRequest<SearchJobsResponse> {
+public class JobListRequest extends MediaPlatformRequest<JobList> {
 
     private String nextPageToken;
 
@@ -30,66 +30,66 @@ public class SearchJobsRequest extends MediaPlatformRequest<SearchJobsResponse> 
 
     private String path;
 
-    public SearchJobsRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "GET", baseUrl + "jobs");
+    public JobListRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
+        super(authenticatedHTTPClient, "GET", baseUrl + "jobs", JobList.class);
     }
 
-    public SearchJobsRequest setNextPageToken(String nextPageToken) {
+    public JobListRequest setNextPageToken(String nextPageToken) {
         this.nextPageToken = nextPageToken;
         return this;
     }
 
-    public SearchJobsRequest setPageSize(Integer pageSize) {
+    public JobListRequest setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
         return this;
     }
 
-    public SearchJobsRequest setOrderBy(OrderBy orderBy) {
+    public JobListRequest setOrderBy(OrderBy orderBy) {
         this.orderBy = orderBy;
         return this;
     }
 
-    public SearchJobsRequest ascending() {
+    public JobListRequest ascending() {
         this.orderDirection = OrderDirection.acs;
         return this;
     }
 
-    public SearchJobsRequest descending() {
+    public JobListRequest descending() {
         this.orderDirection = OrderDirection.des;
         return this;
     }
 
-    public SearchJobsRequest setOrderDirection(OrderDirection orderDirection) {
+    public JobListRequest setOrderDirection(OrderDirection orderDirection) {
         this.orderDirection = orderDirection;
         return this;
     }
 
-    public SearchJobsRequest setIssuer(String issuer) {
+    public JobListRequest setIssuer(String issuer) {
         this.issuer = issuer;
         return this;
     }
 
-    public SearchJobsRequest setType(String type) {
+    public JobListRequest setType(String type) {
         this.type = type;
         return this;
     }
 
-    public SearchJobsRequest setStatus(String status) {
+    public JobListRequest setStatus(String status) {
         this.status = status;
         return this;
     }
 
-    public SearchJobsRequest setGroupId(String groupId) {
+    public JobListRequest setGroupId(String groupId) {
         this.groupId = groupId;
         return this;
     }
 
-    public SearchJobsRequest setFileId(String fileId) {
+    public JobListRequest setFileId(String fileId) {
         this.fileId = fileId;
         return this;
     }
 
-    public SearchJobsRequest setPath(String path) {
+    public JobListRequest setPath(String path) {
         this.path = path;
         return this;
     }

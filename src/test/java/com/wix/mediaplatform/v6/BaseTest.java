@@ -1,48 +1,32 @@
 package com.wix.mediaplatform.v6;
 
-import com.google.gson.Gson;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.ssl.SSLContexts;
-import org.apache.http.ssl.TrustStrategy;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.wix.mediaplatform.v6.auth.Authenticator;
+import com.wix.mediaplatform.v6.configuration.Configuration;
+import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
+import okhttp3.OkHttpClient;
+import org.junit.Rule;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 public abstract class BaseTest {
 
     protected int PORT = 8443;
 
-    protected HttpClient httpClient;
+    private OkHttpClient httpClient = new OkHttpClient();
 
-    protected Gson gson = MediaPlatform.getGson(true);
+    protected ObjectMapper objectMapper = MediaPlatform.getMapper();
 
-    public BaseTest() {
+    protected Configuration configuration = new Configuration("http", "localhost:" + PORT,
+            "appId",
+            "95eee2c63ac2d15270628664c84f6ddd");
 
-//        System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.SimpleLog");
-//        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-//        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
+    protected Authenticator authenticator = new Authenticator(configuration);
 
-        try {
-            this.httpClient = MediaPlatform.getRetryingHttpClientBuilder()
-                    .disableAuthCaching()
-                    .disableCookieManagement()
-                    .disableConnectionState()
-                    .setMaxConnPerRoute(50)
-                    .setMaxConnTotal(100)
-                    .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-                    .setSSLContext(SSLContexts.custom()
-                            .loadTrustMaterial(null, new TrustStrategy() {
-                                @Override
-                                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                                    return true;
-                                }
-                            })
-                            .build())
-                    .build();
+    protected AuthenticatedHTTPClient authenticatedHttpClient = new AuthenticatedHTTPClient(authenticator, httpClient,
+            objectMapper);
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(PORT));
 }

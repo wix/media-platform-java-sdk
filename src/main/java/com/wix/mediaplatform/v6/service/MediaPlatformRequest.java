@@ -6,7 +6,7 @@ import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 
 import java.util.Map;
 
-public abstract class MediaPlatformRequest<T> {
+public abstract class MediaPlatformRequest<P> {
 
     @JsonIgnore
     protected AuthenticatedHTTPClient authenticatedHTTPClient;
@@ -17,27 +17,27 @@ public abstract class MediaPlatformRequest<T> {
     @JsonIgnore
     private String method;
 
-    protected MediaPlatformRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String method, String url) {
+    private Class<P> clazz;
+
+    protected MediaPlatformRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String method, String url, Class<P> clazz) {
         this.authenticatedHTTPClient = authenticatedHTTPClient;
         this.method = method;
         this.url = url;
+
+        this.clazz = clazz;
     }
 
-    public T execute() throws MediaPlatformException {
+    public P execute() throws MediaPlatformException {
 
         validate();
 
-        RestResponse<T> response;
         switch (method) {
             case "POST":
-                response = authenticatedHTTPClient.post(url, this);
-                return response.getPayload();
+                return authenticatedHTTPClient.post(url, this, clazz);
             case "GET":
-                response = authenticatedHTTPClient.get(url, params());
-                return response.getPayload();
+                return authenticatedHTTPClient.get(url, params(), clazz);
             case "DELETE":
-                response = authenticatedHTTPClient.delete(url, params());
-                return response.getPayload();
+                return authenticatedHTTPClient.delete(url, params(), clazz);
             default:
                 throw new MediaPlatformException("method not supported");
         }

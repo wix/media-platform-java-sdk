@@ -1,5 +1,7 @@
 package com.wix.mediaplatform.v6.service.live;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,10 +237,15 @@ public class LiveStream {
 
     public enum State {
 
+        @JsonProperty("created")
         created("created"),
+        @JsonProperty("working")
         streaming("working"),
+        @JsonProperty("pending_reconnect")
         pending_reconnect("pending_reconnect"),
+        @JsonProperty("dvr_processing")
         dvr_processing("dvr_processing"),
+        @JsonProperty("closed")
         closed("closed");
 
         private final String value;
@@ -258,6 +265,7 @@ public class LiveStream {
 
     public enum Protocol {
 
+        @JsonProperty("rtmp")
         rtmp("rtmp");
 
         private final String value;
@@ -277,7 +285,9 @@ public class LiveStream {
 
     public enum Type {
 
+        @JsonProperty("live")
         live("live"),
+        @JsonProperty("event")
         event("event");
 
         private final String value;
@@ -294,5 +304,4 @@ public class LiveStream {
             return Type.valueOf(typeString);
         }
     }
-
 }

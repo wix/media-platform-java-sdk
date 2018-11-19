@@ -16,7 +16,7 @@ public class CreateArchiveRequest extends MediaPlatformRequest<CreateArchiveJob>
     private String archiveType;
 
     CreateArchiveRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST   ", baseUrl + "/archive/create");
+        super(authenticatedHTTPClient, "POST", baseUrl + "/archive/create", CreateArchiveJob.class);
     }
 
     public CreateArchiveRequest setArchiveSources(ArrayList<ArchiveSource> sources) {

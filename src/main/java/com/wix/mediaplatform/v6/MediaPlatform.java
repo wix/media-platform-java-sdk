@@ -1,25 +1,27 @@
 package com.wix.mediaplatform.v6;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wix.mediaplatform.v6.auth.Authenticator;
 import com.wix.mediaplatform.v6.configuration.Configuration;
 import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v6.service.archive.ArchiveService;
-import com.wix.mediaplatform.v6.service.file.FileDownloader;
 import com.wix.mediaplatform.v6.service.file.FileService;
-import com.wix.mediaplatform.v6.service.file.FileUploader;
 import com.wix.mediaplatform.v6.service.job.JobService;
+import com.wix.mediaplatform.v6.service.live.LiveService;
 import com.wix.mediaplatform.v6.service.transcode.TranscodeService;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.Nullable;
 
 public class MediaPlatform {
 
-    private final FileDownloader fileDownloader;
+    public static int MAX_RETRIES = 5;
+
     private final FileService fileService;
     private final JobService jobService;
     private final ArchiveService archiveService;
     private final TranscodeService transcodeService;
+    private final LiveService liveService;
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
         this(domain, appId, sharedSecret, null);
@@ -36,24 +38,16 @@ public class MediaPlatform {
 
         AuthenticatedHTTPClient authenticatedHTTPClient;
         if (null == httpClient) {
-            authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator,
-                    getHttpClient(), objectMapper);
+            authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, getHttpClient(), objectMapper);
         } else {
-            authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator,
-                    httpClient, objectMapper);
+            authenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, objectMapper);
         }
 
+        this.fileService = new FileService(configuration, authenticatedHTTPClient, objectMapper, authenticator);
         this.archiveService = new ArchiveService(configuration, authenticatedHTTPClient);
-
-        FileUploader fileUploader = new FileUploader(configuration, authenticatedHTTPClient, objectMapper);
-        this.fileDownloader = new FileDownloader(configuration, authenticator);
-        this.fileService = new FileService(configuration, authenticatedHTTPClient, fileUploader);
         this.jobService = new JobService(configuration, authenticatedHTTPClient);
         this.transcodeService = new TranscodeService(configuration, authenticatedHTTPClient);
-    }
-
-    public FileDownloader fileDownloader() {
-        return fileDownloader;
+        this.liveService = new LiveService(configuration, authenticatedHTTPClient);
     }
 
     public FileService fileManager() {
@@ -72,8 +66,14 @@ public class MediaPlatform {
         return archiveService;
     }
 
+    public LiveService liveService() {
+        return liveService;
+    }
+
     public static ObjectMapper getMapper() {
-        return new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
     }
 
     public static OkHttpClient getHttpClient() {

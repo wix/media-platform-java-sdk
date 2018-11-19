@@ -1,5 +1,7 @@
 package com.wix.mediaplatform.v6.service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 public class FileDescriptor {
@@ -112,25 +114,11 @@ public class FileDescriptor {
         return lifecycle;
     }
 
-    @Override
-    public String toString() {
-        return "FileDescriptor{" +
-                "id='" + id + '\'' +
-                ", hash='" + hash + '\'' +
-                ", path='" + path + '\'' +
-                ", mimeType='" + mimeType + '\'' +
-                ", type=" + type +
-                ", size=" + size +
-                ", acl=" + acl +
-                ", dateCreated=" + dateCreated +
-                ", dateUpdated=" + dateUpdated +
-                '}';
-    }
-
-
     public enum Acl {
 
+        @JsonProperty("public")
         PUBLIC("public"),
+        @JsonProperty("private")
         PRIVATE("private");
 
         private final String value;
@@ -156,7 +144,9 @@ public class FileDescriptor {
 
     public enum Type {
 
+        @JsonProperty("-")
         FILE("-"),
+        @JsonProperty("d")
         DIRECTORY("d");
 
         private final String value;

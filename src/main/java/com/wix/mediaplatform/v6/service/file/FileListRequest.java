@@ -26,7 +26,7 @@ public class FileListRequest extends MediaPlatformRequest<FileList> {
     private Boolean recursive = false;
 
     public FileListRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "GET", baseUrl + "/files/ls_dir");
+        super(authenticatedHTTPClient, "GET", baseUrl + "/files/ls_dir", FileList.class);
     }
 
     @Override

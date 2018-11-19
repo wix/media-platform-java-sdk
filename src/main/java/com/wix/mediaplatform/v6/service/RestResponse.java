@@ -3,13 +3,13 @@ package com.wix.mediaplatform.v6.service;
 import com.wix.mediaplatform.v6.exception.ExceptionFactory;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 
-public class RestResponse<T> {
+public class RestResponse<P> {
 
     private int code;
 
     private String message;
 
-    private T payload;
+    private P payload;
 
     public int getCode() {
         return code;
@@ -19,7 +19,7 @@ public class RestResponse<T> {
         return message;
     }
 
-    public T getPayload() {
+    public P getPayload() {
         return payload;
     }
 

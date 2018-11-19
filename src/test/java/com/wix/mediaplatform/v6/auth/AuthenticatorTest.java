@@ -9,7 +9,9 @@ import static org.hamcrest.Matchers.is;
 
 public class AuthenticatorTest extends BaseTest {
 
-    private Configuration configuration = new Configuration("domain", "appId", "95eee2c63ac2d15270628664c84f6ddd");
+    private Configuration configuration = new Configuration("domain", "appId",
+            "95eee2c63ac2d15270628664c84f6ddd");
+
     private Authenticator authenticator = new Authenticator(configuration);
 
 

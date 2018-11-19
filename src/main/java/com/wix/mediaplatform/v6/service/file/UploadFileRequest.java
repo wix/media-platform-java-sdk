@@ -8,7 +8,6 @@ import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.FileLifecycle;
 import com.wix.mediaplatform.v6.service.MediaPlatformRequest;
-import com.wix.mediaplatform.v6.service.RestResponse;
 
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
     private ObjectMapper objectMapper;
 
     UploadFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, ObjectMapper objectMapper) {
-        super(authenticatedHTTPClient, "POST", baseUrl);
+        super(authenticatedHTTPClient, "POST", baseUrl, FileDescriptor.class);
 
         this.objectMapper = objectMapper;
     }
@@ -60,12 +59,13 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
             }
         }
 
-        RestResponse<FileDescriptor[]> response = authenticatedHTTPClient.postForm(
+        FileDescriptor[] response = authenticatedHTTPClient.postForm(
                 uploadUrl.getUploadUrl(),
                 mimeType,
                 content,
-                params);
-        return response.getPayload()[0];
+                params,
+                FileDescriptor[].class);
+        return response[0];
     }
 
     public byte[] getContent() {

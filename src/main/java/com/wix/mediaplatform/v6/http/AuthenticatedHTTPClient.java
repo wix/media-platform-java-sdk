@@ -1,12 +1,13 @@
 package com.wix.mediaplatform.v6.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wix.mediaplatform.v6.auth.Authenticator;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.v6.exception.UnauthorizedException;
+import com.wix.mediaplatform.v6.service.RestResponse;
 import okhttp3.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,11 +31,11 @@ public class AuthenticatedHTTPClient {
         this.objectMapper = objectMapper;
     }
 
-    public <T> T get(String url) throws MediaPlatformException {
-        return get(url, null);
+    public <P> P get(String url, Class<P> clazz) throws MediaPlatformException {
+        return get(url, null, clazz);
     }
 
-    public <T> T get(String url, @Nullable Map<String, String> params) throws MediaPlatformException {
+    public <P> P get(String url, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
 
         HttpUrl withQuery = appendQuery(params, url);
 
@@ -45,13 +46,13 @@ public class AuthenticatedHTTPClient {
 
         // closable in try
         try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response);
+            return handleResponse(response, clazz);
         } catch (IOException e) {
             throw new MediaPlatformException(e.getMessage());
         }
     }
 
-    public <T> T post(String url, Object payload) throws MediaPlatformException {
+    public <P> P post(String url, Object payload, Class<P> clazz) throws MediaPlatformException {
 
         Request request;
         try {
@@ -69,13 +70,13 @@ public class AuthenticatedHTTPClient {
 
         // closable in try
         try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response);
+            return handleResponse(response, clazz);
         } catch (IOException e) {
             throw new MediaPlatformException(e.getMessage());
         }
     }
 
-    public <T> T postForm(String url, String mimeType, byte[] content, Map<String, String> params) throws MediaPlatformException {
+    public <P> P postForm(String url, String mimeType, byte[] content, Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
 
         MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -92,13 +93,13 @@ public class AuthenticatedHTTPClient {
 
         // closable in try
         try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response);
+            return handleResponse(response, clazz);
         } catch (IOException e) {
             throw new MediaPlatformException(e.getMessage());
         }
     }
 
-    public <T> T put(String url, Object payload, @Nullable Map<String, String> params) throws MediaPlatformException {
+    public <P> P put(String url, Object payload, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
 
         HttpUrl withQuery = appendQuery(params, url);
 
@@ -118,17 +119,17 @@ public class AuthenticatedHTTPClient {
 
         // closable in try
         try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response);
+            return handleResponse(response, clazz);
         } catch (IOException e) {
             throw new MediaPlatformException(e.getMessage());
         }
     }
 
-    public <T> T delete(String url) throws MediaPlatformException {
-        return delete(url, null);
+    public <P> P delete(String url, Class<P> clazz) throws MediaPlatformException {
+        return delete(url, null, clazz);
     }
 
-    public <T> T delete(String url, @Nullable Map<String, String> params) throws MediaPlatformException {
+    public <P> P delete(String url, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
 
         HttpUrl withQuery = appendQuery(params, url);
 
@@ -139,7 +140,7 @@ public class AuthenticatedHTTPClient {
 
         // closable in try
         try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response);
+            return handleResponse(response, clazz);
         } catch (IOException e) {
             throw new MediaPlatformException(e.getMessage());
         }
@@ -171,7 +172,7 @@ public class AuthenticatedHTTPClient {
         return urlBuilder.build();
     }
 
-    private <T> T handleResponse(Response response) throws MediaPlatformException {
+    private <P> P handleResponse(Response response, Class<P> clazz) throws MediaPlatformException {
 
         int statusCode = response.code();
 
@@ -191,11 +192,11 @@ public class AuthenticatedHTTPClient {
             throw new MediaPlatformException("empty response");
         }
 
-        TypeReference ref = new TypeReference<T>() {
-        };
-
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(RestResponse.class, clazz);
+        
         try {
-            return objectMapper.readValue(response.body().byteStream(), ref);
+            RestResponse<P> restResponse = objectMapper.readValue(response.body().byteStream(), javaType);
+            return restResponse.getPayload();
         } catch (IOException e) {
             throw new MediaPlatformException(e.getMessage());
         }

@@ -4,9 +4,16 @@ public class LiveStreamList {
 
     private String nextPageToken;
 
-    private LiveStream[] files;
+    private LiveStream[] liveStreams;
 
     public LiveStreamList() {
     }
 
+    public String getNextPageToken() {
+        return nextPageToken;
+    }
+
+    public LiveStream[] getLiveStreams() {
+        return liveStreams;
+    }
 }

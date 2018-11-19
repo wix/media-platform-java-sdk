@@ -18,7 +18,7 @@ public class JobService extends MediaPlatformService {
         return new JobGroupRequest(authenticatedHTTPClient, baseUrl, groupId);
     }
 
-    public SearchJobsRequest searchJobsRequest() {
-        return new SearchJobsRequest(authenticatedHTTPClient, baseUrl);
+    public JobListRequest jobListRequest() {
+        return new JobListRequest(authenticatedHTTPClient, baseUrl);
     }
 }

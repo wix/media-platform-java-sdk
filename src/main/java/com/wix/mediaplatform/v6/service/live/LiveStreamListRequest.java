@@ -9,7 +9,7 @@ import com.wix.mediaplatform.v6.service.MediaPlatformRequest;
 public class LiveStreamListRequest extends MediaPlatformRequest<LiveStreamList> {
 
     LiveStreamListRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "GET", baseUrl + "/live/list_streams");
+        super(authenticatedHTTPClient, "GET", baseUrl + "/live/list_streams", LiveStreamList.class);
     }
 
 }

@@ -1,33 +1,21 @@
 package com.wix.mediaplatform.v6.management;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.wix.mediaplatform.v6.BaseTest;
-import com.wix.mediaplatform.v6.auth.Authenticator;
-import com.wix.mediaplatform.v6.configuration.Configuration;
-import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v6.service.Job;
+import com.wix.mediaplatform.v6.service.job.JobGroup;
+import com.wix.mediaplatform.v6.service.job.JobList;
 import com.wix.mediaplatform.v6.service.job.JobService;
-import com.wix.mediaplatform.v6.service.job.SearchJobsRequest;
-import com.wix.mediaplatform.v6.service.job.SearchJobsResponse;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class JobServiceTest extends BaseTest {
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(PORT));
-
-    private Configuration configuration = new Configuration("localhost:" + PORT, "appId", "sharedSecret");
-    private Authenticator authenticator = new Authenticator(configuration);
-    private AuthenticatedHTTPClient AuthenticatedHTTPClient = new AuthenticatedHTTPClient(authenticator, httpClient, gson);
-    private JobService jobService = new JobService(configuration, AuthenticatedHTTPClient);
+    private JobService jobService = new JobService(configuration, authenticatedHttpClient);
 
     @Before
     public void setup() {
@@ -41,7 +29,8 @@ public class JobServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-job-response.json")));
 
-        Job job = jobService.getJob("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f");
+        Job job = jobService.jobRequest("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f")
+                .execute();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
     }
@@ -53,9 +42,10 @@ public class JobServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-job-group-response.json")));
 
-        Job[] jobs = jobService.getJobGroup("71f0d3fde7f348ea89aa1173299146f8");
+        JobGroup group = jobService.jobGroupRequest("71f0d3fde7f348ea89aa1173299146f8").execute();
 
-        assertThat(jobs[0].getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
+        assertThat(group.getJobs()[0].getId(),
+                is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
     }
 
     @Test
@@ -65,9 +55,9 @@ public class JobServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("search-jobs-response.json")));
 
-        SearchJobsRequest searchJobsRequest = new SearchJobsRequest()
-                .setGroupId("71f0d3fde7f348ea89aa1173299146f8");
-        SearchJobsResponse response = jobService.searchJobs(searchJobsRequest);
+        JobList response = jobService.jobListRequest()
+                .setGroupId("71f0d3fde7f348ea89aa1173299146f8")
+                .execute();
 
         assertThat(response.getJobs()[0].getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
     }

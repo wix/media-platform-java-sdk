@@ -17,7 +17,7 @@ public class CreateFileRequest extends MediaPlatformRequest<FileDescriptor> {
     private long size;
 
     public CreateFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST", baseUrl + "/files");
+        super(authenticatedHTTPClient, "POST", baseUrl + "/files", FileDescriptor.class);
     }
 
     public String getPath() {

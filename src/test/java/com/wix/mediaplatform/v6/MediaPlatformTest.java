@@ -7,37 +7,37 @@ public class MediaPlatformTest {
 
     @Test
     public void constructor() {
-        MediaPlatform mediaPlatform = new MediaPlatform("domain", "appId", "secret");
+        new MediaPlatform("domain", "appId", "secret");
     }
 
     @Test(expected = InvalidConfigurationException.class)
     public void nullDomain() {
-        MediaPlatform mediaPlatform = new MediaPlatform(null, "appId", "secret");
+        new MediaPlatform(null, "appId", "secret");
     }
 
     @Test(expected = InvalidConfigurationException.class)
     public void emptyStringDomain() {
-        MediaPlatform mediaPlatform = new MediaPlatform("", "appId", "secret");
+        new MediaPlatform("", "appId", "secret");
     }
 
     @Test(expected = InvalidConfigurationException.class)
     public void nullAppId() {
-        MediaPlatform mediaPlatform = new MediaPlatform("domain", null, "secret");
+        new MediaPlatform("domain", null, "secret");
     }
 
     @Test(expected = InvalidConfigurationException.class)
     public void emptyStringAppId() {
-        MediaPlatform mediaPlatform = new MediaPlatform("domain", "", "secret");
+        new MediaPlatform("domain", "", "secret");
     }
 
     @Test(expected = InvalidConfigurationException.class)
     public void nullSharedSecret() {
-        MediaPlatform mediaPlatform = new MediaPlatform("domain", "appId", null);
+        new MediaPlatform("domain", "appId", null);
     }
 
     @Test(expected = InvalidConfigurationException.class)
     public void emptyStringSharedSecret() {
-        MediaPlatform mediaPlatform = new MediaPlatform("domain", "appId", "");
+        new MediaPlatform("domain", "appId", "");
     }
 
 }

@@ -14,7 +14,7 @@ public class ExtractArchiveRequest extends MediaPlatformRequest<ExtractArchiveJo
     private ExtractedFilesReport extractedFilesReport;
 
     ExtractArchiveRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST", baseUrl + "/archive/extract");
+        super(authenticatedHTTPClient, "POST", baseUrl + "/archive/extract", ExtractArchiveJob.class);
     }
 
     public ExtractArchiveRequest setSource(Source source) {

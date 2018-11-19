@@ -1,6 +1,6 @@
 package com.wix.mediaplatform.v6.service;
 
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 // todo: register sub types
 public abstract class Job {
@@ -97,29 +97,22 @@ public abstract class Job {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "Job{" +
-                "id='" + id + '\'' +
-                ", type=" + type +
-                ", issuer='" + issuer + '\'' +
-                ", status=" + status +
-                ", groupId='" + groupId + '\'' +
-                ", sources=" + Arrays.toString(sources) +
-                ", dateCreated='" + dateCreated + '\'' +
-                ", dateUpdated='" + dateUpdated + '\'' +
-                '}';
-    }
-
     public enum Type {
+        @JsonProperty("urn:job:av.transcode")
         TRANSCODE("urn:job:av.transcode"),
+        @JsonProperty("urn:job:archive.create")
         ARCHIVE_CREATE("urn:job:archive.create"),
+        @JsonProperty("urn:job:archive.extract")
         ARCHIVE_EXTRACT("urn:job:archive.extract"),
+        @JsonProperty("urn:job:import.file")
         FILE_IMPORT("urn:job:import.file"),
 
         // obsolete, here for backwards compatibility only
+        @JsonProperty("urn:job:av.package")
         PACKAGE("urn:job:av.package"),
+        @JsonProperty("urn:job:replication.enable")
         REPLICATION_ENABLE("urn:job:replication.enable"),
+        @JsonProperty("urn:job:replication.disable")
         REPLICATION_DISABLE("urn:job:replication.disable");
 
         private final String value;
@@ -144,9 +137,13 @@ public abstract class Job {
     }
 
     public enum Status {
+        @JsonProperty("pending")
         pending("pending"),
+        @JsonProperty("working")
         working("working"),
+        @JsonProperty("success")
         success("success"),
+        @JsonProperty("error")
         error("error");
 
         private final String value;

@@ -7,7 +7,8 @@ import com.wix.mediaplatform.v6.service.MediaPlatformRequest;
 public class FileIdMetadataRequest extends MediaPlatformRequest<FileMetadata> {
 
     FileIdMetadataRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, String fileId) {
-        super(authenticatedHTTPClient, "GET", baseUrl + "/files/" + fileId + "/metadata");
+        super(authenticatedHTTPClient, "GET", baseUrl + "/files/" + fileId + "/metadata",
+                FileMetadata.class);
     }
 
 }

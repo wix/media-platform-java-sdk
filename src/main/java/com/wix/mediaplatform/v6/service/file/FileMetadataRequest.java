@@ -13,7 +13,7 @@ public class FileMetadataRequest extends MediaPlatformRequest<FileMetadata> {
     private String path;
 
     FileMetadataRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "GET", baseUrl + "/files/metadata");
+        super(authenticatedHTTPClient, "GET", baseUrl + "/files/metadata", FileMetadata.class);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class CopyFileRequest extends MediaPlatformRequest<FileDescriptor> {
     private Destination destination;
 
     CopyFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST", baseUrl + "/copy/file");
+        super(authenticatedHTTPClient, "POST", baseUrl + "/copy/file", FileDescriptor.class);
     }
 
     public Source getSource() {

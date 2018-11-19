@@ -22,7 +22,7 @@ public class OpenLiveStreamRequest extends MediaPlatformRequest<LiveStream> {
     private StateNotification stateNotification;
 
     public OpenLiveStreamRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST", baseUrl + "/live/stream");
+        super(authenticatedHTTPClient, "POST", baseUrl + "/live/stream", LiveStream.class);
     }
 
     public LiveStream.Protocol getProtocol() {

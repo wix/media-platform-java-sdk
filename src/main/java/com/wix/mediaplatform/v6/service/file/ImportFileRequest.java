@@ -13,7 +13,7 @@ public class ImportFileRequest extends MediaPlatformRequest<ImportFileJob> {
     private Destination destination;
 
     ImportFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST", baseUrl + "/import/file");
+        super(authenticatedHTTPClient, "POST", baseUrl + "/import/file", ImportFileJob.class);
     }
 
     public ImportFileRequest setSourceUrl(String sourceUrl) {

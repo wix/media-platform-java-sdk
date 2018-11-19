@@ -17,7 +17,7 @@ public class UploadUrlRequest extends MediaPlatformRequest<UploadUrl> {
     private FileDescriptor.Acl acl = FileDescriptor.Acl.PUBLIC;
 
     UploadUrlRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "GET", baseUrl + "/_api/upload/url");
+        super(authenticatedHTTPClient, "GET", baseUrl + "/upload/url", UploadUrl.class);
     }
 
     public UploadUrlRequest setMimeType(String mimeType) {
