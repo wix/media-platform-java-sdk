@@ -73,6 +73,9 @@ public class MediaPlatform {
     public static ObjectMapper getMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_MISSING_EXTERNAL_TYPE_ID_PROPERTY, false);
+//        objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false);
+//        objectMapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
         return objectMapper;
     }
 

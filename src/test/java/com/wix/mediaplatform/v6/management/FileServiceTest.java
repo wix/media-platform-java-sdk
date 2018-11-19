@@ -2,8 +2,8 @@ package com.wix.mediaplatform.v6.management;
 
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.MediaPlatform;
-import com.wix.mediaplatform.v6.exception.FileNotFoundException;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
+import com.wix.mediaplatform.v6.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.v6.metadata.FileMetadata;
 import com.wix.mediaplatform.v6.service.*;
 import com.wix.mediaplatform.v6.service.file.*;
@@ -59,7 +59,7 @@ public class FileServiceTest extends BaseTest {
         assertThat(file.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
     }
 
-    @Test(expected = FileNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void getFileNotFound() throws Exception {
         stubFor(get(urlEqualTo("/_api/files?path=%2Ffile.txt"))
                 .willReturn(aResponse()
@@ -124,7 +124,7 @@ public class FileServiceTest extends BaseTest {
 
     @Test
     public void listFilesWithAllParams() throws Exception {
-        stubFor(get(urlEqualTo("/_api/files/ls_dir?nextPageToken=fish&orderBy=name&orderDirection=acs&pageSize=200&path=%2F&r=yes&type=-"))
+        stubFor(get(urlEqualTo("/_api/files/ls_dir?path=%2F&nextPageToken=fish&pageSize=200&orderBy=name&orderDirection=acs&r=yes&type=-"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("list-files-response.json")));
@@ -172,7 +172,7 @@ public class FileServiceTest extends BaseTest {
         UploadUrl response = fileService.uploadUrlRequest().execute();
 
         assertThat(response.getUploadToken(), is("some token"));
-        assertThat(response.getUploadUrl(), is("https://localhost:8443/_api/upload/file"));
+        assertThat(response.getUploadUrl(), is("http://localhost:8443/_api/upload/file"));
     }
 
     @Test
@@ -364,7 +364,7 @@ public class FileServiceTest extends BaseTest {
         assertThat(job.getStatus(), is(Job.Status.pending.getValue()));
         assertThat(job.getType(), is("urn:job:import.file"));
         assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
-        assertThat(specification.getDestination().getAcl(), is("public"));
+        assertThat(specification.getDestination().getAcl(), is(FileDescriptor.Acl.PUBLIC));
         assertThat(specification.getDestination().getDirectory(), is("/fish"));
     }
 
@@ -389,7 +389,7 @@ public class FileServiceTest extends BaseTest {
         assertThat(job.getType(), is("urn:job:import.file"));
 
         assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
-        assertThat(specification.getDestination().getAcl(), is("public"));
+        assertThat(specification.getDestination().getAcl(), is(FileDescriptor.Acl.PUBLIC));
         assertThat(specification.getDestination().getDirectory(), is("/fish"));
 
         assertThat(result.getCode(), is(0));
@@ -398,7 +398,7 @@ public class FileServiceTest extends BaseTest {
         assertThat(result.getPayload().getPath(), is("/fish/filename.txt"));
         assertThat(result.getPayload().getMimeType(), is("text/plain"));
         assertThat(result.getPayload().getType(), is(FileDescriptor.Type.FILE.getValue()));
-        assertThat(result.getPayload().getSize(), is(100));
+        assertThat(result.getPayload().getSize(), is(100L));
         assertThat(result.getPayload().getAcl(), is(FileDescriptor.Acl.PUBLIC.getValue()));
     }
 

@@ -18,7 +18,8 @@ public class FileMetadata {
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
             property = "mediaType",
-            include = JsonTypeInfo.As.EXTERNAL_PROPERTY)
+            include = JsonTypeInfo.As.EXTERNAL_PROPERTY
+    )
     @JsonSubTypes({
             @JsonSubTypes.Type(value = VideoBasicMetadata.class, name = "video"),
             @JsonSubTypes.Type(value = ImageBasicMetadata.class, name = "image"),
@@ -28,8 +29,10 @@ public class FileMetadata {
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
             property = "mediaType",
-            include = JsonTypeInfo.As.EXTERNAL_PROPERTY)
+            include = JsonTypeInfo.As.EXTERNAL_PROPERTY
+    )
     @JsonSubTypes({
+//            @JsonSubTypes.Type(value = VideoFeatures.class, name = "video"),
             @JsonSubTypes.Type(value = ImageFeatures.class, name = "image"),
     })
     private Features features;
