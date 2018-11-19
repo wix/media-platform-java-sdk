@@ -172,7 +172,7 @@ public class AuthenticatedHTTPClient {
         return urlBuilder.build();
     }
 
-    private <P> P handleResponse(Response response, Class<P> clazz) throws MediaPlatformException {
+    private <P> P handleResponse(Response response, @Nullable Class<P> clazz) throws MediaPlatformException {
 
         int statusCode = response.code();
 
@@ -192,11 +192,17 @@ public class AuthenticatedHTTPClient {
             throw new MediaPlatformException("empty response");
         }
 
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(RestResponse.class, clazz);
-        
         try {
-            RestResponse<P> restResponse = objectMapper.readValue(response.body().byteStream(), javaType);
-            return restResponse.getPayload();
+            if (clazz != null) {
+                JavaType javaType = objectMapper.getTypeFactory().constructParametricType(RestResponse.class, clazz);
+                RestResponse<P> restResponse = objectMapper.readValue(response.body().byteStream(), javaType);
+                restResponse.throwForErrorCode();
+                return restResponse.getPayload();
+            } else {
+                RestResponse restResponse = objectMapper.readValue(response.body().byteStream(), RestResponse.class);
+                restResponse.throwForErrorCode();
+                return null;
+            }
         } catch (IOException e) {
             throw new MediaPlatformException(e.getMessage());
         }

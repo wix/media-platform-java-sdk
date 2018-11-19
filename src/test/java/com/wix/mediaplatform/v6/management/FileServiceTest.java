@@ -2,7 +2,6 @@ package com.wix.mediaplatform.v6.management;
 
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.MediaPlatform;
-import com.wix.mediaplatform.v6.exception.FileAlreadyExistsException;
 import com.wix.mediaplatform.v6.exception.FileNotFoundException;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.metadata.FileMetadata;
@@ -301,7 +300,7 @@ public class FileServiceTest extends BaseTest {
         assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
     }
 
-    @Test(expected = FileAlreadyExistsException.class)
+    @Test(expected = MediaPlatformException.class)
     public void uploadFileAlreadyExists() throws Exception {
         stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
                 .willReturn(aResponse()
@@ -310,6 +309,7 @@ public class FileServiceTest extends BaseTest {
 
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()
+                        .withStatus(409)
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("file-upload-already-exists-response.json")));
 
@@ -406,7 +406,7 @@ public class FileServiceTest extends BaseTest {
     public void getDownloadUrlDefault() throws Exception {
         String url = fileService.downloadUrlRequest().setPath("/file.txt").execute();
 
-        assertThat(url, startsWith("https://localhost:8443/_api/download/file?downloadToken="));
+        assertThat(url, startsWith("http://localhost:8443/_api/download/file?downloadToken="));
     }
 
     @Test
@@ -418,7 +418,7 @@ public class FileServiceTest extends BaseTest {
                         .setFilename("fish"))
                 .execute();
 
-        assertThat(url, startsWith("https://localhost:8443/_api/download/file?downloadToken="));
+        assertThat(url, startsWith("http://localhost:8443/_api/download/file?downloadToken="));
     }
 
     //    todo: test copy

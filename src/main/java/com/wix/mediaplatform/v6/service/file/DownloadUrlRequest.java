@@ -32,7 +32,7 @@ public class DownloadUrlRequest extends MediaPlatformRequest<String> {
 
     DownloadUrlRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, Authenticator authenticator,
                        String appId) {
-        super(authenticatedHTTPClient, null, baseUrl + "/_api/download/file?downloadToken=", String.class);
+        super(authenticatedHTTPClient, null, baseUrl + "/download/file", String.class);
 
         this.appId = appId;
         this.authenticator = authenticator;
@@ -69,7 +69,7 @@ public class DownloadUrlRequest extends MediaPlatformRequest<String> {
 
         String signedToken = authenticator.encode(token);
 
-        return url + "/_api/download/file?downloadToken=" + signedToken;
+        return url + "?downloadToken=" + signedToken;
     }
 
     public String getPath() {

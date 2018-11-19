@@ -3,6 +3,6 @@
   "message": "OK",
   "payload": {
     "uploadToken": "some token",
-    "uploadUrl": "https://localhost:8443/_api/upload/file"
+    "uploadUrl": "http://localhost:8443/_api/upload/file"
   }
 }

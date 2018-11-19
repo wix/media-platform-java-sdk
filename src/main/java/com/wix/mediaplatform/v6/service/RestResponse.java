@@ -2,6 +2,7 @@ package com.wix.mediaplatform.v6.service;
 
 import com.wix.mediaplatform.v6.exception.ExceptionFactory;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
+import org.jetbrains.annotations.Nullable;
 
 public class RestResponse<P> {
 
@@ -19,6 +20,7 @@ public class RestResponse<P> {
         return message;
     }
 
+    @Nullable
     public P getPayload() {
         return payload;
     }

@@ -17,25 +17,35 @@ public class ImageBasicMetadata extends BasicMetadata {
         return height;
     }
 
+    public ImageBasicMetadata setHeight(Integer height) {
+        this.height = height;
+        return this;
+    }
+
     public Integer getWidth() {
         return width;
+    }
+
+    public ImageBasicMetadata setWidth(Integer width) {
+        this.width = width;
+        return this;
     }
 
     public String getColorspace() {
         return colorspace;
     }
 
+    public ImageBasicMetadata setColorspace(String colorspace) {
+        this.colorspace = colorspace;
+        return this;
+    }
+
     public String getFormat() {
         return format;
     }
 
-    @Override
-    public String toString() {
-        return "ImageBasicMetadata{" +
-                "height=" + height +
-                ", width=" + width +
-                ", colorspace='" + colorspace + '\'' +
-                ", format='" + format + '\'' +
-                '}';
+    public ImageBasicMetadata setFormat(String format) {
+        this.format = format;
+        return this;
     }
 }

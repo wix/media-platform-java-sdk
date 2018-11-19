@@ -16,15 +16,6 @@ public class FileMetadataRequest extends MediaPlatformRequest<FileMetadata> {
         super(authenticatedHTTPClient, "GET", baseUrl + "/files/metadata", FileMetadata.class);
     }
 
-    @Override
-    protected Map<String, String> params() {
-        Map<String, String> params = newHashMap();
-
-        params.put("path", path);
-
-        return params;
-    }
-
     public String getPath() {
         return path;
     }
@@ -32,5 +23,14 @@ public class FileMetadataRequest extends MediaPlatformRequest<FileMetadata> {
     public FileMetadataRequest setPath(String path) {
         this.path = path;
         return this;
+    }
+
+    @Override
+    protected Map<String, String> params() {
+        Map<String, String> params = newHashMap();
+
+        params.put("path", path);
+
+        return params;
     }
 }
