@@ -1,30 +1,14 @@
 package com.wix.mediaplatform.v6.service.archive;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wix.mediaplatform.v6.service.Destination;
 
-/**
- * Created by alonne on 03/07/2017.
- */
+
 public class ExtractedFilesReport {
-    public enum Format {
-        json("json"),
-        csv("csv");
-
-        private final String value;
-
-        Format(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
 
     private Destination destination;
 
     private ExtractedFilesReport.Format format;
-
 
     public ExtractedFilesReport() {
     }
@@ -47,29 +31,20 @@ public class ExtractedFilesReport {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "ExtractedFilesReport{" +
-                "destination=" + destination +
-                ", format='" + format + '\'' +
-                '}';
-    }
+    public enum Format {
+        @JsonProperty("json")
+        json("json"),
+        @JsonProperty("csv")
+        csv("csv");
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        private final String value;
 
-        ExtractedFilesReport that = (ExtractedFilesReport) o;
+        Format(String value) {
+            this.value = value;
+        }
 
-        if (!destination.equals(that.destination)) return false;
-        return format.equals(that.format);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = destination.hashCode();
-        result = 31 * result + format.hashCode();
-        return result;
+        public String getValue() {
+            return value;
+        }
     }
 }

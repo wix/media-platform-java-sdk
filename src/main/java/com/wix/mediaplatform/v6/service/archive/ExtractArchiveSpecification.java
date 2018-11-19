@@ -11,7 +11,7 @@ public class ExtractArchiveSpecification implements Specification {
 
     private Destination destination;
 
-    private ExtractedFilesReport extractedFilesReport = null;
+    private ExtractedFilesReport extractedFilesReport;
 
     public ExtractArchiveSpecification() {
     }
@@ -24,15 +24,7 @@ public class ExtractArchiveSpecification implements Specification {
         return destination;
     }
 
-    public ExtractedFilesReport getExtractedFilesReport() { return extractedFilesReport; }
-
-    @Override
-    public String toString() {
-        return "ExtractArchiveSpecification{" +
-                "source=" + source +
-                ", destination=" + destination +
-                ", extractedFilesReport=" + extractedFilesReport +
-                '}';
+    public ExtractedFilesReport getExtractedFilesReport() {
+        return extractedFilesReport;
     }
-
 }

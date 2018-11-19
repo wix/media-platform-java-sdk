@@ -3,6 +3,7 @@ package com.wix.mediaplatform.v6.management;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.service.Destination;
+import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.live.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,9 +43,9 @@ public class LiveServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("list-live-streams-response.json")));
 
-        LiveStreamList liveStreams = liveService.liveStreamListRequest().execute();
+        LiveStream[] liveStreams = liveService.liveStreamListRequest().execute();
 
-        assertThat(liveStreams.getLiveStreams()[0].getId(), is("wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM"));
+        assertThat(liveStreams[0].getId(), is("wixmp-3dbd5cb16bb136182e099f78_R3PlOjNM"));
     }
 
     @Test
@@ -58,7 +59,7 @@ public class LiveServiceTest extends BaseTest {
                 .setDigitalVideoRecorder(new DigitalVideoRecorder()
                         .setDestination(new Destination()
                                 .setDirectory("/test/dvr")
-                                .setAcl("public")))
+                                .setAcl(FileDescriptor.Acl.PRIVATE)))
                 .setStreamType(LiveStream.Type.event)
                 .setConnectTimeout(3600)
                 .setGeo(new Geo()

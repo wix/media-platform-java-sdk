@@ -8,7 +8,6 @@ import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.metadata.FileMetadata;
 import com.wix.mediaplatform.v6.service.*;
 import com.wix.mediaplatform.v6.service.file.*;
-import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -356,14 +355,14 @@ public class FileServiceTest extends BaseTest {
         ImportFileJob job = fileService.importFileRequest()
                 .setSourceUrl("http://source.url/filename.txt")
                 .setDestination(new Destination()
-                        .setAcl("public")
+                        .setAcl(FileDescriptor.Acl.PUBLIC)
                         .setDirectory("/fish"))
                 .execute();
         ImportFileSpecification specification = job.getSpecification();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
-        assertThat(job.getStatus(), Matchers.is(Job.Status.pending.getValue()));
-        assertThat(job.getType(), is(Job.Type.FILE_IMPORT.getValue()));
+        assertThat(job.getStatus(), is(Job.Status.pending.getValue()));
+        assertThat(job.getType(), is("urn:job:import.file"));
         assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
         assertThat(specification.getDestination().getAcl(), is("public"));
         assertThat(specification.getDestination().getDirectory(), is("/fish"));
@@ -379,7 +378,7 @@ public class FileServiceTest extends BaseTest {
         ImportFileJob job = fileService.importFileRequest()
                 .setSourceUrl("http://source.url/filename.ext")
                 .setDestination(new Destination()
-                        .setAcl("public")
+                        .setAcl(FileDescriptor.Acl.PUBLIC)
                         .setDirectory("/fish"))
                 .execute();
         ImportFileSpecification specification = job.getSpecification();
@@ -387,7 +386,7 @@ public class FileServiceTest extends BaseTest {
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
         assertThat(job.getStatus(), is(Job.Status.success.getValue()));
-        assertThat(job.getType(), is(Job.Type.FILE_IMPORT.getValue()));
+        assertThat(job.getType(), is("urn:job:import.file"));
 
         assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
         assertThat(specification.getDestination().getAcl(), is("public"));

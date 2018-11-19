@@ -5,11 +5,12 @@ import com.wix.mediaplatform.v6.service.RestResponse;
 
 public class ExtractArchiveJob extends Job {
 
-    public static final Job.Type job_type = Type.ARCHIVE_EXTRACT;
-
     private ExtractArchiveSpecification specification;
 
     private RestResponse<ExtractArchiveJobResult> result;
+
+    public ExtractArchiveJob() {
+    }
 
     @Override
     public ExtractArchiveSpecification getSpecification() {
@@ -17,5 +18,7 @@ public class ExtractArchiveJob extends Job {
     }
 
     @Override
-    public RestResponse<ExtractArchiveJobResult> getResult() { return result; }
+    public RestResponse<ExtractArchiveJobResult> getResult() {
+        return result;
+    }
 }

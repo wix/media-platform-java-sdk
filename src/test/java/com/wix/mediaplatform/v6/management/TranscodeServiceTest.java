@@ -3,6 +3,7 @@ package com.wix.mediaplatform.v6.management;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.service.Destination;
+import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.Job;
 import com.wix.mediaplatform.v6.service.Source;
 import com.wix.mediaplatform.v6.service.transcode.*;
@@ -34,7 +35,7 @@ public class TranscodeServiceTest extends BaseTest {
                 .addSpecification(new TranscodeSpecification()
                         .setDestination(new Destination()
                                 .setDirectory("/test/encodes/")
-                                .setAcl("public"))
+                                .setAcl(FileDescriptor.Acl.PUBLIC))
                         .setQualityRange(new QualityRange()
                                 .setMinimum("240p")
                                 .setMaximum("1440p")))

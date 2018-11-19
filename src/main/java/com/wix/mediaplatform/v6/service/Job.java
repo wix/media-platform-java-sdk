@@ -8,7 +8,10 @@ import com.wix.mediaplatform.v6.service.archive.ExtractArchiveJob;
 import com.wix.mediaplatform.v6.service.file.ImportFileJob;
 import com.wix.mediaplatform.v6.service.transcode.TranscodeJob;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+        property = "type",
+        include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = CreateArchiveJob.class, name = "urn:job:archive.create"),
         @JsonSubTypes.Type(value = ExtractArchiveJob.class, name = "urn:job:archive.extract"),
@@ -19,7 +22,7 @@ public abstract class Job {
 
     private String id;
 
-    private Type type;
+    private String type;
 
     private String issuer;
 
@@ -33,12 +36,15 @@ public abstract class Job {
 
     private String dateUpdated;
 
+    public Job() {
+    }
+
     public String getId() {
         return id;
     }
 
     public String getType() {
-        return type.getValue();
+        return type;
     }
 
     public String getIssuer() {
@@ -65,9 +71,6 @@ public abstract class Job {
         return dateUpdated;
     }
 
-    public Job() {
-    }
-
     public abstract Specification getSpecification();
 
     public abstract RestResponse getResult();
@@ -77,7 +80,7 @@ public abstract class Job {
         return this;
     }
 
-    public Job setType(Type type) {
+    public Job setType(String type) {
         this.type = type;
         return this;
     }
@@ -110,45 +113,6 @@ public abstract class Job {
     public Job setDateUpdated(String dateUpdated) {
         this.dateUpdated = dateUpdated;
         return this;
-    }
-
-    public enum Type {
-        @JsonProperty("urn:job:av.transcode")
-        TRANSCODE("urn:job:av.transcode"),
-        @JsonProperty("urn:job:archive.create")
-        ARCHIVE_CREATE("urn:job:archive.create"),
-        @JsonProperty("urn:job:archive.extract")
-        ARCHIVE_EXTRACT("urn:job:archive.extract"),
-        @JsonProperty("urn:job:import.file")
-        FILE_IMPORT("urn:job:import.file"),
-
-        // obsolete, here for backwards compatibility only
-        @JsonProperty("urn:job:av.package")
-        PACKAGE("urn:job:av.package"),
-        @JsonProperty("urn:job:replication.enable")
-        REPLICATION_ENABLE("urn:job:replication.enable"),
-        @JsonProperty("urn:job:replication.disable")
-        REPLICATION_DISABLE("urn:job:replication.disable");
-
-        private final String value;
-
-        Type(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public static Type fromString(String typeString) {
-            for (Type type : Type.values()) {
-                if (type.getValue().equals(typeString)) {
-                    return type;
-                }
-            }
-
-            throw new IllegalArgumentException("Invalid value for job type: " + typeString);
-        }
     }
 
     public enum Status {

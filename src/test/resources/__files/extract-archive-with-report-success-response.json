@@ -16,15 +16,10 @@
         "reportFileDescriptor": {
           "mimeType": "application/json; charset=utf-8",
           "hash": null,
-          "parent": "/report_dir",
           "dateCreated": "2017-07-30T12:46:39Z",
           "path": "/report_dir/report.json",
           "id": "report file id",
           "size": 1718,
-          "ancestors": [
-            "/",
-            "/report_dir"
-          ],
           "acl": "public",
           "dateUpdated": "2017-07-30T12:46:39Z",
           "type": "-"

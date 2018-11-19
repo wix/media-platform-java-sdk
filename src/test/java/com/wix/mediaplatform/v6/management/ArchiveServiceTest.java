@@ -30,7 +30,7 @@ public class ArchiveServiceTest extends BaseTest {
 
         CreateArchiveJob job = archiveService.createArchiveRequest()
                 .addSource(new ArchiveSource().setFileId("file id"))
-                .setDestination(new Destination().setPath("/fish/file.zip").setAcl("private"))
+                .setDestination(new Destination().setPath("/fish/file.zip").setAcl(FileDescriptor.Acl.PRIVATE))
                 .setArchiveType("zip")
                 .execute();
 
@@ -48,7 +48,7 @@ public class ArchiveServiceTest extends BaseTest {
                 .addSource(new ArchiveSource().setFileId("file id"))
                 .setDestination(new Destination()
                         .setPath("/fish/file.zip")
-                        .setAcl("private")
+                        .setAcl(FileDescriptor.Acl.PRIVATE)
                         .setFileLifecycle(new FileLifecycle()
                                 .setAction(FileLifecycle.Action.DELETE)
                                 .setAge(100)))
@@ -67,7 +67,7 @@ public class ArchiveServiceTest extends BaseTest {
 
         CreateArchiveJob job = archiveService.createArchiveRequest()
                 .addSource(new ArchiveSource().setPathInArchive("/foo"))
-                .setDestination(new Destination().setPath("/fish/file.zip").setAcl("private"))
+                .setDestination(new Destination().setPath("/fish/file.zip").setAcl(FileDescriptor.Acl.PRIVATE))
                 .setArchiveType("zip")
                 .execute();
 
@@ -96,42 +96,43 @@ public class ArchiveServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("extract-archive-with-report-pending-response.json")));
 
-        ExtractedFilesReport requestExtractedFilesReport = new ExtractedFilesReport()
-                .setDestination(new Destination().setPath("/report_dir/report.txt").setAcl("public"))
-                .setFormat(ExtractedFilesReport.Format.json);
 
         ExtractArchiveJob job = archiveService.extractArchiveRequest()
                 .setSource(new Source().setFileId("file id"))
                 .setDestination(new Destination().setDirectory("/fish"))
-                .setExtractedFilesReport(requestExtractedFilesReport)
+                .setExtractedFilesReport(new ExtractedFilesReport()
+                        .setDestination(new Destination()
+                                .setPath("/report_dir/report.txt")
+                                .setAcl(FileDescriptor.Acl.PUBLIC))
+                        .setFormat(ExtractedFilesReport.Format.json))
                 .execute();
 
         assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
-        assertThat(job.getType(), is(Job.Type.ARCHIVE_EXTRACT.getValue()));
+        assertThat(job.getType(), is("urn:job:archive.extract"));
         assertThat(job.getStatus(), is(Job.Status.pending.name()));
         ExtractArchiveSpecification extractArchiveSpecification = job.getSpecification();
         ExtractedFilesReport responseExtractedFilesReport = extractArchiveSpecification.getExtractedFilesReport();
 
         assertThat(responseExtractedFilesReport.getDestination().getDirectory(), is("/report_dir"));
-        assertThat(responseExtractedFilesReport.getDestination().getAcl(), is("public"));
+        assertThat(responseExtractedFilesReport.getDestination().getAcl(), is(FileDescriptor.Acl.PUBLIC));
         assertThat(responseExtractedFilesReport.getFormat(), is(ExtractedFilesReport.Format.json));
     }
 
     @Test
-    public void extractArchiveWithReportSucess() throws Exception {
+    public void extractArchiveWithReportSuccess() throws Exception {
         stubFor(post(urlEqualTo("/_api/archive/extract"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("extract-archive-with-report-success-response.json")));
 
-        ExtractedFilesReport requestExtractedFilesReport = new ExtractedFilesReport()
-                .setDestination(new Destination().setPath("/report_dir/report.json").setAcl("public"))
-                .setFormat(ExtractedFilesReport.Format.json);
-
         ExtractArchiveJob job = archiveService.extractArchiveRequest()
                 .setSource(new Source().setFileId("file id").setPath("/zips/zip1.zip"))
                 .setDestination(new Destination().setDirectory("/fish"))
-                .setExtractedFilesReport(requestExtractedFilesReport)
+                .setExtractedFilesReport( new ExtractedFilesReport()
+                        .setDestination(new Destination()
+                                .setPath("/report_dir/report.json")
+                                .setAcl(FileDescriptor.Acl.PUBLIC))
+                        .setFormat(ExtractedFilesReport.Format.json))
                 .execute();
 
         RestResponse<ExtractArchiveJobResult> jobResult = job.getResult();
@@ -139,8 +140,7 @@ public class ArchiveServiceTest extends BaseTest {
         assertThat(jobResult.getCode(), is(0));
         assertThat(jobResult.getMessage(), is("OK"));
         assertThat(reportFileDescriptor.getPath(), is("/report_dir/report.json"));
-        // TODO: Uncomment when we fix the hash issue
-        // assertThat(reportFileDescriptor.getHash(), is("XXXX"));
+
         assertThat(reportFileDescriptor.getType(), is(FileDescriptor.Type.FILE.getValue()));
         assertThat(reportFileDescriptor.getAcl(), is(FileDescriptor.Acl.PUBLIC.getValue()));
         assertThat(reportFileDescriptor.getId(), is("report file id"));
@@ -148,25 +148,25 @@ public class ArchiveServiceTest extends BaseTest {
         assertThat(reportFileDescriptor.getMimeType(), is("application/json; charset=utf-8"));
 
         assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
-        assertThat(job.getType(), is(Job.Type.ARCHIVE_EXTRACT.getValue()));
+        assertThat(job.getType(), is("urn:job:archive.extract"));
         assertThat(job.getStatus(), is(Job.Status.success.name()));
+
         ExtractArchiveSpecification extractArchiveSpecification = job.getSpecification();
         ExtractedFilesReport responseExtractedFilesReport = extractArchiveSpecification.getExtractedFilesReport();
-
         assertThat(responseExtractedFilesReport.getDestination().getDirectory(), is("/report_dir"));
-        assertThat(responseExtractedFilesReport.getDestination().getAcl(), is("public"));
+        assertThat(responseExtractedFilesReport.getDestination().getAcl(), is(FileDescriptor.Acl.PUBLIC));
         assertThat(responseExtractedFilesReport.getFormat(), is(ExtractedFilesReport.Format.json));
     }
 
     @Test
-    public void extractArchiveWithoutReportSucess() throws Exception {
+    public void extractArchiveWithoutReportSuccess() throws Exception {
         stubFor(post(urlEqualTo("/_api/archive/extract"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("extract-archive-without-report-success-response.json")));
 
         ExtractedFilesReport requestExtractedFilesReport = new ExtractedFilesReport()
-                .setDestination(new Destination().setPath("/report_dir/report.json").setAcl("public"))
+                .setDestination(new Destination().setPath("/report_dir/report.json").setAcl(FileDescriptor.Acl.PUBLIC))
                 .setFormat(ExtractedFilesReport.Format.json);
 
         ExtractArchiveJob job =  archiveService.extractArchiveRequest()
@@ -180,13 +180,13 @@ public class ArchiveServiceTest extends BaseTest {
         assertThat(jobResult.getMessage(), is("OK"));
         assertThat(jobResult.getPayload().getReportFileDescriptor(), is(nullValue()));
         assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
-        assertThat(job.getType(), is(Job.Type.ARCHIVE_EXTRACT.getValue()));
+        assertThat(job.getType(), is("urn:job:archive.extract"));
         assertThat(job.getStatus(), is(Job.Status.success.name()));
         ExtractArchiveSpecification extractArchiveSpecification = job.getSpecification();
         ExtractedFilesReport responseExtractedFilesReport = extractArchiveSpecification.getExtractedFilesReport();
 
         assertThat(responseExtractedFilesReport.getDestination().getDirectory(), is("/report_dir"));
-        assertThat(responseExtractedFilesReport.getDestination().getAcl(), is("public"));
+        assertThat(responseExtractedFilesReport.getDestination().getAcl(), is(FileDescriptor.Acl.PUBLIC));
         assertThat(responseExtractedFilesReport.getFormat(), is(ExtractedFilesReport.Format.json));
     }
 

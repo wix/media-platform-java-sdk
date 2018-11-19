@@ -6,8 +6,6 @@ import com.wix.mediaplatform.v6.service.Specification;
 
 public class TranscodeJob extends Job {
 
-    public static final Job.Type job_type = Job.Type.TRANSCODE;
-
     private TranscodeSpecification specification;
 
     private RestResponse<TranscodeJobResult> result;

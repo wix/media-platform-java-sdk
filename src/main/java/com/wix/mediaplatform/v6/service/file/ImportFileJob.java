@@ -6,8 +6,6 @@ import com.wix.mediaplatform.v6.service.RestResponse;
 
 public class ImportFileJob extends Job {
 
-    public static final Job.Type job_type = Type.FILE_IMPORT;
-
     private ImportFileSpecification specification;
 
     private RestResponse<FileDescriptor> result;
