@@ -19,6 +19,8 @@ import java.util.Map;
 public class AuthenticatedHTTPClient {
 
     private static final String APPLICATION_JSON = "application/json";
+    private static final MediaType MEDIA_TYPE = MediaType.parse(APPLICATION_JSON);
+    private static final String USER_AGENT = "WixMP Java SDK 6.x";
 
     private final Authenticator authenticator;
 
@@ -53,7 +55,7 @@ public class AuthenticatedHTTPClient {
         Request request;
         try {
             RequestBody body = RequestBody.create(
-                    MediaType.parse(APPLICATION_JSON),
+                    MEDIA_TYPE,
                     objectMapper.writeValueAsBytes(payload)
             );
             request = defaultBuilder()
@@ -93,7 +95,7 @@ public class AuthenticatedHTTPClient {
         Request request;
         try {
             RequestBody body = RequestBody.create(
-                    MediaType.parse(APPLICATION_JSON),
+                    MEDIA_TYPE,
                     objectMapper.writeValueAsBytes(payload)
             );
             request = defaultBuilder()
@@ -128,7 +130,7 @@ public class AuthenticatedHTTPClient {
         String authHeader = authenticator.getHeader();
 
         return new Request.Builder()
-                .header("User-Agent", "WixMP Java SDK 6.x")
+                .header("User-Agent", USER_AGENT)
                 .addHeader("Accept", APPLICATION_JSON)
                 .addHeader("Authorization", authHeader);
     }
