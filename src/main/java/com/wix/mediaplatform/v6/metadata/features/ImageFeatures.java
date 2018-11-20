@@ -2,8 +2,6 @@ package com.wix.mediaplatform.v6.metadata.features;
 
 import com.wix.mediaplatform.v6.geometry.Rectangle;
 
-import java.util.Arrays;
-
 public class ImageFeatures extends Features {
 
     private Label[] label;
@@ -12,12 +10,44 @@ public class ImageFeatures extends Features {
 
     private Color[] colors;
 
-    @Override
-    public String toString() {
-        return "ImageFeatures{" +
-                "label=" + Arrays.toString(label) +
-                ", faces=" + Arrays.toString(faces) +
-                ", colors=" + Arrays.toString(colors) +
-                '}';
+    private ExplicitContent[] explicitContent;
+
+    public ImageFeatures() {
+    }
+
+    public Label[] getLabel() {
+        return label;
+    }
+
+    public ImageFeatures setLabel(Label[] label) {
+        this.label = label;
+        return this;
+    }
+
+    public Rectangle[] getFaces() {
+        return faces;
+    }
+
+    public ImageFeatures setFaces(Rectangle[] faces) {
+        this.faces = faces;
+        return this;
+    }
+
+    public Color[] getColors() {
+        return colors;
+    }
+
+    public ImageFeatures setColors(Color[] colors) {
+        this.colors = colors;
+        return this;
+    }
+
+    public ExplicitContent[] getExplicitContent() {
+        return explicitContent;
+    }
+
+    public ImageFeatures setExplicitContent(ExplicitContent[] explicitContent) {
+        this.explicitContent = explicitContent;
+        return this;
     }
 }

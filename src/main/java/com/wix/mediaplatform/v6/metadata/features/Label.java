@@ -16,12 +16,4 @@ public class Label {
     public Float getScore() {
         return score;
     }
-
-    @Override
-    public String toString() {
-        return "Label{" +
-                "name='" + name + '\'' +
-                ", score=" + score +
-                '}';
-    }
 }

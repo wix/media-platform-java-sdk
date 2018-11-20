@@ -8,6 +8,7 @@ import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v6.service.archive.ArchiveService;
 import com.wix.mediaplatform.v6.service.file.FileService;
+import com.wix.mediaplatform.v6.service.image.ImageService;
 import com.wix.mediaplatform.v6.service.job.JobService;
 import com.wix.mediaplatform.v6.service.live.LiveService;
 import com.wix.mediaplatform.v6.service.transcode.TranscodeService;
@@ -33,6 +34,7 @@ public class MediaPlatform {
     private final ArchiveService archiveService;
     private final TranscodeService transcodeService;
     private final LiveService liveService;
+    private final ImageService imageService;
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
         this(domain, appId, sharedSecret, null);
@@ -59,6 +61,7 @@ public class MediaPlatform {
         this.jobService = new JobService(configuration, authenticatedHTTPClient);
         this.transcodeService = new TranscodeService(configuration, authenticatedHTTPClient);
         this.liveService = new LiveService(configuration, authenticatedHTTPClient);
+        this.imageService = new ImageService(configuration, authenticatedHTTPClient);
     }
 
     public FileService fileManager() {
