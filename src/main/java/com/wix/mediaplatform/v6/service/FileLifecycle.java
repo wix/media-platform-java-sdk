@@ -1,8 +1,11 @@
 package com.wix.mediaplatform.v6.service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class FileLifecycle {
 
     private Integer age;
+
     private Action action;
 
     public FileLifecycle() {}
@@ -26,6 +29,8 @@ public class FileLifecycle {
     }
 
     public enum Action {
+
+        @JsonProperty("delete")
         DELETE("delete");
 
         private final String action;

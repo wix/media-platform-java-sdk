@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wix.mediaplatform.v6.auth.Authenticator;
+import com.wix.mediaplatform.v6.exception.ForbiddenException;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.v6.exception.UnauthorizedException;
@@ -44,12 +45,7 @@ public class AuthenticatedHTTPClient {
                 .url(withQuery)
                 .build();
 
-        // closable in try
-        try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response, clazz);
-        } catch (IOException e) {
-            throw new MediaPlatformException(e.getMessage());
-        }
+        return doRequest(request, clazz);
     }
 
     public <P> P post(String url, Object payload, Class<P> clazz) throws MediaPlatformException {
@@ -68,12 +64,8 @@ public class AuthenticatedHTTPClient {
             throw new MediaPlatformException(e.getMessage());
         }
 
-        // closable in try
-        try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response, clazz);
-        } catch (IOException e) {
-            throw new MediaPlatformException(e.getMessage());
-        }
+        return doRequest(request, clazz);
+
     }
 
     public <P> P postForm(String url, String mimeType, byte[] content, Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
@@ -91,12 +83,7 @@ public class AuthenticatedHTTPClient {
                 .url(url)
                 .build();
 
-        // closable in try
-        try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response, clazz);
-        } catch (IOException e) {
-            throw new MediaPlatformException(e.getMessage());
-        }
+        return doRequest(request, clazz);
     }
 
     public <P> P put(String url, Object payload, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
@@ -117,12 +104,7 @@ public class AuthenticatedHTTPClient {
             throw new MediaPlatformException(e.getMessage());
         }
 
-        // closable in try
-        try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response, clazz);
-        } catch (IOException e) {
-            throw new MediaPlatformException(e.getMessage());
-        }
+        return doRequest(request, clazz);
     }
 
     public <P> P delete(String url, Class<P> clazz) throws MediaPlatformException {
@@ -138,12 +120,7 @@ public class AuthenticatedHTTPClient {
                 .url(withQuery)
                 .build();
 
-        // closable in try
-        try (Response response = httpClient.newCall(request).execute()) {
-            return handleResponse(response, clazz);
-        } catch (IOException e) {
-            throw new MediaPlatformException(e.getMessage());
-        }
+        return doRequest(request, clazz);
     }
 
     private Request.Builder defaultBuilder() {
@@ -172,12 +149,28 @@ public class AuthenticatedHTTPClient {
         return urlBuilder.build();
     }
 
+    private <P> P doRequest(Request request, Class<P> clazz) throws MediaPlatformException {
+        // closable in try
+        try (Response response = httpClient.newCall(request).execute()) {
+            return handleResponse(response, clazz);
+        } catch (IOException e) {
+            if (e.getCause() instanceof MediaPlatformException) {
+                throw (MediaPlatformException) e.getCause();
+            }
+            throw new MediaPlatformException(e.getMessage());
+        }
+    }
+
     private <P> P handleResponse(Response response, @Nullable Class<P> clazz) throws MediaPlatformException {
 
         int statusCode = response.code();
 
-        if (statusCode == 401 || statusCode == 403) {
+        if (statusCode == 401) {
             throw new UnauthorizedException();
+        }
+
+        if (statusCode == 403) {
+            throw new ForbiddenException();
         }
 
         if (statusCode == 404) {

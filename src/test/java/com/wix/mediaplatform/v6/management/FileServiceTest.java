@@ -196,6 +196,29 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
+    public void uploadFileWithLifecycle() throws Exception {
+        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-with-lifecycle-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getBytes())
+                .setLifecycle(new FileLifecycle()
+                        .setAction(FileLifecycle.Action.DELETE)
+                        .setAge(100))
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
     public void uploadFileError500OneRetry() throws Exception {
         stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
                 .willReturn(aResponse()
@@ -275,29 +298,6 @@ public class FileServiceTest extends BaseTest {
         } finally {
             verify(exactly(1), postRequestedFor(urlEqualTo("/_api/upload/file")));
         }
-    }
-
-    @Test
-    public void uploadFileWithLifecycle() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
-        stubFor(post(urlEqualTo("/_api/upload/file"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-with-fileLifecycle-response.json")));
-
-        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
-                .setPath("/a/new.txt")
-                .setMimeType("text/plain")
-                .setContent(getBytes())
-                .setLifecycle(new FileLifecycle()
-                        .setAction(FileLifecycle.Action.DELETE)
-                        .setAge(100))
-                .execute();
-
-        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
     }
 
     @Test(expected = MediaPlatformException.class)

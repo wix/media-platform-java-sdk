@@ -16,7 +16,7 @@ public abstract class BaseTest {
 
     private int PORT = 8443;
 
-    private OkHttpClient httpClient = new OkHttpClient();
+    private OkHttpClient httpClient = MediaPlatform.getHttpClient();
 
     protected ObjectMapper objectMapper = MediaPlatform.getMapper();
 
