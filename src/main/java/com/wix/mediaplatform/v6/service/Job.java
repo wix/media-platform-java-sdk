@@ -43,41 +43,13 @@ public abstract class Job {
         return id;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public String getStatus() {
-        return status.name();
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public Source[] getSources() {
-        return sources;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public String getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public abstract Specification getSpecification();
-
-    public abstract RestResponse getResult();
-
     public Job setId(String id) {
         this.id = id;
         return this;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public Job setType(String type) {
@@ -85,9 +57,17 @@ public abstract class Job {
         return this;
     }
 
+    public String getIssuer() {
+        return issuer;
+    }
+
     public Job setIssuer(String issuer) {
         this.issuer = issuer;
         return this;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     public Job setStatus(Status status) {
@@ -95,9 +75,17 @@ public abstract class Job {
         return this;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
     public Job setGroupId(String groupId) {
         this.groupId = groupId;
         return this;
+    }
+
+    public Source[] getSources() {
+        return sources;
     }
 
     public Job setSources(Source[] sources) {
@@ -105,15 +93,27 @@ public abstract class Job {
         return this;
     }
 
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
     public Job setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
         return this;
+    }
+
+    public String getDateUpdated() {
+        return dateUpdated;
     }
 
     public Job setDateUpdated(String dateUpdated) {
         this.dateUpdated = dateUpdated;
         return this;
     }
+
+    public abstract Specification getSpecification();
+
+    public abstract RestResponse getResult();
 
     public enum Status {
 

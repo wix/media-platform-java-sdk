@@ -1,11 +1,10 @@
-package com.wix.mediaplatform.v6.management;
+package com.wix.mediaplatform.v6.service;
 
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.MediaPlatform;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.v6.metadata.FileMetadata;
-import com.wix.mediaplatform.v6.service.*;
 import com.wix.mediaplatform.v6.service.file.*;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,7 +41,25 @@ public class FileServiceTest extends BaseTest {
                 .execute();
 
         assertThat(fileDescriptor.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
-        assertThat(fileDescriptor.getType(), is(FileDescriptor.Type.DIRECTORY.getValue()));
+        assertThat(fileDescriptor.getType(), is(FileDescriptor.Type.DIRECTORY));
+    }
+
+    @Test
+    public void copyFile() throws Exception {
+        stubFor(post(urlEqualTo("/_api/copy/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("copy-file-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.copyFileRequest()
+                .setDestination(new Destination()
+                        .setAcl(FileDescriptor.Acl.PUBLIC)
+                        .setDirectory("/fish"))
+                .setSource(new Source().setPath("/cat.jpg"))
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("d0e18fd468cd4e53bc2bbec3ca4a8676"));
+        assertThat(fileDescriptor.getType(), is(FileDescriptor.Type.FILE));
     }
 
     @Test
@@ -361,7 +378,7 @@ public class FileServiceTest extends BaseTest {
         ImportFileSpecification specification = job.getSpecification();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
-        assertThat(job.getStatus(), is(Job.Status.pending.getValue()));
+        assertThat(job.getStatus(), is(Job.Status.pending));
         assertThat(job.getType(), is("urn:job:import.file"));
         assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
         assertThat(specification.getDestination().getAcl(), is(FileDescriptor.Acl.PUBLIC));
@@ -385,7 +402,7 @@ public class FileServiceTest extends BaseTest {
         RestResponse<FileDescriptor> result = job.getResult();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
-        assertThat(job.getStatus(), is(Job.Status.success.getValue()));
+        assertThat(job.getStatus(), is(Job.Status.success));
         assertThat(job.getType(), is("urn:job:import.file"));
 
         assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
@@ -397,9 +414,9 @@ public class FileServiceTest extends BaseTest {
         assertThat(result.getPayload().getHash(), is("456"));
         assertThat(result.getPayload().getPath(), is("/fish/filename.txt"));
         assertThat(result.getPayload().getMimeType(), is("text/plain"));
-        assertThat(result.getPayload().getType(), is(FileDescriptor.Type.FILE.getValue()));
+        assertThat(result.getPayload().getType(), is(FileDescriptor.Type.FILE));
         assertThat(result.getPayload().getSize(), is(100L));
-        assertThat(result.getPayload().getAcl(), is(FileDescriptor.Acl.PUBLIC.getValue()));
+        assertThat(result.getPayload().getAcl(), is(FileDescriptor.Acl.PUBLIC));
     }
 
     @Test

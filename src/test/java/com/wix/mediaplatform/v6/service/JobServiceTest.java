@@ -1,7 +1,6 @@
-package com.wix.mediaplatform.v6.management;
+package com.wix.mediaplatform.v6.service;
 
 import com.wix.mediaplatform.v6.BaseTest;
-import com.wix.mediaplatform.v6.service.Job;
 import com.wix.mediaplatform.v6.service.job.JobList;
 import com.wix.mediaplatform.v6.service.job.JobService;
 import org.junit.Test;

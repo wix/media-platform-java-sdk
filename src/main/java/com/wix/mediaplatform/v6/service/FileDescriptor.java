@@ -26,51 +26,6 @@ public class FileDescriptor {
 
     private FileLifecycle lifecycle;
 
-    public FileDescriptor setId(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public FileDescriptor setPath(String path) {
-        this.path = path;
-        return this;
-    }
-
-    public FileDescriptor setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-        return this;
-    }
-
-    public FileDescriptor setType(Type type) {
-        this.type = type;
-        return this;
-    }
-
-    public FileDescriptor setSize(long size) {
-        this.size = size;
-        return this;
-    }
-
-    public FileDescriptor setAcl(Acl acl) {
-        this.acl = acl;
-        return this;
-    }
-
-    public FileDescriptor setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-        return this;
-    }
-
-    public FileDescriptor setDateUpdated(Date dateUpdated) {
-        this.dateUpdated = dateUpdated;
-        return this;
-    }
-
-    public FileDescriptor setLifecycle(FileLifecycle lifecycle) {
-        this.lifecycle = lifecycle;
-        return this;
-    }
-
     public FileDescriptor() {
     }
 
@@ -78,40 +33,90 @@ public class FileDescriptor {
         return id;
     }
 
+    public FileDescriptor setId(String id) {
+        this.id = id;
+        return this;
+    }
+
     public String getHash() {
         return hash;
+    }
+
+    public FileDescriptor setHash(String hash) {
+        this.hash = hash;
+        return this;
     }
 
     public String getPath() {
         return path;
     }
 
+    public FileDescriptor setPath(String path) {
+        this.path = path;
+        return this;
+    }
+
     public String getMimeType() {
         return mimeType;
     }
 
-    public String getType() {
-        return type.getValue();
+    public FileDescriptor setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+        return this;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public FileDescriptor setType(Type type) {
+        this.type = type;
+        return this;
     }
 
     public long getSize() {
         return size;
     }
 
-    public String getAcl() {
-        return acl.getValue();
+    public FileDescriptor setSize(long size) {
+        this.size = size;
+        return this;
+    }
+
+    public Acl getAcl() {
+        return acl;
+    }
+
+    public FileDescriptor setAcl(Acl acl) {
+        this.acl = acl;
+        return this;
     }
 
     public Date getDateCreated() {
         return dateCreated;
     }
 
+    public FileDescriptor setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+        return this;
+    }
+
     public Date getDateUpdated() {
         return dateUpdated;
     }
 
+    public FileDescriptor setDateUpdated(Date dateUpdated) {
+        this.dateUpdated = dateUpdated;
+        return this;
+    }
+
     public FileLifecycle getLifecycle() {
         return lifecycle;
+    }
+
+    public FileDescriptor setLifecycle(FileLifecycle lifecycle) {
+        this.lifecycle = lifecycle;
+        return this;
     }
 
     public enum Acl {

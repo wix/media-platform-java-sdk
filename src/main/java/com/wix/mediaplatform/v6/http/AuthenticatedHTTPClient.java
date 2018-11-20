@@ -67,7 +67,6 @@ public class AuthenticatedHTTPClient {
         }
 
         return doRequest(request, clazz);
-
     }
 
     public <P> P postForm(String url, String mimeType, byte[] content, Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
@@ -109,10 +108,6 @@ public class AuthenticatedHTTPClient {
         return doRequest(request, clazz);
     }
 
-    public <P> P delete(String url, Class<P> clazz) throws MediaPlatformException {
-        return delete(url, null, clazz);
-    }
-
     public <P> P delete(String url, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
 
         HttpUrl withQuery = appendQuery(params, url);
@@ -151,6 +146,7 @@ public class AuthenticatedHTTPClient {
         return urlBuilder.build();
     }
 
+    @Nullable
     private <P> P doRequest(Request request, Class<P> clazz) throws MediaPlatformException {
         // closable in try
         try (Response response = httpClient.newCall(request).execute()) {
@@ -163,6 +159,7 @@ public class AuthenticatedHTTPClient {
         }
     }
 
+    @Nullable
     private <P> P handleResponse(Response response, @Nullable Class<P> clazz) throws MediaPlatformException {
 
         int statusCode = response.code();

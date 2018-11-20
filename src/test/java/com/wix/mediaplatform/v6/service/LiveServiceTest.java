@@ -1,8 +1,6 @@
-package com.wix.mediaplatform.v6.management;
+package com.wix.mediaplatform.v6.service;
 
 import com.wix.mediaplatform.v6.BaseTest;
-import com.wix.mediaplatform.v6.service.Destination;
-import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.live.*;
 import org.junit.Test;
 
