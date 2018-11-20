@@ -1,11 +1,9 @@
 package com.wix.mediaplatform.v6.management;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.service.Job;
 import com.wix.mediaplatform.v6.service.job.JobList;
 import com.wix.mediaplatform.v6.service.job.JobService;
-import org.junit.Before;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -15,11 +13,6 @@ import static org.hamcrest.Matchers.is;
 public class JobServiceTest extends BaseTest {
 
     private JobService jobService = new JobService(configuration, authenticatedHttpClient);
-
-    @Before
-    public void setup() {
-        WireMock.reset();
-    }
 
     @Test
     public void getJob() throws Exception {

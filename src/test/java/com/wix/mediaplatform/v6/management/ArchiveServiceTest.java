@@ -1,10 +1,8 @@
 package com.wix.mediaplatform.v6.management;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.service.*;
 import com.wix.mediaplatform.v6.service.archive.*;
-import org.junit.Before;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -15,11 +13,6 @@ import static org.hamcrest.Matchers.nullValue;
 public class ArchiveServiceTest extends BaseTest {
 
     private ArchiveService archiveService = new ArchiveService(configuration, authenticatedHttpClient);
-
-    @Before
-    public void setup() {
-        WireMock.reset();
-    }
 
     @Test
     public void createArchive() throws Exception {

@@ -1,11 +1,9 @@
 package com.wix.mediaplatform.v6.management;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.service.Destination;
 import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.live.*;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -17,11 +15,6 @@ import static org.hamcrest.Matchers.is;
 public class LiveServiceTest extends BaseTest {
 
     private LiveService liveService = new LiveService(configuration, authenticatedHttpClient);
-
-    @Before
-    public void setup() {
-        WireMock.reset();
-    }
 
     @Test
     public void getStream() throws Exception {

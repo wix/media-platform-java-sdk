@@ -1,13 +1,11 @@
 package com.wix.mediaplatform.v6.management;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.service.Destination;
 import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.Job;
 import com.wix.mediaplatform.v6.service.Source;
 import com.wix.mediaplatform.v6.service.transcode.*;
-import org.junit.Before;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -17,11 +15,6 @@ import static org.hamcrest.Matchers.is;
 public class TranscodeServiceTest extends BaseTest {
 
     private TranscodeService transcodeService = new TranscodeService(configuration, authenticatedHttpClient);
-
-    @Before
-    public void setup() {
-        WireMock.reset();
-    }
 
     @Test
     public void transcodeFile() throws Exception {
