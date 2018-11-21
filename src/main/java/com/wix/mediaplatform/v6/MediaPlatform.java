@@ -12,6 +12,7 @@ import com.wix.mediaplatform.v6.service.image.ImageService;
 import com.wix.mediaplatform.v6.service.job.JobService;
 import com.wix.mediaplatform.v6.service.live.LiveService;
 import com.wix.mediaplatform.v6.service.transcode.TranscodeService;
+import com.wix.mediaplatform.v6.service.video.VideoService;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -35,6 +36,7 @@ public class MediaPlatform {
     private final TranscodeService transcodeService;
     private final LiveService liveService;
     private final ImageService imageService;
+    private final VideoService videoService;
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
         this(domain, appId, sharedSecret, null);
@@ -62,6 +64,7 @@ public class MediaPlatform {
         this.transcodeService = new TranscodeService(configuration, authenticatedHTTPClient);
         this.liveService = new LiveService(configuration, authenticatedHTTPClient);
         this.imageService = new ImageService(configuration, authenticatedHTTPClient);
+        this.videoService = new VideoService(configuration, authenticatedHTTPClient);
     }
 
     public FileService fileManager() {
@@ -82,6 +85,14 @@ public class MediaPlatform {
 
     public LiveService liveService() {
         return liveService;
+    }
+
+    public ImageService imageService() {
+        return imageService;
+    }
+
+    public VideoService videoService() {
+        return videoService;
     }
 
     public static ObjectMapper getMapper() {

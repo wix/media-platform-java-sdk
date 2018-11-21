@@ -7,6 +7,8 @@ import com.wix.mediaplatform.v6.service.archive.CreateArchiveJob;
 import com.wix.mediaplatform.v6.service.archive.ExtractArchiveJob;
 import com.wix.mediaplatform.v6.service.file.ImportFileJob;
 import com.wix.mediaplatform.v6.service.transcode.TranscodeJob;
+import com.wix.mediaplatform.v6.service.video.ExtractPosterJob;
+import com.wix.mediaplatform.v6.service.video.ExtractStoryboardJob;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         property = "type",
@@ -17,6 +19,8 @@ import com.wix.mediaplatform.v6.service.transcode.TranscodeJob;
         @JsonSubTypes.Type(value = ExtractArchiveJob.class, name = "urn:job:archive.extract"),
         @JsonSubTypes.Type(value = ImportFileJob.class, name = "urn:job:import.file"),
         @JsonSubTypes.Type(value = TranscodeJob.class, name = "urn:job:av.transcode"),
+        @JsonSubTypes.Type(value = ExtractPosterJob.class, name = "urn:job:av.poster"),
+        @JsonSubTypes.Type(value = ExtractStoryboardJob.class, name = "urn:job:av.storyboard"),
 })
 public abstract class Job {
 
@@ -110,6 +114,8 @@ public abstract class Job {
         this.dateUpdated = dateUpdated;
         return this;
     }
+
+    //    todo: support job callback
 
     public abstract Specification getSpecification();
 
