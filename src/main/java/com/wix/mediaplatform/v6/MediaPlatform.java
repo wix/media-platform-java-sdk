@@ -8,6 +8,7 @@ import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v6.service.archive.ArchiveService;
 import com.wix.mediaplatform.v6.service.file.FileService;
+import com.wix.mediaplatform.v6.service.flowcontrol.FlowControlService;
 import com.wix.mediaplatform.v6.service.image.ImageService;
 import com.wix.mediaplatform.v6.service.job.JobService;
 import com.wix.mediaplatform.v6.service.live.LiveService;
@@ -37,6 +38,7 @@ public class MediaPlatform {
     private final LiveService liveService;
     private final ImageService imageService;
     private final VideoService videoService;
+    private final FlowControlService flowControlService;
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
         this(domain, appId, sharedSecret, null);
@@ -65,6 +67,7 @@ public class MediaPlatform {
         this.liveService = new LiveService(configuration, authenticatedHTTPClient);
         this.imageService = new ImageService(configuration, authenticatedHTTPClient);
         this.videoService = new VideoService(configuration, authenticatedHTTPClient);
+        this.flowControlService = new FlowControlService(configuration, authenticatedHTTPClient);
     }
 
     public FileService fileManager() {
@@ -93,6 +96,10 @@ public class MediaPlatform {
 
     public VideoService videoService() {
         return videoService;
+    }
+
+    public FlowControlService flowControlService() {
+        return flowControlService;
     }
 
     public static ObjectMapper getMapper() {
