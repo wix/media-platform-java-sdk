@@ -1,0 +1,259 @@
+{
+  "code": 0,
+  "message": "OK",
+  "payload": {
+    "invocation": {
+      "sources": [],
+      "entryPoints": [
+        "import"
+      ],
+      "notification": null
+    },
+    "operations": {
+      "import": {
+        "status": "success",
+        "deleteSources": false,
+        "jobs": [
+          "de3791863889435ea813661c76881fd5_d63792a426794aad8313722839ca1313"
+        ],
+        "specification": {
+          "destination": {
+            "directory": null,
+            "path": "/imports/video.mp4",
+            "acl": "public",
+            "lifecycle": null
+          },
+          "sourceUrl": "https://fish.com/dag.gadol"
+        },
+        "results": [
+          {
+            "mimeType": "video/mp4",
+            "hash": null,
+            "urn": "urn:file:93787d2019254af9b24f81efbcd9333c",
+            "dateCreated": "2018-01-11T13:15:57Z",
+            "path": "/imports/video.mp4",
+            "dateUpdated": "2018-01-11T13:15:57Z",
+            "acl": "public",
+            "type": "-",
+            "id": "93787d2019254af9b24f81efbcd9333c",
+            "size": 4151438,
+            "lifecycle": null
+          }
+        ],
+        "extraResults": {},
+        "sources": [],
+        "successors": [
+          "transcode"
+        ],
+        "type": "file.import"
+      },
+      "transcode": {
+        "status": "success",
+        "jobs": [
+          "c8207856d11442bfa88a8aac498df9df_640704bc16564dc58400eab08dce122a",
+          "c8207856d11442bfa88a8aac498df9df_dc5872d038644da9bf48290de95a72a4",
+          "c8207856d11442bfa88a8aac498df9df_22e2875963d248989e12ecae85eb3d3a",
+          "c8207856d11442bfa88a8aac498df9df_b55c5c92ebf640688c241f40c2c11f56",
+          "c8207856d11442bfa88a8aac498df9df_20a71463ec664e7cb89d7d49b6930d3a"
+        ],
+        "deleteSources": false,
+        "specification": {
+          "quality": null,
+          "destination": {
+            "directory": "/transcodes/",
+            "path": null,
+            "acl": "public",
+            "lifecycle": null
+          },
+          "video": null,
+          "qualityRange": {
+            "minimum": "240p",
+            "maximum": "1440p"
+          },
+          "audio": null
+        },
+        "results": [
+          {
+            "mimeType": "video/mp4",
+            "hash": "e895081a6152c334cf5c8afbf4c86950",
+            "urn": "urn:file:240dbd12752642a5aa7b8ab469d91e9e",
+            "dateCreated": "2018-01-10T16:11:30Z",
+            "path": "/transcodes/480p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:30Z",
+            "acl": "public",
+            "type": "-",
+            "id": "240dbd12752642a5aa7b8ab469d91e9e",
+            "size": 1277825,
+            "lifecycle": null
+          },
+          {
+            "mimeType": "video/mp4",
+            "hash": "5ebd4a776185535d0e3ad405945b9474",
+            "urn": "urn:file:66b1f6fffc95479db00526d27969ceb4",
+            "dateCreated": "2018-01-10T16:11:36Z",
+            "path": "/transcodes/720p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:36Z",
+            "acl": "public",
+            "type": "-",
+            "id": "66b1f6fffc95479db00526d27969ceb4",
+            "size": 2607390,
+            "lifecycle": null
+          },
+          {
+            "mimeType": "video/mp4",
+            "hash": "6773f38357a87b4a37681aa17620ae6c",
+            "urn": "urn:file:05e7b21872aa4a179e46bfafaabc64af",
+            "dateCreated": "2018-01-10T16:11:42Z",
+            "path": "/transcodes/1080p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:42Z",
+            "acl": "public",
+            "type": "-",
+            "id": "05e7b21872aa4a179e46bfafaabc64af",
+            "size": 5517966,
+            "lifecycle": null
+          },
+          {
+            "mimeType": "video/mp4",
+            "hash": "2f65031e2dfd389b05ecc51616d98831",
+            "urn": "urn:file:f2ef24a01ed44cbb8d5595fc40dc6e56",
+            "dateCreated": "2018-01-10T16:11:27Z",
+            "path": "/transcodes/240p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:27Z",
+            "acl": "public",
+            "type": "-",
+            "id": "f2ef24a01ed44cbb8d5595fc40dc6e56",
+            "size": 443561,
+            "lifecycle": null
+          },
+          {
+            "mimeType": "video/mp4",
+            "hash": "de175daf66ab325699d57e7878f0652e",
+            "urn": "urn:file:c171f0a2d15b4cbdac2edd72d42f12b2",
+            "dateCreated": "2018-01-10T16:11:33Z",
+            "path": "/transcodes/360p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:33Z",
+            "acl": "public",
+            "type": "-",
+            "id": "c171f0a2d15b4cbdac2edd72d42f12b2",
+            "size": 844481,
+            "lifecycle": null
+          }
+        ],
+        "extraResults": {},
+        "sources": [
+          {
+            "path": "/imports/video.mp4",
+            "fileId": "93787d2019254af9b24f81efbcd9333c"
+          }
+        ],
+        "successors": [
+          "urlsetcreate"
+        ],
+        "type": "av.transcode"
+      },
+      "urlsetcreate": {
+        "status": "success",
+        "deleteSources": false,
+        "jobs": [],
+        "specification": null,
+        "results": [
+          {
+            "mimeType": "video/mp4",
+            "hash": "e895081a6152c334cf5c8afbf4c86950",
+            "urn": "urn:file:240dbd12752642a5aa7b8ab469d91e9e",
+            "dateCreated": "2018-01-10T16:11:30Z",
+            "path": "/transcodes/480p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:30Z",
+            "acl": "public",
+            "type": "-",
+            "id": "240dbd12752642a5aa7b8ab469d91e9e",
+            "size": 1277825,
+            "lifecycle": null
+          },
+          {
+            "mimeType": "video/mp4",
+            "hash": "5ebd4a776185535d0e3ad405945b9474",
+            "urn": "urn:file:66b1f6fffc95479db00526d27969ceb4",
+            "dateCreated": "2018-01-10T16:11:36Z",
+            "path": "/transcodes/720p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:36Z",
+            "acl": "public",
+            "type": "-",
+            "id": "66b1f6fffc95479db00526d27969ceb4",
+            "size": 2607390,
+            "lifecycle": null
+          },
+          {
+            "mimeType": "video/mp4",
+            "hash": "6773f38357a87b4a37681aa17620ae6c",
+            "urn": "urn:file:05e7b21872aa4a179e46bfafaabc64af",
+            "dateCreated": "2018-01-10T16:11:42Z",
+            "path": "/transcodes/1080p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:42Z",
+            "acl": "public",
+            "type": "-",
+            "id": "05e7b21872aa4a179e46bfafaabc64af",
+            "size": 5517966,
+            "lifecycle": null
+          },
+          {
+            "mimeType": "video/mp4",
+            "hash": "2f65031e2dfd389b05ecc51616d98831",
+            "urn": "urn:file:f2ef24a01ed44cbb8d5595fc40dc6e56",
+            "dateCreated": "2018-01-10T16:11:27Z",
+            "path": "/transcodes/240p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:27Z",
+            "acl": "public",
+            "type": "-",
+            "id": "f2ef24a01ed44cbb8d5595fc40dc6e56",
+            "size": 443561,
+            "lifecycle": null
+          },
+          {
+            "mimeType": "video/mp4",
+            "hash": "de175daf66ab325699d57e7878f0652e",
+            "urn": "urn:file:c171f0a2d15b4cbdac2edd72d42f12b2",
+            "dateCreated": "2018-01-10T16:11:33Z",
+            "path": "/transcodes/360p/video.mp4",
+            "dateUpdated": "2018-01-10T16:11:33Z",
+            "acl": "public",
+            "type": "-",
+            "id": "c171f0a2d15b4cbdac2edd72d42f12b2",
+            "size": 844481,
+            "lifecycle": null
+          }
+        ],
+        "extraResults": {
+          "urlset": "//fishenzon.com/transcodes/,480p,720p,1080p,240p,360p,/video.mp4.urlset/master.m3u8"
+        },
+        "sources": [
+          {
+            "path": "/transcodes/480p/video.mp4",
+            "fileId": "240dbd12752642a5aa7b8ab469d91e9e"
+          },
+          {
+            "path": "/transcodes/720p/video.mp4",
+            "fileId": "66b1f6fffc95479db00526d27969ceb4"
+          },
+          {
+            "path": "/transcodes/1080p/video.mp4",
+            "fileId": "05e7b21872aa4a179e46bfafaabc64af"
+          },
+          {
+            "path": "/transcodes/240p/video.mp4",
+            "fileId": "f2ef24a01ed44cbb8d5595fc40dc6e56"
+          },
+          {
+            "path": "/transcodes/360p/video.mp4",
+            "fileId": "c171f0a2d15b4cbdac2edd72d42f12b2"
+          }
+        ],
+        "successors": [],
+        "type": "av.create_urlset"
+      }
+    },
+    "id": "49eca277747047c5833f15a0eed137b9",
+    "status": "success",
+    "error": null
+  }
+}

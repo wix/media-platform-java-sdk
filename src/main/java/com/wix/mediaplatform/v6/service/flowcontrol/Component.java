@@ -1,12 +1,20 @@
 package com.wix.mediaplatform.v6.service.flowcontrol;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.wix.mediaplatform.v6.service.Specification;
 
-public class Component {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+        property = "type",
+        visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ImportFileComponent.class, name = "file.import"),
+        @JsonSubTypes.Type(value = TranscodeComponent.class, name = "av.transcode"),
+        @JsonSubTypes.Type(value = CreateUrlSetComponent.class, name = "av.create_urlset"),
+})
+public abstract class Component {
 
     private String type;
-
-    private Specification specification;
 
     private String[] successors;
 
@@ -21,15 +29,6 @@ public class Component {
 
     public Component setType(String type) {
         this.type = type;
-        return this;
-    }
-
-    public Specification getSpecification() {
-        return specification;
-    }
-
-    public Component setSpecification(Specification specification) {
-        this.specification = specification;
         return this;
     }
 
@@ -50,4 +49,6 @@ public class Component {
         this.deleteSources = deleteSources;
         return this;
     }
+
+    public abstract Specification getSpecification();
 }

@@ -1,10 +1,23 @@
 package com.wix.mediaplatform.v6.service.flowcontrol;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.Source;
 
-public class Operation extends Component {
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.EXISTING_PROPERTY;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+        include = EXISTING_PROPERTY,
+        property = "type",
+        visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ImportFileOperation.class, name = "file.import"),
+        @JsonSubTypes.Type(value = TranscodeOperation.class, name = "av.transcode"),
+        @JsonSubTypes.Type(value = CreateUrlSetOperation.class, name = "av.create_urlset"),
+})
+public abstract class Operation extends Component {
 
     private Source[] sources;
 
@@ -13,8 +26,6 @@ public class Operation extends Component {
     private String[] jobs;
 
     private FileDescriptor[] results;
-
-    private ExtraResults extraResults;
 
     public Operation() {
     }
@@ -55,14 +66,7 @@ public class Operation extends Component {
         return this;
     }
 
-    public ExtraResults getExtraResults() {
-        return extraResults;
-    }
-
-    public Operation setExtraResults(ExtraResults extraResults) {
-        this.extraResults = extraResults;
-        return this;
-    }
+    public abstract ExtraResults getExtraResults();
 
     public enum Status {
 
