@@ -1,7 +1,10 @@
-package com.wix.mediaplatform.v6.service;
+package com.wix.mediaplatform.v6.service.transcode;
 
 import com.wix.mediaplatform.v6.BaseTest;
-import com.wix.mediaplatform.v6.service.transcode.*;
+import com.wix.mediaplatform.v6.service.Destination;
+import com.wix.mediaplatform.v6.service.FileDescriptor;
+import com.wix.mediaplatform.v6.service.Job;
+import com.wix.mediaplatform.v6.service.Source;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;

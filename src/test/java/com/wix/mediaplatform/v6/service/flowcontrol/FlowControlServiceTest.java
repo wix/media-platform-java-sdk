@@ -1,8 +1,6 @@
-package com.wix.mediaplatform.v6.service;
+package com.wix.mediaplatform.v6.service.flowcontrol;
 
 import com.wix.mediaplatform.v6.BaseTest;
-import com.wix.mediaplatform.v6.service.flowcontrol.FlowControlService;
-import com.wix.mediaplatform.v6.service.flowcontrol.FlowState;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -25,5 +23,4 @@ public class FlowControlServiceTest extends BaseTest {
 
         assertThat(flowState.getId(), is("49eca277747047c5833f15a0eed137b9"));
     }
-
 }

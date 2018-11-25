@@ -1,8 +1,7 @@
-package com.wix.mediaplatform.v6.service;
+package com.wix.mediaplatform.v6.service.job;
 
 import com.wix.mediaplatform.v6.BaseTest;
-import com.wix.mediaplatform.v6.service.job.JobList;
-import com.wix.mediaplatform.v6.service.job.JobService;
+import com.wix.mediaplatform.v6.service.Job;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;

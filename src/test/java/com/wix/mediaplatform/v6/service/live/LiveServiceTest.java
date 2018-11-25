@@ -1,7 +1,8 @@
-package com.wix.mediaplatform.v6.service;
+package com.wix.mediaplatform.v6.service.live;
 
 import com.wix.mediaplatform.v6.BaseTest;
-import com.wix.mediaplatform.v6.service.live.*;
+import com.wix.mediaplatform.v6.service.Destination;
+import com.wix.mediaplatform.v6.service.FileDescriptor;
 import org.junit.Test;
 
 import java.util.HashMap;

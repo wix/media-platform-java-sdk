@@ -1,9 +1,10 @@
-package com.wix.mediaplatform.v6.service;
+package com.wix.mediaplatform.v6.service.image;
 
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.metadata.features.ImageFeatures;
-import com.wix.mediaplatform.v6.service.image.ImageOperationSpecification;
-import com.wix.mediaplatform.v6.service.image.ImageService;
+import com.wix.mediaplatform.v6.service.Destination;
+import com.wix.mediaplatform.v6.service.FileDescriptor;
+import com.wix.mediaplatform.v6.service.Source;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;

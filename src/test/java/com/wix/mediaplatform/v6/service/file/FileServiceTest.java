@@ -1,11 +1,12 @@
-package com.wix.mediaplatform.v6.service;
+package com.wix.mediaplatform.v6.service.file;
 
 import com.wix.mediaplatform.v6.BaseTest;
 import com.wix.mediaplatform.v6.MediaPlatform;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.v6.metadata.FileMetadata;
-import com.wix.mediaplatform.v6.service.file.*;
+import com.wix.mediaplatform.v6.service.*;
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -378,7 +379,7 @@ public class FileServiceTest extends BaseTest {
         ImportFileSpecification specification = job.getSpecification();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
-        assertThat(job.getStatus(), is(Job.Status.pending));
+        assertThat(job.getStatus(), Matchers.is(Job.Status.pending));
         assertThat(job.getType(), is("urn:job:import.file"));
         assertThat(specification.getSourceUrl(), is("http://source.url/filename.txt"));
         assertThat(specification.getDestination().getAcl(), is(FileDescriptor.Acl.PUBLIC));

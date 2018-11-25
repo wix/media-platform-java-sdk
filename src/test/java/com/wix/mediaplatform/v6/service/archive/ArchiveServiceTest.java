@@ -1,7 +1,8 @@
-package com.wix.mediaplatform.v6.service;
+package com.wix.mediaplatform.v6.service.archive;
 
 import com.wix.mediaplatform.v6.BaseTest;
-import com.wix.mediaplatform.v6.service.archive.*;
+import com.wix.mediaplatform.v6.service.*;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -101,7 +102,7 @@ public class ArchiveServiceTest extends BaseTest {
 
         assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
         assertThat(job.getType(), is("urn:job:archive.extract"));
-        assertThat(job.getStatus(), is(Job.Status.pending));
+        assertThat(job.getStatus(), Matchers.is(Job.Status.pending));
         ExtractArchiveSpecification extractArchiveSpecification = job.getSpecification();
         ExtractedFilesReport responseExtractedFilesReport = extractArchiveSpecification.getExtractedFilesReport();
 
