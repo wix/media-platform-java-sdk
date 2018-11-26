@@ -14,6 +14,10 @@ public class FlowControlService extends MediaPlatformService {
         return new FlowInvocationRequest(authenticatedHTTPClient, baseUrl);
     }
 
+    public AbortFlowRequest abortFlowRequest(String flowId) {
+        return new AbortFlowRequest(authenticatedHTTPClient, baseUrl, flowId);
+    }
+
     public FlowStateRequest flowStateRequest(String flowId) {
         return new FlowStateRequest(authenticatedHTTPClient, baseUrl, flowId);
     }

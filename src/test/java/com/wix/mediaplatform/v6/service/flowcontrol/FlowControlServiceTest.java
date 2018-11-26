@@ -13,7 +13,7 @@ public class FlowControlServiceTest extends BaseTest {
 
     @Test
     public void getFlowState() throws Exception {
-        stubFor(get(urlEqualTo("/_api/flow/49eca277747047c5833f15a0eed137b9"))
+        stubFor(get(urlEqualTo("/_api/flow_control/flow/49eca277747047c5833f15a0eed137b9"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("get-flow-state-response.json")));
@@ -22,5 +22,27 @@ public class FlowControlServiceTest extends BaseTest {
                 .execute();
 
         assertThat(flowState.getId(), is("49eca277747047c5833f15a0eed137b9"));
+    }
+
+    @Test
+    public void invokeFlow() throws Exception {
+        stubFor(post(urlEqualTo("/_api/flow_control/flow"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("invoke-flow-response.json")));
+
+        FlowState flowState = flowControlService.flowInvocationRequest().execute();
+
+        assertThat(flowState.getId(), is("49eca277747047c5833f15a0eed137b9"));
+    }
+
+    @Test
+    public void abortFlow() throws Exception {
+        stubFor(delete(urlEqualTo("/_api/flow_control/flow/49eca277747047c5833f15a0eed137b9"))
+            .willReturn(aResponse()
+            .withHeader("Content-Type", "application/json")
+            .withBodyFile("null-payload-response.json")));
+
+        flowControlService.abortFlowRequest("49eca277747047c5833f15a0eed137b9").execute();
     }
 }

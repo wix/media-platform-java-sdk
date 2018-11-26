@@ -6,7 +6,7 @@ import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
 
 import java.util.Map;
 
-public abstract class MediaPlatformRequest<P> {
+public abstract class MediaPlatformRequest<R> {
 
     @JsonIgnore
     protected AuthenticatedHTTPClient authenticatedHTTPClient;
@@ -17,9 +17,9 @@ public abstract class MediaPlatformRequest<P> {
     @JsonIgnore
     private String method;
 
-    private Class<P> clazz;
+    private Class<R> clazz;
 
-    protected MediaPlatformRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String method, String url, Class<P> clazz) {
+    protected MediaPlatformRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String method, String url, Class<R> clazz) {
         this.authenticatedHTTPClient = authenticatedHTTPClient;
         this.method = method;
         this.url = url;
@@ -27,7 +27,7 @@ public abstract class MediaPlatformRequest<P> {
         this.clazz = clazz;
     }
 
-    public P execute() throws MediaPlatformException {
+    public R execute() throws MediaPlatformException {
 
         validate();
 
