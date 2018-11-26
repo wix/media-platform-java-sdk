@@ -4,7 +4,7 @@ import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.Job;
 import com.wix.mediaplatform.v6.service.RestResponse;
 
-public class ImportFileJob extends Job {
+public class ImportFileJob extends Job<FileDescriptor> {
 
     private ImportFileSpecification specification;
 

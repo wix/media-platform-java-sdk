@@ -25,11 +25,13 @@ public class RestResponse<P> {
         return payload;
     }
 
-    public void throwForErrorCode() throws MediaPlatformException {
+    public RestResponse<P> throwOrReturn() throws MediaPlatformException {
         MediaPlatformException exception = ExceptionFactory.createException(this);
         if (exception != null) {
             throw exception;
         }
+
+        return this;
     }
 
     @Override

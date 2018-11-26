@@ -10,6 +10,8 @@ import com.wix.mediaplatform.v6.service.transcode.TranscodeJob;
 import com.wix.mediaplatform.v6.service.video.ExtractPosterJob;
 import com.wix.mediaplatform.v6.service.video.ExtractStoryboardJob;
 
+import java.util.Arrays;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         property = "type",
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
@@ -22,7 +24,7 @@ import com.wix.mediaplatform.v6.service.video.ExtractStoryboardJob;
         @JsonSubTypes.Type(value = ExtractPosterJob.class, name = "urn:job:av.poster"),
         @JsonSubTypes.Type(value = ExtractStoryboardJob.class, name = "urn:job:av.storyboard"),
 })
-public abstract class Job {
+public abstract class Job<R> {
 
     private String id;
 
@@ -115,11 +117,15 @@ public abstract class Job {
         return this;
     }
 
+    public boolean done() {
+        return status == Status.success || status == Status.error;
+    }
+
     //    todo: support job callback
 
     public abstract Specification getSpecification();
 
-    public abstract RestResponse getResult();
+    public abstract RestResponse<R> getResult();
 
     public enum Status {
 
@@ -145,5 +151,19 @@ public abstract class Job {
         public static Status fromString(String typeString) {
             return Status.valueOf(typeString);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", issuer='" + issuer + '\'' +
+                ", status=" + status +
+                ", groupId='" + groupId + '\'' +
+                ", sources=" + Arrays.toString(sources) +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", dateUpdated='" + dateUpdated + '\'' +
+                '}';
     }
 }

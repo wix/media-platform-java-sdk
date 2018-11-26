@@ -1,19 +1,25 @@
 package com.wix.mediaplatform.v6.exception;
 
 import com.wix.mediaplatform.v6.service.RestResponse;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * Created by alonne on 06/07/2017.
- */
+// todo: fix
 public final class ExceptionFactory {
 
     private ExceptionFactory() {}
 
+    @Nullable
     public static MediaPlatformException createException(RestResponse restResponse) {
+
         int code = restResponse.getCode();
+
+        if (code == 0) {
+            return null;
+        }
+
         ErrorCode errorCode = ErrorCode.find(code);
         if (errorCode == null) {
-            return new MediaPlatformException(String.format("Error %d", code), code);
+            return new MediaPlatformException(restResponse.getMessage(), restResponse.getCode());
         }
 
         switch (errorCode) {
@@ -24,7 +30,7 @@ public final class ExceptionFactory {
             case notFound:
                 return new ResourceNotFoundException(restResponse.getMessage());
             default:
-                return new MediaPlatformException(String.format("Error %d", code), code);
+                return new MediaPlatformException(restResponse.getMessage(), restResponse.getCode());
         }
     }
 }

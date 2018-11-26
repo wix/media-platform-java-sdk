@@ -188,11 +188,11 @@ public class AuthenticatedHTTPClient {
             if (clazz != null) {
                 JavaType javaType = objectMapper.getTypeFactory().constructParametricType(RestResponse.class, clazz);
                 RestResponse<P> restResponse = objectMapper.readValue(response.body().byteStream(), javaType);
-                restResponse.throwForErrorCode();
+                restResponse.throwOrReturn();
                 return restResponse.getPayload();
             } else {
                 RestResponse restResponse = objectMapper.readValue(response.body().byteStream(), RestResponse.class);
-                restResponse.throwForErrorCode();
+                restResponse.throwOrReturn();
                 return null;
             }
         } catch (IOException e) {
