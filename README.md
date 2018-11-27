@@ -3,7 +3,7 @@
 [![Build Status][travis-image]][travis-url] 
 [![MVN version][mvn-image]][mvn-url]
 
-[Wix Media Platform][wixmp-url] is an end-to-end solution for all modern web media management, handling images, video and audio in the most efficient way on the market. From upload, storage, metadata management and all the way to delivery, Wix Media Platform takes care of all possible media workflows.
+[Wix Media Platform][wixmp-url] is an end-to-end solution for all modern web media management, handling images, video and audio in the most efficient way on the market. From upload, storage, metadata management and all the way to delivery, Wix Media Platform takes care of all possible media work flows.
 
 # Java SDK
 
