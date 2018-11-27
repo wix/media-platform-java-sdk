@@ -40,16 +40,18 @@ Our powerful technology makes it simple for everyone to create a beautiful websi
 
 ## About Google Cloud Platform
 
-[Google Cloud Platform](https://cloud.google.com/) enables developers to build, test and deploy applications on Google’s reliable infrastructure.
+[Google Cloud Platform][google-url] enables developers to build, test and deploy applications on Google’s reliable infrastructure.
 It offers computing, storage and application services for web, mobile and backend solutions.
 
 [wix-url]: https://www.wix.com/
-[wixmp-url]: https://gcp.wixmp.com/
+[google-url]: https://cloud.google.com/
+[wixmp-url]: https://console.wixmp.com/
+
 [mvn-image]: https://img.shields.io/maven-central/v/com.wix/media-platform-java-sdk.svg
 [mvn-url]: https://mvnrepository.com/artifact/com.wix/media-platform-java-sdk
+
 [npm-url]: https://npmjs.org/package/media-platform-js-sdk
+
 [travis-image]: https://travis-ci.org/wix/media-platform-java-sdk.svg?branch=master
 [travis-url]: https://travis-ci.org/wix/media-platform-java-sdk
-[org-and-project-start]: https://support.wixmp.com/en/article/creating-your-organization-and-project
-[application-start]: https://support.wixmp.com/en/article/creating-your-first-application
-[jobs-api]: https://support.wixmp.com/en/article/jobs
+
