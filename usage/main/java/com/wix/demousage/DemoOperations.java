@@ -1,4 +1,4 @@
-package com.wix.mediaplatform;
+package com.wix.demousage;
 
 import com.wix.mediaplatform.v6.MediaPlatform;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
@@ -15,11 +15,11 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.UUID;
 
-class Demo {
+class DemoOperations {
 
     private final MediaPlatform mediaPlatform;
 
-    Demo(MediaPlatform mediaPlatform) {
+    DemoOperations(MediaPlatform mediaPlatform) {
         this.mediaPlatform = mediaPlatform;
     }
 
@@ -28,7 +28,7 @@ class Demo {
         ImportFileJob importFileJob = mediaPlatform.fileManager().importFileRequest()
                 .setSourceUrl("https://static.wixstatic.com/media/f31d7d0cfc554aacb1d737757c8d3f1b.jpg")
                 .setDestination(new Destination()
-                        .setDirectory("/demo/import/" + UUID.randomUUID().toString())
+                        .setDirectory("/demousage/import/" + UUID.randomUUID().toString())
                         .setAcl(FileDescriptor.Acl.PUBLIC))
                 .execute();
 
@@ -51,7 +51,7 @@ class Demo {
         ).getPath()).toPath();
 
         FileDescriptor file = mediaPlatform.fileManager().uploadFileRequest()
-                .setPath("/demo/upload/" + id + ".golan.jpg")
+                .setPath("/demousage/upload/" + id + ".golan.jpg")
                 .setMimeType("image/jpeg")
                 .setContent(Files.readAllBytes(localPath))
                 .execute();

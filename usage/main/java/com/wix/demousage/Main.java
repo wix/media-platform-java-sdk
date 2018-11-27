@@ -1,4 +1,4 @@
-package com.wix.mediaplatform;
+package com.wix.demousage;
 
 import com.wix.mediaplatform.v6.MediaPlatform;
 
@@ -19,13 +19,13 @@ public class Main {
             System.out.println(arg);
         }
 
-        Demo demo = new Demo(mediaPlatform);
+        DemoOperations demoOperations = new DemoOperations(mediaPlatform);
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
         executor.submit(() -> {
             try {
-                demo.uploadImage();
+                demoOperations.uploadImage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -33,7 +33,7 @@ public class Main {
 
         executor.submit(() -> {
             try {
-                demo.importFile();
+                demoOperations.importFile();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -41,14 +41,14 @@ public class Main {
 
         executor.submit(() -> {
             try {
-                demo.listJobs();
+                demoOperations.listJobs();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-//            demo.transcodeFile();
-//            demo.createArchive();
-//            demo.extractArchive();
+//            demoOperations.transcodeFile();
+//            demoOperations.createArchive();
+//            demoOperations.extractArchive();
 
         executor.shutdown();
     }
