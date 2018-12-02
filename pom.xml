@@ -178,18 +178,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <!--<resources>-->
-            <!--<resource>-->
-                <!--<directory>demoOperations/</directory>-->
-                <!--<excludes>-->
-                    <!--<exclude>**/*</exclude>-->
-                <!--</excludes>-->
-            <!--</resource>-->
-        <!--</resources>-->
     </build>
-
-
-
-
 
 </project>
