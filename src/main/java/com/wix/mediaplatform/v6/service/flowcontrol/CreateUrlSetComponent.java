@@ -1,11 +1,12 @@
 package com.wix.mediaplatform.v6.service.flowcontrol;
 
-import com.wix.mediaplatform.v6.service.file.ImportFileSpecification;
+import com.wix.mediaplatform.v6.service.Specification;
+
 
 public class CreateUrlSetComponent extends Component {
 
     @Override
-    public ImportFileSpecification getSpecification() {
+    public Specification getSpecification() {
         return null;
     }
 }
