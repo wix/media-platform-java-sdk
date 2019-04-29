@@ -23,12 +23,15 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class MediaPlatform {
 
     public static int MAX_RETRIES = 5;
     public static int INITIAL_DELAY = 250;
     public static int MAX_DELAY = 3000;
+    public static int CONNECTION_TIMEOUT = 10;
+    public static int TIMEOUT = 0;
     public static Set<Integer> RETRYABLES = new HashSet<>(Arrays.asList(500, 503, 504, 429));
 
     private final FileService fileService;
@@ -112,7 +115,10 @@ public class MediaPlatform {
     }
 
     public static OkHttpClient getHttpClient() {
-        return new OkHttpClient.Builder().addInterceptor(chain -> {
+        return new OkHttpClient.Builder()
+                .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+                .callTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .addInterceptor(chain -> {
 
                     int attempt = 1;
 
@@ -132,6 +138,10 @@ public class MediaPlatform {
                             break;
                         } catch (IOException io) {
 
+                            if (null != response) {
+                                response.close();
+                            }
+
                             if (attempt >= MAX_RETRIES) {
                                 throw io;
                             }
@@ -144,6 +154,10 @@ public class MediaPlatform {
                         } finally {
                             attempt++;
                         }
+                    }
+
+                    if (null == response) {
+                        throw new RuntimeException("no response");
                     }
 
                     return response;
