@@ -24,15 +24,10 @@ public class Authenticator {
         this.key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 
-    /**
-     * @return The authorization header
-     */
-    public String getHeader() {
-        Token token = new Token()
-                .setIssuer(NS.APPLICATION + configuration.getAppId())
-                .setSubject(NS.APPLICATION + configuration.getAppId());
-
-        return getHeader(token);
+    public Token getToken() {
+        return new Token()
+                    .setIssuer(NS.APPLICATION + configuration.getAppId())
+                    .setSubject(NS.APPLICATION + configuration.getAppId());
     }
 
     /**
@@ -54,7 +49,16 @@ public class Authenticator {
     }
 
     /**
-     * @param token an optional Token
+     * @return The authorization header
+     */
+    public String getHeader() {
+        Token token = getToken();
+
+        return getHeader(token);
+    }
+
+    /**
+     * @param token the token to encode and sign
      * @return The authorization header
      */
     public String getHeader(Token token) {

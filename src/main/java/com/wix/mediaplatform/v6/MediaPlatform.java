@@ -3,6 +3,7 @@ package com.wix.mediaplatform.v6;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wix.mediaplatform.v6.auth.Authenticator;
+import com.wix.mediaplatform.v6.auth.Token;
 import com.wix.mediaplatform.v6.configuration.Configuration;
 import com.wix.mediaplatform.v6.exception.MediaPlatformException;
 import com.wix.mediaplatform.v6.http.AuthenticatedHTTPClient;
@@ -34,6 +35,7 @@ public class MediaPlatform {
     public static int TIMEOUT = 0;
     public static Set<Integer> RETRYABLES = new HashSet<>(Arrays.asList(500, 503, 504, 429));
 
+    private final Authenticator authenticator;
     private final FileService fileService;
     private final JobService jobService;
     private final ArchiveService archiveService;
@@ -42,6 +44,7 @@ public class MediaPlatform {
     private final ImageService imageService;
     private final VideoService videoService;
     private final FlowControlService flowControlService;
+
 
     public MediaPlatform(String domain, String appId, String sharedSecret) {
         this(domain, appId, sharedSecret, null);
@@ -54,7 +57,7 @@ public class MediaPlatform {
     public MediaPlatform(Configuration configuration, @Nullable OkHttpClient httpClient) {
 
         ObjectMapper objectMapper = getMapper();
-        Authenticator authenticator = new Authenticator(configuration);
+        this.authenticator = new Authenticator(configuration);
 
         AuthenticatedHTTPClient authenticatedHTTPClient;
         if (null == httpClient) {
@@ -105,6 +108,14 @@ public class MediaPlatform {
         return flowControlService;
     }
 
+    public Token getToken() {
+        return authenticator.getToken();
+    }
+
+    public String getAuthorizationHeader(Token token) {
+        return authenticator.getHeader(token);
+    }
+
     public static ObjectMapper getMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -116,52 +127,53 @@ public class MediaPlatform {
 
     public static OkHttpClient getHttpClient() {
         return new OkHttpClient.Builder()
+
                 .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
                 .callTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
 
-                    int attempt = 1;
+                            int attempt = 1;
 
-                    Request request = chain.request();
+                            Request request = chain.request();
 
-                    // try the request
-                    Response response = null;
-                    while (attempt <= MAX_RETRIES) {
-                        try {
-                            response = chain.proceed(request);
+                            // try the request
+                            Response response = null;
+                            while (attempt <= MAX_RETRIES) {
+                                try {
+                                    response = chain.proceed(request);
 
-                            if (RETRYABLES.contains(response.code())) {
-                                throw new IOException("status: " + response.code() + ", attempt: " + attempt,
-                                        new MediaPlatformException("server error", response.code()));
+                                    if (RETRYABLES.contains(response.code())) {
+                                        throw new IOException("status: " + response.code() + ", attempt: " + attempt,
+                                                new MediaPlatformException("server error", response.code()));
+                                    }
+
+                                    break;
+                                } catch (IOException io) {
+
+                                    if (null != response) {
+                                        response.close();
+                                    }
+
+                                    if (attempt >= MAX_RETRIES) {
+                                        throw io;
+                                    }
+
+                                    try {
+                                        Thread.sleep(Math.min(INITIAL_DELAY * attempt, MAX_DELAY));
+                                    } catch (InterruptedException in) {
+                                        throw new RuntimeException(in);
+                                    }
+                                } finally {
+                                    attempt++;
+                                }
                             }
 
-                            break;
-                        } catch (IOException io) {
-
-                            if (null != response) {
-                                response.close();
+                            if (null == response) {
+                                throw new RuntimeException("no response");
                             }
 
-                            if (attempt >= MAX_RETRIES) {
-                                throw io;
-                            }
-
-                            try {
-                                Thread.sleep(Math.min(INITIAL_DELAY * attempt, MAX_DELAY));
-                            } catch (InterruptedException in) {
-                                throw new RuntimeException(in);
-                            }
-                        } finally {
-                            attempt++;
+                            return response;
                         }
-                    }
-
-                    if (null == response) {
-                        throw new RuntimeException("no response");
-                    }
-
-                    return response;
-                }
-        ).build();
+                ).build();
     }
 }

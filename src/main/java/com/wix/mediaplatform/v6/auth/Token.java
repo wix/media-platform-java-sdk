@@ -19,11 +19,12 @@ public class Token {
 
     private String issuer;
     private String subject;
-    private String object;
     private List<String> verbs = newArrayList();
     private Long issuedAt;
     private Long expiration;
     private String tokenId;
+
+    private Object object;
     private Map<String, Object> additionalClaims;
 
     public Token() {
@@ -40,8 +41,6 @@ public class Token {
                 claims.get(Constants.ISSUER).toString();
         this.subject = (claims.get(Constants.SUBJECT) == null) ? null :
                 claims.get(Constants.SUBJECT).toString();
-        this.object = (claims.get(Constants.OBJECT) == null) ? null :
-                claims.get(Constants.OBJECT).toString();
         this.verbs = (claims.get(Constants.AUDIENCE) == null) ? Lists.newArrayList() :
                 (ArrayList) claims.get(Constants.AUDIENCE);
         this.issuedAt = (claims.get(Constants.ISSUED_AT) == null) ? null :
@@ -50,6 +49,8 @@ public class Token {
                 ((Integer) claims.get(Constants.EXPIRATION)).longValue();
         this.tokenId = (claims.get(Constants.IDENTIFIER) == null) ? null :
                 claims.get(Constants.IDENTIFIER).toString();
+
+        this.object = claims.get(Constants.OBJECT);
     }
 
     public Token setIssuer(String issuer) {
@@ -62,7 +63,7 @@ public class Token {
         return this;
     }
 
-    public Token setObject(String object) {
+    public Token setObject(Object object) {
         this.object = object;
         return this;
     }
@@ -99,7 +100,7 @@ public class Token {
         return subject;
     }
 
-    public String getObject() {
+    public Object getObject() {
         return object;
     }
 
@@ -132,6 +133,7 @@ public class Token {
         claims.put(Constants.ISSUED_AT, issuedAt);
         claims.put(Constants.IDENTIFIER, tokenId);
         claims.put(Constants.AUDIENCE, verbs);
+        claims.put(Constants.OBJECT, object);
         if (additionalClaims != null) {
             claims.putAll(additionalClaims);
         }
