@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 
-public class DeleteFileRequest extends MediaPlatformRequest<Void> {
+public class DeleteFileRequest extends MediaPlatformRequest<Object> {
 
     private String path;
 
