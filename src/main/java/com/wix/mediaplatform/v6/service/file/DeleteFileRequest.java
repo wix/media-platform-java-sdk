@@ -7,11 +7,11 @@ import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 
-public class DeleteFileRequest extends MediaPlatformRequest {
+public class DeleteFileRequest extends MediaPlatformRequest<Void> {
 
     private String path;
 
-    DeleteFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
+    public DeleteFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
         super(authenticatedHTTPClient, "DELETE", baseUrl + "/files", null);
     }
 

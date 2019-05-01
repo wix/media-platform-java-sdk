@@ -12,7 +12,7 @@ public class FileRequest extends MediaPlatformRequest<FileDescriptor> {
 
     private String path;
 
-    FileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
+    public FileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
         super(authenticatedHTTPClient, "GET", baseUrl + "/files", FileDescriptor.class);
     }
 

@@ -30,7 +30,7 @@ public class DownloadUrlRequest extends MediaPlatformRequest<String> {
     @JsonIgnore
     private Authenticator authenticator;
 
-    DownloadUrlRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, Authenticator authenticator,
+    public DownloadUrlRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, Authenticator authenticator,
                        String appId) {
         super(authenticatedHTTPClient, null, baseUrl + "/download/file", String.class);
 
