@@ -44,7 +44,7 @@
     <parent>
         <groupId>com.wix</groupId>
         <artifactId>wix-oss-java-parent</artifactId>
-        <version>0.38.0</version>
+        <version>0.48.0</version>
     </parent>
 
     <properties>
@@ -177,6 +177,19 @@
                         <exclude>usage/**</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.source.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
