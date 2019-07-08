@@ -76,6 +76,7 @@ public class Image {
         return this;
     }
 
+    @Deprecated
     public Image smartCrop(int width, int height) {
         this.frame = new SmartCrop(width, height);
         return this;
@@ -100,18 +101,22 @@ public class Image {
         return addOption(new Blur(percentage));
     }
 
+    @Deprecated
     public Image brightness(int brightness) {
         return addOption(new Brightness(brightness));
     }
 
+    @Deprecated
     public Image contrast(int contrast) {
         return addOption(new Contrast(contrast));
     }
 
+    @Deprecated
     public Image hue(int hue) {
         return addOption(new Hue(hue));
     }
 
+    @Deprecated
     public Image saturation(int saturation) {
         return addOption(new Saturation(saturation));
     }

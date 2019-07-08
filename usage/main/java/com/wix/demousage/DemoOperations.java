@@ -24,7 +24,6 @@ class DemoOperations {
     }
 
     void importFile() throws MediaPlatformException {
-
         ImportFileJob importFileJob = mediaPlatform.fileManager().importFileRequest()
                 .setSourceUrl("https://static.wixstatic.com/media/f31d7d0cfc554aacb1d737757c8d3f1b.jpg")
                 .setDestination(new Destination()
@@ -42,8 +41,8 @@ class DemoOperations {
         System.out.println("SEE IMPORTED IMAGE @ " + url);
     }
 
+    @Deprecated
     void uploadImage() throws MediaPlatformException, IOException {
-
         String id = UUID.randomUUID().toString();
 
         Path localPath = new File(Objects.requireNonNull(
@@ -62,6 +61,25 @@ class DemoOperations {
         System.out.println("SEE UPLOADED IMAGE @ " + image.toUrl());
         image.smartCrop(200, 300);
         System.out.println("SEE SMART CROPPED IMAGE @ " + image.toUrl());
+    }
+
+    void uploadImageV2() throws MediaPlatformException, IOException {
+        String id = UUID.randomUUID().toString();
+
+        Path localPath = new File(Objects.requireNonNull(
+                this.getClass().getClassLoader().getResource("files/golan.jpg")
+        ).getPath()).toPath();
+
+        FileDescriptor file = mediaPlatform.fileManager().uploadFileRequestV2()
+                .setPath("/demousage/upload/" + id + ".golan.jpg")
+                .setMimeType("image/jpeg")
+                .setContent(Files.readAllBytes(localPath))
+                .execute();
+
+        Image image = new Image(file).setHost("https://images-wixmp-410a67650b2f46baa5d003c6.wixmp.com");
+
+        image.crop(200, 300, 0, 0, 2);
+        System.out.println("SEE UPLOADED IMAGE @ " + image.toUrl());
     }
 
     void listJobs() throws MediaPlatformException {

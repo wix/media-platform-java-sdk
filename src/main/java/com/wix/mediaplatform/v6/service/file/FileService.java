@@ -20,12 +20,22 @@ public class FileService extends MediaPlatformService {
         this.authenticator = authenticator;
     }
 
+    @Deprecated
     public UploadUrlRequest uploadUrlRequest() {
         return new UploadUrlRequest(authenticatedHTTPClient, baseUrl);
     }
 
+    @Deprecated
     public UploadFileRequest uploadFileRequest() {
         return new UploadFileRequest(authenticatedHTTPClient, baseUrl, objectMapper);
+    }
+
+    public UploadConfigurationRequest uploadConfigurationRequest() {
+        return new UploadConfigurationRequest(authenticatedHTTPClient, baseUrl);
+    }
+
+    public UploadFileRequestV2 uploadFileRequestV2() {
+        return new UploadFileRequestV2(authenticatedHTTPClient, baseUrl, objectMapper);
     }
 
     public ImportFileRequest importFileRequest() {

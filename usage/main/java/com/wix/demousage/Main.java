@@ -25,7 +25,7 @@ public class Main {
 
         executor.submit(() -> {
             try {
-                demoOperations.uploadImage();
+                demoOperations.uploadImageV2();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -19,8 +19,8 @@ import java.util.Objects;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 public class FileServiceTest extends BaseTest {
 
@@ -181,6 +181,7 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
+    @Deprecated
     public void getUploadUrl() throws Exception {
         stubFor(get(urlEqualTo("/_api/upload/url?acl=public"))
                 .willReturn(aResponse()
@@ -194,6 +195,40 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
+    public void uploadConfigurationRequest() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+
+        UploadUrl response = fileService.uploadConfigurationRequest().execute();
+
+        assertThat(response.getUploadToken(), is("some token"));
+        assertThat(response.getUploadUrl(), is("http://localhost:8443/_api/upload/file"));
+    }
+
+    @Test
+    public void uploadFileV2() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-v2-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequestV2()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getBytes())
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    @Deprecated
     public void uploadFile() throws Exception {
         stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
                 .willReturn(aResponse()
