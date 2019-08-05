@@ -176,13 +176,13 @@ public class AuthenticatedHTTPClient {
             throw new ResourceNotFoundException(response.toString());
         }
 
-        if (statusCode < 200 || statusCode > 299) {
-            throw new MediaPlatformException(response.toString(), statusCode);
+        if (null == response.body()) {
+            throw new MediaPlatformException("empty response", statusCode);
         }
 
-        if (null == response.body()) {
-            throw new MediaPlatformException("empty response");
-        }
+//        if (statusCode < 200 || statusCode > 299) {
+//            throw new MediaPlatformException(response.toString(), statusCode);
+//        }
 
         try {
             if (clazz != null) {
