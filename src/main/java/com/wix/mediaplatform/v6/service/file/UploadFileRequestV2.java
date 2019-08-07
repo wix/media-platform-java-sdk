@@ -9,6 +9,7 @@ import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.FileLifecycle;
 import com.wix.mediaplatform.v6.service.MediaPlatformRequest;
 
+import java.io.File;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -18,6 +19,8 @@ public class UploadFileRequestV2 extends MediaPlatformRequest<FileDescriptor> {
     private String path;
 
     private byte[] content;
+
+    private File file;
 
     private String mimeType = "application/octet-stream";
 
@@ -55,12 +58,21 @@ public class UploadFileRequestV2 extends MediaPlatformRequest<FileDescriptor> {
             }
         }
 
-        return authenticatedHTTPClient.postForm(
-                uploadUrl.getUploadUrl(),
-                mimeType,
-                content,
-                params,
-                FileDescriptor.class);
+        if (content != null) {
+            return authenticatedHTTPClient.postForm(
+                    uploadUrl.getUploadUrl(),
+                    mimeType,
+                    content,
+                    params,
+                    FileDescriptor.class);
+        } else {
+            return authenticatedHTTPClient.postForm(
+                    uploadUrl.getUploadUrl(),
+                    mimeType,
+                    file,
+                    params,
+                    FileDescriptor.class);
+        }
     }
 
     public byte[] getContent() {
@@ -68,7 +80,22 @@ public class UploadFileRequestV2 extends MediaPlatformRequest<FileDescriptor> {
     }
 
     public UploadFileRequestV2 setContent(byte[] content) {
+        this.file = null;
         this.content = content;
+        return this;
+    }
+
+    public UploadFileRequestV2 setContent(File file) {
+        return this.setFile(file);
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public UploadFileRequestV2 setFile(File file) {
+        this.content = null;
+        this.file = file;
         return this;
     }
 

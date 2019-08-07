@@ -12,6 +12,7 @@ import com.wix.mediaplatform.v6.service.RestResponse;
 import okhttp3.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -39,7 +40,6 @@ public class AuthenticatedHTTPClient {
     }
 
     public <P> P get(String url, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
-
         HttpUrl withQuery = appendQuery(params, url);
 
         Request request = defaultBuilder()
@@ -51,7 +51,6 @@ public class AuthenticatedHTTPClient {
     }
 
     public <P> P post(String url, Object payload, Class<P> clazz) throws MediaPlatformException {
-
         Request request;
         try {
             RequestBody body = RequestBody.create(
@@ -70,7 +69,6 @@ public class AuthenticatedHTTPClient {
     }
 
     public <P> P postForm(String url, String mimeType, byte[] content, Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
-
         MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", "file-name",
@@ -87,8 +85,24 @@ public class AuthenticatedHTTPClient {
         return doRequest(request, clazz);
     }
 
-    public <P> P put(String url, Object payload, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
+    public <P> P postForm(String url, String mimeType, File content, Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
+        MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", content.getName(),
+                        RequestBody.create(MediaType.parse(mimeType), content)
+                );
 
+        params.forEach(bodyBuilder::addFormDataPart);
+
+        Request request = defaultBuilder()
+                .post(bodyBuilder.build())
+                .url(url)
+                .build();
+
+        return doRequest(request, clazz);
+    }
+
+    public <P> P put(String url, Object payload, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
         HttpUrl withQuery = appendQuery(params, url);
 
         Request request;
@@ -109,7 +123,6 @@ public class AuthenticatedHTTPClient {
     }
 
     public <P> P delete(String url, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
-
         HttpUrl withQuery = appendQuery(params, url);
 
         Request request = defaultBuilder()
@@ -121,7 +134,6 @@ public class AuthenticatedHTTPClient {
     }
 
     private Request.Builder defaultBuilder() {
-
         String authHeader = authenticator.getHeader();
 
         return new Request.Builder()
@@ -131,7 +143,6 @@ public class AuthenticatedHTTPClient {
     }
 
     private HttpUrl appendQuery(@Nullable Map<String, String> params, String url) throws MediaPlatformException {
-
         HttpUrl httpUrl = HttpUrl.parse(url);
         if (null == httpUrl) {
             throw new MediaPlatformException("bad url");
@@ -161,7 +172,6 @@ public class AuthenticatedHTTPClient {
 
     @Nullable
     private <P> P handleResponse(Response response, @Nullable Class<P> clazz) throws MediaPlatformException {
-
         int statusCode = response.code();
 
         if (statusCode == 401) {

@@ -35,7 +35,7 @@ class DemoOperations {
 
         String url = new Image(imageFile)
                 .setHost("https://images-wixmp-410a67650b2f46baa5d003c6.wixmp.com")
-                .smartCrop(400, 300)
+                .crop(400, 300, 1, 2, 1)
                 .toUrl();
 
         System.out.println("SEE IMPORTED IMAGE @ " + url);
@@ -74,6 +74,25 @@ class DemoOperations {
                 .setPath("/demousage/upload/" + id + ".golan.jpg")
                 .setMimeType("image/jpeg")
                 .setContent(Files.readAllBytes(localPath))
+                .execute();
+
+        Image image = new Image(file).setHost("https://images-wixmp-410a67650b2f46baa5d003c6.wixmp.com");
+
+        image.crop(200, 300, 0, 0, 2);
+        System.out.println("SEE UPLOADED IMAGE @ " + image.toUrl());
+    }
+
+    void uploadImageV2FromFile() throws MediaPlatformException, IOException {
+        String id = UUID.randomUUID().toString();
+
+        File localFile = new File(Objects.requireNonNull(
+                this.getClass().getClassLoader().getResource("files/golan.jpg")
+        ).getPath());
+
+        FileDescriptor file = mediaPlatform.fileManager().uploadFileRequestV2()
+                .setPath("/demousage/upload/" + id + ".golan.jpg")
+                .setMimeType("image/jpeg")
+                .setFile(localFile)
                 .execute();
 
         Image image = new Image(file).setHost("https://images-wixmp-410a67650b2f46baa5d003c6.wixmp.com");

@@ -227,6 +227,27 @@ public class FileServiceTest extends BaseTest {
         assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
     }
 
+
+    @Test
+    public void uploadFileV2FromFile() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-v2-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequestV2()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getLocalFile())
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
     @Test
     @Deprecated
     public void uploadFile() throws Exception {
@@ -477,9 +498,13 @@ public class FileServiceTest extends BaseTest {
     //    todo: test copy
 
     private byte[] getBytes() throws IOException {
-        File file = new File(Objects.requireNonNull(this.getClass().getClassLoader()
+        File file = getLocalFile();
+        return Files.readAllBytes(file.toPath());
+    }
+
+    private File getLocalFile() {
+        return new File(Objects.requireNonNull(this.getClass().getClassLoader()
                 .getResource("source/image.jpg"))
                 .getFile());
-        return Files.readAllBytes(file.toPath());
     }
 }
