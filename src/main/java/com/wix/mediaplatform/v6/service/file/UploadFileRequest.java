@@ -9,47 +9,57 @@ import com.wix.mediaplatform.v6.service.FileDescriptor;
 import com.wix.mediaplatform.v6.service.FileLifecycle;
 import com.wix.mediaplatform.v6.service.MediaPlatformRequest;
 
+import java.io.File;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 
 public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
 
-    private String path;
+    protected final String version;
 
-    private byte[] content;
+    protected String path;
 
-    private String mimeType = "application/octet-stream";
+    protected byte[] content;
 
-    private FileDescriptor.Acl acl = FileDescriptor.Acl.PUBLIC;
+    protected File file;
 
-    private FileLifecycle lifecycle;
+    protected String mimeType = "application/octet-stream";
+
+    protected FileDescriptor.Acl acl = FileDescriptor.Acl.PUBLIC;
+
+    protected FileLifecycle lifecycle;
 
     @JsonIgnore
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
 
     UploadFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, ObjectMapper objectMapper) {
+        this(authenticatedHTTPClient, baseUrl, objectMapper, "v2");
+    }
+
+    UploadFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, ObjectMapper objectMapper, String version) {
         super(authenticatedHTTPClient, "POST", baseUrl, FileDescriptor.class);
 
         this.objectMapper = objectMapper;
+        this.version = version;
     }
+
 
     @Override
     public FileDescriptor execute() throws MediaPlatformException {
-
         validate();
 
-        UploadUrl uploadUrl = new UploadUrlRequest(authenticatedHTTPClient, url)
+        UploadUrl uploadUrl = new UploadConfigurationRequest(authenticatedHTTPClient, url, version)
                 .setPath(path)
                 .setMimeType(mimeType)
                 .setAcl(acl)
                 .execute();
 
         Map<String, String> params = newHashMap();
-        params.put("path", path);
-        params.put("uploadToken", uploadUrl.getUploadToken());
-        params.put("mimeType", mimeType);
-        params.put("acl", acl.getValue());
+        String uploadToken = uploadUrl.getUploadToken();
+        if(uploadToken != null) {
+            params.put("uploadToken", uploadToken);
+        }
 
         if (lifecycle != null) {
             try {
@@ -59,13 +69,21 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
             }
         }
 
-        FileDescriptor[] response = authenticatedHTTPClient.postForm(
-                uploadUrl.getUploadUrl(),
-                mimeType,
-                content,
-                params,
-                FileDescriptor[].class);
-        return response[0];
+        if (content != null) {
+            return authenticatedHTTPClient.postForm(
+                    uploadUrl.getUploadUrl(),
+                    mimeType,
+                    content,
+                    params,
+                    FileDescriptor.class);
+        } else {
+            return authenticatedHTTPClient.postForm(
+                    uploadUrl.getUploadUrl(),
+                    mimeType,
+                    file,
+                    params,
+                    FileDescriptor.class);
+        }
     }
 
     public byte[] getContent() {
@@ -73,7 +91,22 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
     }
 
     public UploadFileRequest setContent(byte[] content) {
+        this.file = null;
         this.content = content;
+        return this;
+    }
+
+    public UploadFileRequest setContent(File file) {
+        return this.setFile(file);
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public UploadFileRequest setFile(File file) {
+        this.content = null;
+        this.file = file;
         return this;
     }
 
