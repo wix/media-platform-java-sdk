@@ -212,13 +212,33 @@ public class FileServiceTest extends BaseTest {
         stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
+                        .withBodyFile("get-upload-configuration-response.json")));
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("file-upload-v2-response.json")));
 
         FileDescriptor fileDescriptor = fileService.uploadFileRequestV2()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getBytes())
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void uploadFileV3() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-configuration-v3-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-v2-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequestV3()
                 .setPath("/a/new.txt")
                 .setMimeType("text/plain")
                 .setContent(getBytes())
@@ -249,16 +269,36 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
-    @Deprecated
-    public void uploadFile() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+    public void uploadFileV3FromFile() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
+                        .withBodyFile("get-upload-configuration-v3-response.json")));
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-response.json")));
+                        .withBodyFile("file-upload-v2-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequestV3()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getLocalFile())
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    @Deprecated
+    public void uploadFile() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-configuration-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-v2-response.json")));
 
         FileDescriptor fileDescriptor = fileService.uploadFileRequest()
                 .setPath("/a/new.txt")
@@ -271,10 +311,10 @@ public class FileServiceTest extends BaseTest {
 
     @Test
     public void uploadFileWithLifecycle() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
+                        .withBodyFile("get-upload-configuration-response.json")));
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -294,10 +334,10 @@ public class FileServiceTest extends BaseTest {
 
     @Test
     public void uploadFileError500OneRetry() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
+                        .withBodyFile("get-upload-configuration-response.json")));
 
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .inScenario("Error500OneRetry")
@@ -310,7 +350,7 @@ public class FileServiceTest extends BaseTest {
                 .whenScenarioStateIs("afterOneError")
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-response.json")));
+                        .withBodyFile("file-upload-v2-response.json")));
 
         FileDescriptor fileDescriptor = fileService.uploadFileRequest()
                 .setPath("/a/new.txt")
@@ -325,10 +365,10 @@ public class FileServiceTest extends BaseTest {
     @Test
     public void uploadFileError500MaxRetries() throws Exception {
         try {
-            stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+            stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                     .willReturn(aResponse()
                             .withHeader("Content-Type", "application/json")
-                            .withBodyFile("get-upload-url-response.json")));
+                            .withBodyFile("get-upload-configuration-response.json")));
 
             stubFor(post(urlEqualTo("/_api/upload/file"))
                     .willReturn(aResponse().withStatus(500)));
@@ -352,10 +392,10 @@ public class FileServiceTest extends BaseTest {
     @Test
     public void uploadFileError401NoRetries() throws Exception {
         try {
-            stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+            stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                     .willReturn(aResponse()
                             .withHeader("Content-Type", "application/json")
-                            .withBodyFile("get-upload-url-response.json")));
+                            .withBodyFile("get-upload-configuration-response.json")));
 
             stubFor(post(urlEqualTo("/_api/upload/file"))
                     .willReturn(aResponse().withStatus(401)));
@@ -376,10 +416,10 @@ public class FileServiceTest extends BaseTest {
 
     @Test(expected = MediaPlatformException.class)
     public void uploadFileAlreadyExists() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
+                        .withBodyFile("get-upload-configuration-response.json")));
 
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()
@@ -399,10 +439,10 @@ public class FileServiceTest extends BaseTest {
 
     @Test(expected = MediaPlatformException.class)
     public void uploadFileUnrecognizedError() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?acl=public&mimeType=text%2Fplain&path=%2Fa%2Fnew.txt"))
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
+                        .withBodyFile("get-upload-configuration-response.json")));
 
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()

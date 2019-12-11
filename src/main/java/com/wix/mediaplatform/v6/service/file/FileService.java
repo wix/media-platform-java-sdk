@@ -25,15 +25,23 @@ public class FileService extends MediaPlatformService {
         return new UploadUrlRequest(authenticatedHTTPClient, baseUrl);
     }
 
-    @Deprecated
     public UploadFileRequest uploadFileRequest() {
         return new UploadFileRequest(authenticatedHTTPClient, baseUrl, objectMapper);
+    }
+
+    public UploadFileRequest uploadFileRequestV3() {
+        return new UploadFileRequest(authenticatedHTTPClient, baseUrl, objectMapper, "v3");
     }
 
     public UploadConfigurationRequest uploadConfigurationRequest() {
         return new UploadConfigurationRequest(authenticatedHTTPClient, baseUrl);
     }
 
+    /**
+     * @deprecated Use UploadFileRequest with version parameter
+     * @return
+     */
+    @Deprecated
     public UploadFileRequestV2 uploadFileRequestV2() {
         return new UploadFileRequestV2(authenticatedHTTPClient, baseUrl, objectMapper);
     }

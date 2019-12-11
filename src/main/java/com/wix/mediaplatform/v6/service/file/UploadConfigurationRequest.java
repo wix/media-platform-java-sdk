@@ -13,7 +13,11 @@ public class UploadConfigurationRequest extends MediaPlatformRequest<UploadUrl> 
     private FileDescriptor.Acl acl = FileDescriptor.Acl.PUBLIC;
 
     UploadConfigurationRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
-        super(authenticatedHTTPClient, "POST", baseUrl + "/v2/upload/configuration", UploadUrl.class);
+        this(authenticatedHTTPClient, baseUrl, "v2");
+    }
+
+    UploadConfigurationRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, String version) {
+        super(authenticatedHTTPClient, "POST", baseUrl + "/" + version + "/upload/configuration", UploadUrl.class);
     }
 
     public UploadConfigurationRequest setMimeType(String mimeType) {
