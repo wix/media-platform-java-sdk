@@ -127,53 +127,51 @@ public class MediaPlatform {
 
     public static OkHttpClient getHttpClient() {
         return new OkHttpClient.Builder()
-
                 .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
                 .callTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
+                    int attempt = 1;
 
-                            int attempt = 1;
+                    Request request = chain.request();
 
-                            Request request = chain.request();
+                    // try the request
+                    Response response = null;
+                    while (attempt <= MAX_RETRIES) {
+                        try {
+                            response = chain.proceed(request);
 
-                            // try the request
-                            Response response = null;
-                            while (attempt <= MAX_RETRIES) {
-                                try {
-                                    response = chain.proceed(request);
-
-                                    if (RETRYABLES.contains(response.code())) {
-                                        throw new IOException("status: " + response.code() + ", attempt: " + attempt,
-                                                new MediaPlatformException("server error", response.code()));
-                                    }
-
-                                    break;
-                                } catch (IOException io) {
-
-                                    if (null != response) {
-                                        response.close();
-                                    }
-
-                                    if (attempt >= MAX_RETRIES) {
-                                        throw io;
-                                    }
-
-                                    try {
-                                        Thread.sleep(Math.min(INITIAL_DELAY * attempt, MAX_DELAY));
-                                    } catch (InterruptedException in) {
-                                        throw new RuntimeException(in);
-                                    }
-                                } finally {
-                                    attempt++;
-                                }
+                            if (RETRYABLES.contains(response.code())) {
+                                throw new IOException("status: " + response.code() + ", attempt: " + attempt,
+                                        new MediaPlatformException("server error", response.code()));
                             }
 
-                            if (null == response) {
-                                throw new RuntimeException("no response");
+                            break;
+                        } catch (IOException io) {
+
+                            if (null != response) {
+                                response.close();
                             }
 
-                            return response;
+                            if (attempt >= MAX_RETRIES) {
+                                throw io;
+                            }
+
+                            try {
+                                Thread.sleep(Math.min(INITIAL_DELAY * attempt, MAX_DELAY));
+                            } catch (InterruptedException in) {
+                                throw new RuntimeException(in);
+                            }
+                        } finally {
+                            attempt++;
                         }
-                ).build();
+                    }
+
+                    if (null == response) {
+                        throw new RuntimeException("no response");
+                    }
+
+                    return response;
+                })
+                .build();
     }
 }
