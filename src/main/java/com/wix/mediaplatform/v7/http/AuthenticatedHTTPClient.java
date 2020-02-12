@@ -54,8 +54,8 @@ public class AuthenticatedHTTPClient {
         Request request;
         try {
             RequestBody body = RequestBody.create(
-                    MEDIA_TYPE,
-                    objectMapper.writeValueAsBytes(payload)
+                    objectMapper.writeValueAsBytes(payload),
+                    MEDIA_TYPE
             );
             request = defaultBuilder()
                     .post(body)
@@ -72,7 +72,7 @@ public class AuthenticatedHTTPClient {
         MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", "file-name",
-                        RequestBody.create(MediaType.parse(mimeType), content)
+                        RequestBody.create(content, MediaType.parse(mimeType))
                 );
 
         params.forEach(bodyBuilder::addFormDataPart);
@@ -89,7 +89,7 @@ public class AuthenticatedHTTPClient {
         MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", content.getName(),
-                        RequestBody.create(MediaType.parse(mimeType), content)
+                        RequestBody.create(content, MediaType.parse(mimeType))
                 );
 
         params.forEach(bodyBuilder::addFormDataPart);
@@ -108,8 +108,8 @@ public class AuthenticatedHTTPClient {
         Request request;
         try {
             RequestBody body = RequestBody.create(
-                    MEDIA_TYPE,
-                    objectMapper.writeValueAsBytes(payload)
+                    objectMapper.writeValueAsBytes(payload),
+                    MEDIA_TYPE
             );
             request = defaultBuilder()
                     .put(body)
@@ -190,18 +190,19 @@ public class AuthenticatedHTTPClient {
             throw new MediaPlatformException("empty response", statusCode);
         }
 
-//        if (statusCode < 200 || statusCode > 299) {
-//            throw new MediaPlatformException(response.toString(), statusCode);
-//        }
-
         try {
+            ResponseBody body = response.body();
+            if (null == body) {
+                return null;
+            }
+
             if (clazz != null) {
                 JavaType javaType = objectMapper.getTypeFactory().constructParametricType(RestResponse.class, clazz);
-                RestResponse<P> restResponse = objectMapper.readValue(response.body().byteStream(), javaType);
+                RestResponse<P> restResponse = objectMapper.readValue(body.byteStream(), javaType);
                 restResponse.throwOrReturn();
                 return restResponse.getPayload();
             } else {
-                RestResponse restResponse = objectMapper.readValue(response.body().byteStream(), RestResponse.class);
+                RestResponse<?> restResponse = objectMapper.readValue(body.byteStream(), RestResponse.class);
                 restResponse.throwOrReturn();
                 return null;
             }

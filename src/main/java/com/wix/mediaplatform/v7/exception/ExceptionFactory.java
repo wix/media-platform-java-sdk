@@ -9,7 +9,7 @@ public final class ExceptionFactory {
     private ExceptionFactory() {}
 
     @Nullable
-    public static MediaPlatformException createException(RestResponse restResponse) {
+    public static MediaPlatformException createException(RestResponse<?> restResponse) {
 
         int code = restResponse.getCode();
 

@@ -26,8 +26,8 @@ public class Authenticator {
 
     public Token getToken() {
         return new Token()
-                    .setIssuer(NS.APPLICATION + configuration.getAppId())
-                    .setSubject(NS.APPLICATION + configuration.getAppId());
+                .setIssuer(NS.APPLICATION + configuration.getAppId())
+                .setSubject(NS.APPLICATION + configuration.getAppId());
     }
 
     /**
@@ -73,12 +73,11 @@ public class Authenticator {
 
     public Token decode(String token) {
         try {
-            Jws<Claims> jws = Jwts.parser()
+            Claims claims = Jwts.parserBuilder()
                     .requireSubject(NS.APPLICATION + configuration.getAppId())
-                    .setSigningKey(key)
-                    .parseClaimsJws(token);
+                    .setSigningKey(key).build().parseClaimsJws(token).getBody();
 
-            return new Token(jws.getBody());
+            return new Token(claims);
         } catch (UnsupportedJwtException | MalformedJwtException | SignatureException |
                 ExpiredJwtException | IllegalArgumentException e) {
             throw new RuntimeException("invalid token", e);

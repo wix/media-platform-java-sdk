@@ -22,7 +22,7 @@ public class VideoStream {
 
     private String avgFrameRate;
 
-    private String smapleAspectRatio;
+    private String sampleAspectRatio;
 
     private String displayAspectRatio;
 
@@ -69,8 +69,8 @@ public class VideoStream {
         return avgFrameRate;
     }
 
-    public String getSmapleAspectRatio() {
-        return smapleAspectRatio;
+    public String getSampleAspectRatio() {
+        return sampleAspectRatio;
     }
 
     public String getDisplayAspectRatio() {
@@ -90,7 +90,7 @@ public class VideoStream {
                 ", index=" + index +
                 ", rFrameRate='" + rFrameRate + '\'' +
                 ", avgFrameRate='" + avgFrameRate + '\'' +
-                ", smapleAspectRatio='" + smapleAspectRatio + '\'' +
+                ", sampleAspectRatio='" + sampleAspectRatio + '\'' +
                 ", displayAspectRatio='" + displayAspectRatio + '\'' +
                 '}';
     }
