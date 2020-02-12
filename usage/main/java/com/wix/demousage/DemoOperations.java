@@ -1,12 +1,12 @@
 package com.wix.demousage;
 
-import com.wix.mediaplatform.v6.MediaPlatform;
-import com.wix.mediaplatform.v6.exception.MediaPlatformException;
-import com.wix.mediaplatform.v6.image.Image;
-import com.wix.mediaplatform.v6.service.Destination;
-import com.wix.mediaplatform.v6.service.FileDescriptor;
-import com.wix.mediaplatform.v6.service.file.ImportFileJob;
-import com.wix.mediaplatform.v6.service.job.JobList;
+import com.wix.mediaplatform.v7.MediaPlatform;
+import com.wix.mediaplatform.v7.exception.MediaPlatformException;
+import com.wix.mediaplatform.v7.image.Image;
+import com.wix.mediaplatform.v7.service.Destination;
+import com.wix.mediaplatform.v7.service.FileDescriptor;
+import com.wix.mediaplatform.v7.service.file.ImportFileJob;
+import com.wix.mediaplatform.v7.service.job.JobList;
 
 import java.io.File;
 import java.io.IOException;
