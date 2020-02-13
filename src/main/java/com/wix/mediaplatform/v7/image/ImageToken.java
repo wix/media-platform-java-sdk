@@ -5,13 +5,40 @@ import com.wix.mediaplatform.v7.auth.Token;
 import java.util.Map;
 
 public class ImageToken extends Token {
+
+    private static final String VERB = "urn:service:image.operations";
+
     private Policy policy;
     private Watermark watermark;
 
+    public ImageToken() {
+        super();
+        this.addVerb(VERB);
+    }
+
     public ImageToken(Policy policy, Watermark watermark) {
         super();
+        this.addVerb(VERB);
         this.policy = policy;
         this.watermark = watermark;
+    }
+
+    public Policy getPolicy() {
+        return policy;
+    }
+
+    public ImageToken setPolicy(Policy policy) {
+        this.policy = policy;
+        return this;
+    }
+
+    public Watermark getWatermark() {
+        return watermark;
+    }
+
+    public ImageToken setWatermark(Watermark watermark) {
+        this.watermark = watermark;
+        return this;
     }
 
     @Override

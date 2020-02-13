@@ -1,6 +1,9 @@
 package com.wix.mediaplatform.v7.service.image;
 
 import com.wix.mediaplatform.v7.BaseTest;
+import com.wix.mediaplatform.v7.image.ImageToken;
+import com.wix.mediaplatform.v7.image.Policy;
+import com.wix.mediaplatform.v7.image.Watermark;
 import com.wix.mediaplatform.v7.metadata.features.ImageFeatures;
 import com.wix.mediaplatform.v7.service.Destination;
 import com.wix.mediaplatform.v7.service.FileDescriptor;
@@ -10,10 +13,11 @@ import org.junit.jupiter.api.Test;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class ImageServiceTest extends BaseTest {
 
-    private ImageService imageService = new ImageService(configuration, authenticatedHttpClient);
+    private ImageService imageService = new ImageService(configuration, authenticatedHttpClient, authenticator);
 
     @Test
     public void extractFeatures() throws Exception {
@@ -45,5 +49,16 @@ public class ImageServiceTest extends BaseTest {
                 .execute();
 
         assertThat(fileDescriptor.getPath(), is("/small-cat.jpg"));
+    }
+
+    @Test
+    void signToken() {
+        Policy policy = new Policy().setMaxHeight(1000).setMaxWidth(1500).setPath("/path/to/image.jpg");
+        Watermark watermark = new Watermark().setPath("/path/to/mark.png");
+        ImageToken token = new ImageToken().setPolicy(policy).setWatermark(watermark);
+
+        String signed = imageService.signToken(token);
+
+        assertThat(signed, notNullValue());
     }
 }

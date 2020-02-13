@@ -54,7 +54,7 @@ public class Policy {
         }
 
         List<Map<String, Object>> inner = newArrayList(policy);
-        List< List<Map<String, Object>>> outer = newArrayList();
+        List<List<Map<String, Object>>> outer = newArrayList();
         outer.add(inner);
 
         HashMap<String, Object> claim = new HashMap<>();

@@ -54,7 +54,7 @@ public class Watermark {
         watermark.put("path", path);
         watermark.put("opacity", opacity);
         watermark.put("proportions", proportions);
-        watermark.put("gravity", gravity);
+        watermark.put("gravity", gravity.getGravity());
 
         Map<String, Object> claim = new HashMap<>();
         claim.put("wmk", watermark);

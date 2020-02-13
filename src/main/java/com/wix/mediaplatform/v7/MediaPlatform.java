@@ -71,7 +71,7 @@ public class MediaPlatform {
         this.jobService = new JobService(configuration, authenticatedHTTPClient);
         this.transcodeService = new TranscodeService(configuration, authenticatedHTTPClient);
         this.liveService = new LiveService(configuration, authenticatedHTTPClient);
-        this.imageService = new ImageService(configuration, authenticatedHTTPClient);
+        this.imageService = new ImageService(configuration, authenticatedHTTPClient, authenticator);
         this.videoService = new VideoService(configuration, authenticatedHTTPClient);
         this.flowControlService = new FlowControlService(configuration, authenticatedHTTPClient);
     }
