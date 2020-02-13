@@ -13,7 +13,7 @@ public class Main {
             "fad475d88786ab720b04f059ac674b0e"
     );
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         for (String arg : args) {
             System.out.println(arg);
@@ -25,7 +25,15 @@ public class Main {
 
         executor.submit(() -> {
             try {
-                demoOperations.uploadImageV2FromFile();
+                demoOperations.uploadImageFromFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        executor.submit(() -> {
+            try {
+                demoOperations.imageWithWatermark();
             } catch (Exception e) {
                 e.printStackTrace();
             }

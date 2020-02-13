@@ -37,15 +37,6 @@ public class FileService extends MediaPlatformService {
         return new UploadConfigurationRequest(authenticatedHTTPClient, baseUrl);
     }
 
-    /**
-     * @deprecated Use UploadFileRequest with version parameter
-     * @return
-     */
-    @Deprecated
-    public UploadFileRequestV2 uploadFileRequestV2() {
-        return new UploadFileRequestV2(authenticatedHTTPClient, baseUrl, objectMapper);
-    }
-
     public ImportFileRequest importFileRequest() {
         return new ImportFileRequest(authenticatedHTTPClient, baseUrl);
     }

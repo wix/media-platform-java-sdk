@@ -74,7 +74,7 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
-    public void getFileNotFound() throws Exception {
+    public void getFileNotFound() {
         stubFor(get(urlEqualTo("/_api/files?path=%2Ffile.txt"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -214,7 +214,7 @@ public class FileServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("file-upload-v2-response.json")));
 
-        FileDescriptor fileDescriptor = fileService.uploadFileRequestV2()
+        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
                 .setPath("/a/new.txt")
                 .setMimeType("text/plain")
                 .setContent(getBytes())
@@ -255,7 +255,7 @@ public class FileServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("file-upload-v2-response.json")));
 
-        FileDescriptor fileDescriptor = fileService.uploadFileRequestV2()
+        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
                 .setPath("/a/new.txt")
                 .setMimeType("text/plain")
                 .setContent(getLocalFile())
@@ -359,7 +359,7 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
-    public void uploadFileError500MaxRetries() throws Exception {
+    public void uploadFileError500MaxRetries() {
         try {
             stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                     .willReturn(aResponse()
@@ -382,7 +382,7 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
-    public void uploadFileError401NoRetries() throws Exception {
+    public void uploadFileError401NoRetries() {
         try {
             stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                     .willReturn(aResponse()
@@ -403,7 +403,7 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
-    public void uploadFileAlreadyExists() throws Exception {
+    public void uploadFileAlreadyExists() {
         stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -427,7 +427,7 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
-    public void uploadFileUnrecognizedError() throws Exception {
+    public void uploadFileUnrecognizedError() {
         stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")

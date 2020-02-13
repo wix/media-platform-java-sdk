@@ -1,6 +1,7 @@
 package com.wix.mediaplatform.v7.service.image;
 
 import com.wix.mediaplatform.v7.auth.Authenticator;
+import com.wix.mediaplatform.v7.auth.NS;
 import com.wix.mediaplatform.v7.configuration.Configuration;
 import com.wix.mediaplatform.v7.http.AuthenticatedHTTPClient;
 import com.wix.mediaplatform.v7.image.ImageToken;
@@ -22,6 +23,12 @@ public class ImageService extends MediaPlatformService {
 
     public ImageOperationRequest imageOperationRequest() {
         return new ImageOperationRequest(authenticatedHTTPClient, baseUrl);
+    }
+
+    public ImageToken newImageToken() {
+        return (ImageToken) new ImageToken()
+                .setIssuer(NS.APPLICATION + configuration.getAppId())
+                .setSubject(NS.APPLICATION + configuration.getAppId());
     }
 
     public String signToken(ImageToken token) {
