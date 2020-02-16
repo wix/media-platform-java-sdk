@@ -44,7 +44,6 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
         this.version = version;
     }
 
-
     @Override
     public FileDescriptor execute() throws MediaPlatformException {
         validate();

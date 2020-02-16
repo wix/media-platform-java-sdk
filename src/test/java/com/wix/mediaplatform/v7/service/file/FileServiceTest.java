@@ -177,20 +177,6 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
-    @Deprecated
-    public void getUploadUrl() throws Exception {
-        stubFor(get(urlEqualTo("/_api/upload/url?acl=public"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
-
-        UploadUrl response = fileService.uploadUrlRequest().execute();
-
-        assertThat(response.getUploadToken(), is("some token"));
-        assertThat(response.getUploadUrl(), is("http://localhost:8443/_api/upload/file"));
-    }
-
-    @Test
     public void uploadConfigurationRequest() throws Exception {
         stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
@@ -204,88 +190,6 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
-    public void uploadFileV2() throws Exception {
-        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-configuration-response.json")));
-        stubFor(post(urlEqualTo("/_api/upload/file"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-v2-response.json")));
-
-        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
-                .setPath("/a/new.txt")
-                .setMimeType("text/plain")
-                .setContent(getBytes())
-                .execute();
-
-        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
-    }
-
-    @Test
-    public void uploadFileV3() throws Exception {
-        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-configuration-v3-response.json")));
-        stubFor(post(urlEqualTo("/_api/upload/file"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-v2-response.json")));
-
-        FileDescriptor fileDescriptor = fileService.uploadFileRequestV3()
-                .setPath("/a/new.txt")
-                .setMimeType("text/plain")
-                .setContent(getBytes())
-                .execute();
-
-        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
-    }
-
-
-    @Test
-    public void uploadFileV2FromFile() throws Exception {
-        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-url-response.json")));
-        stubFor(post(urlEqualTo("/_api/upload/file"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-v2-response.json")));
-
-        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
-                .setPath("/a/new.txt")
-                .setMimeType("text/plain")
-                .setContent(getLocalFile())
-                .execute();
-
-        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
-    }
-
-    @Test
-    public void uploadFileV3FromFile() throws Exception {
-        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("get-upload-configuration-v3-response.json")));
-        stubFor(post(urlEqualTo("/_api/upload/file"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-v2-response.json")));
-
-        FileDescriptor fileDescriptor = fileService.uploadFileRequestV3()
-                .setPath("/a/new.txt")
-                .setMimeType("text/plain")
-                .setContent(getLocalFile())
-                .execute();
-
-        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
-    }
-
-    @Test
-    @Deprecated
     public void uploadFile() throws Exception {
         stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
                 .willReturn(aResponse()
@@ -300,6 +204,26 @@ public class FileServiceTest extends BaseTest {
                 .setPath("/a/new.txt")
                 .setMimeType("text/plain")
                 .setContent(getBytes())
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void uploadFileFromFile() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v2/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-url-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-v2-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getLocalFile())
                 .execute();
 
         assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
@@ -450,6 +374,46 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
+    public void uploadFileV3() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-configuration-v3-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-v2-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequestV3()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getBytes())
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void uploadFileV3FromFile() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-configuration-v3-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-v2-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequestV3()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getLocalFile())
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
     public void importFilePending() throws Exception {
         stubFor(post(urlEqualTo("/_api/import/file"))
                 .willReturn(aResponse()
@@ -497,6 +461,7 @@ public class FileServiceTest extends BaseTest {
         assertThat(specification.getDestination().getDirectory(), is("/fish"));
 
         assertThat(result.getCode(), is(0));
+        //noinspection ConstantConditions
         assertThat(result.getPayload().getId(), is("123"));
         assertThat(result.getPayload().getHash(), is("456"));
         assertThat(result.getPayload().getPath(), is("/fish/filename.txt"));
