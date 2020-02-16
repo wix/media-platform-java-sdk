@@ -118,7 +118,7 @@ class DemoOperations {
                 );
         String signedToken = mediaPlatform.imageService().signToken(token);
 
-        System.out.println("SEE UPLOADED IMAGE WITH WATERMARK @ " + image.toUrl() + "&token=" + signedToken);
+        System.out.println("SEE UPLOADED IMAGE WITH WATERMARK @ " + image.toUrl() + "?token=" + signedToken);
     }
 
     void listJobs() throws MediaPlatformException {
