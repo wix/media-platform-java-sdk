@@ -4,7 +4,7 @@ import com.wix.mediaplatform.v7.geometry.Rectangle;
 
 public class ImageFeatures extends Features {
 
-    private Label[] label;
+    private Label[] labels;
 
     private Rectangle[] faces;
 
@@ -15,12 +15,12 @@ public class ImageFeatures extends Features {
     public ImageFeatures() {
     }
 
-    public Label[] getLabel() {
-        return label;
+    public Label[] getLabels() {
+        return labels;
     }
 
-    public ImageFeatures setLabel(Label[] label) {
-        this.label = label;
+    public ImageFeatures setLabels(Label[] labels) {
+        this.labels = labels;
         return this;
     }
 
