@@ -28,6 +28,7 @@ public class ImageServiceTest extends BaseTest {
                 .execute();
 
         assertThat(imageFeatures.getFaces()[0].getX(), is(383));
+        assertThat(imageFeatures.getLabels()[0].getName(), is("cat"));
     }
 
     @Test
