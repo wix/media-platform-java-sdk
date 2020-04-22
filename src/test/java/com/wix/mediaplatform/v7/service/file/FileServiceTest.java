@@ -17,8 +17,7 @@ import java.util.Objects;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FileServiceTest extends BaseTest {
@@ -488,6 +487,26 @@ public class FileServiceTest extends BaseTest {
                 .execute();
 
         assertThat(url, startsWith("http://localhost:8443/_api/download/file?downloadToken="));
+    }
+
+    @Test
+    public void getSignedUrl() throws Exception {
+        String url = fileService.signedUrlRequest().setPath("/file.txt").execute();
+
+        assertThat(url, startsWith("http://localhost:8443/file.txt?token="));
+    }
+
+    @Test
+    public void getSignedUrlWithOptions() throws Exception {
+        String url = fileService.signedUrlRequest()
+                .setPath("/file.txt")
+                .setOnExpireRedirectTo("url")
+                .setAttachment(new Attachment()
+                        .setFilename("fish"))
+                .execute();
+
+        assertThat(url, startsWith("http://localhost:8443/file.txt?token="));
+        assertThat(url, containsString("&filename=fish"));
     }
 
     //    todo: test copy

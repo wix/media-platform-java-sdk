@@ -8,9 +8,9 @@ import com.wix.mediaplatform.v7.service.MediaPlatformService;
 
 public class FileService extends MediaPlatformService {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    private Authenticator authenticator;
+    private final Authenticator authenticator;
 
     public FileService(Configuration configuration, AuthenticatedHTTPClient authenticatedHTTPClient,
                        ObjectMapper objectMapper, Authenticator authenticator) {
@@ -44,8 +44,13 @@ public class FileService extends MediaPlatformService {
         return new CreateFileRequest(authenticatedHTTPClient, baseUrl);
     }
 
+    @Deprecated
     public DownloadUrlRequest downloadUrlRequest() {
         return new DownloadUrlRequest(authenticatedHTTPClient, baseUrl, authenticator, configuration.getAppId());
+    }
+
+    public SignedDownloadUrlRequest signedUrlRequest() {
+        return new SignedDownloadUrlRequest(authenticatedHTTPClient, baseUrl, authenticator, configuration.getAppId());
     }
 
     public FileRequest fileRequest() {
