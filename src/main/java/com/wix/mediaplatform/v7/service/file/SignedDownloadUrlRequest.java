@@ -66,7 +66,7 @@ public class SignedDownloadUrlRequest extends MediaPlatformRequest<String> {
 
         if (onExpireRedirectTo != null) {
             Map<String, Object> additionalClaims = newHashMap();
-            additionalClaims.put("onExpireRedirectTo", onExpireRedirectTo);
+            additionalClaims.put("red", onExpireRedirectTo);
             token.setAdditionalClaims(additionalClaims);
         }
 
