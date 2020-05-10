@@ -15,9 +15,9 @@ public abstract class MediaPlatformRequest<R> {
     protected String url;
 
     @JsonIgnore
-    private String method;
+    private final String method;
 
-    private Class<R> clazz;
+    private final Class<R> clazz;
 
     protected MediaPlatformRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String method, String url, Class<R> clazz) {
         this.authenticatedHTTPClient = authenticatedHTTPClient;
@@ -43,6 +43,7 @@ public abstract class MediaPlatformRequest<R> {
     }
 
     // override this if you want to validate request prior to executing it
+    @SuppressWarnings("RedundantThrows")
     protected void validate() throws MediaPlatformException {}
 
     // override this if you want to pass query params

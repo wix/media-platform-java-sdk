@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 
+@Deprecated
 public class DownloadUrlRequest extends MediaPlatformRequest<String> {
 
     private String path;
