@@ -42,6 +42,8 @@ public abstract class Job<R> {
 
     private String dateUpdated;
 
+    private Callback callback;
+
     public Job() {
     }
 
@@ -117,11 +119,13 @@ public abstract class Job<R> {
         return this;
     }
 
+    public Callback getCallback() {
+        return callback;
+    }
+
     public boolean done() {
         return status == Status.success || status == Status.error;
     }
-
-    //    todo: support job callback
 
     public abstract Specification getSpecification();
 

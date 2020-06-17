@@ -24,6 +24,12 @@
         "format": "json"
       }
     },
+    "callback": {
+      "url": "http://callback.url",
+      "headers": {"headerKey": "headerValue"},
+      "attachment": {"attachmentKey": "attachmentValue"},
+      "passthrough": false
+    },
     "groupId": "6b4da966844d4ae09417300f3811849b",
     "sources": [{
       "fileId": "280bafbe74a54c35b8ce56c2714c297a",
