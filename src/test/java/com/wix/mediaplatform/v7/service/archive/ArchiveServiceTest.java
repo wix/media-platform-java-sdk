@@ -101,16 +101,8 @@ public class ArchiveServiceTest extends BaseTest {
                         .setFormat(ExtractedFilesReport.Format.json))
                 .setJobCallback(new Callback()
                         .setUrl("http://callback.url")
-                        .setAttachment(new HashMap<String, Object>() {
-                            {
-                                put("attachmentKey", "attachmentValue");
-                            }
-                        })
-                        .setHeaders(new HashMap<String, String>() {
-                            {
-                                put("headerKey", "headerValue");
-                            }
-                        }))
+                        .addAttachment("attachmentKey", "attachmentValue")
+                        .addHeader("headerKey", "headerValue"))
                 .execute();
 
         assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
@@ -146,7 +138,7 @@ public class ArchiveServiceTest extends BaseTest {
         ExtractArchiveJob job = archiveService.extractArchiveRequest()
                 .setSource(new Source().setFileId("file id").setPath("/zips/zip1.zip"))
                 .setDestination(new Destination().setDirectory("/fish"))
-                .setExtractedFilesReport( new ExtractedFilesReport()
+                .setExtractedFilesReport(new ExtractedFilesReport()
                         .setDestination(new Destination()
                                 .setPath("/report_dir/report.json")
                                 .setAcl(FileDescriptor.Acl.PUBLIC))
