@@ -5,6 +5,8 @@ import com.wix.mediaplatform.v7.service.*;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -83,12 +85,11 @@ public class ArchiveServiceTest extends BaseTest {
     }
 
     @Test
-    public void extractArchiveWithReportPending() throws Exception {
+    public void extractArchiveWithCallbackAndReportPending() throws Exception {
         stubFor(post(urlEqualTo("/_api/archive/extract"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("extract-archive-with-report-pending-response.json")));
-
 
         ExtractArchiveJob job = archiveService.extractArchiveRequest()
                 .setSource(new Source().setFileId("file id"))
@@ -98,17 +99,41 @@ public class ArchiveServiceTest extends BaseTest {
                                 .setPath("/report_dir/report.txt")
                                 .setAcl(FileDescriptor.Acl.PUBLIC))
                         .setFormat(ExtractedFilesReport.Format.json))
+                .setJobCallback(new Callback()
+                        .setUrl("http://callback.url")
+                        .setAttachment(new HashMap<String, Object>() {
+                            {
+                                put("attachmentKey", "attachmentValue");
+                            }
+                        })
+                        .setHeaders(new HashMap<String, String>() {
+                            {
+                                put("headerKey", "headerValue");
+                            }
+                        }))
                 .execute();
 
         assertThat(job.getId(), is("6b4da966844d4ae09417300f3811849b_dd0ecc5cbaba4f1b9aba08cc6fa7348b"));
         assertThat(job.getType(), is("urn:job:archive.extract"));
         assertThat(job.getStatus(), Matchers.is(Job.Status.pending));
         ExtractArchiveSpecification extractArchiveSpecification = job.getSpecification();
+        Callback callback = job.getCallback();
         ExtractedFilesReport responseExtractedFilesReport = extractArchiveSpecification.getExtractedFilesReport();
 
         assertThat(responseExtractedFilesReport.getDestination().getDirectory(), is("/report_dir"));
         assertThat(responseExtractedFilesReport.getDestination().getAcl(), is(FileDescriptor.Acl.PUBLIC));
         assertThat(responseExtractedFilesReport.getFormat(), is(ExtractedFilesReport.Format.json));
+        assertThat(callback.getUrl(), is("http://callback.url"));
+        assertThat(callback.getAttachment(), is(new HashMap<String, Object>() {
+            {
+                put("attachmentKey", "attachmentValue");
+            }
+        }));
+        assertThat(callback.getHeaders(), is(new HashMap<String, String>() {
+            {
+                put("headerKey", "headerValue");
+            }
+        }));
     }
 
     @Test

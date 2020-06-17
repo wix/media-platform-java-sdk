@@ -1,6 +1,7 @@
 package com.wix.mediaplatform.v7.service.archive;
 
 import com.wix.mediaplatform.v7.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.v7.service.Callback;
 import com.wix.mediaplatform.v7.service.Destination;
 import com.wix.mediaplatform.v7.service.MediaPlatformRequest;
 import com.wix.mediaplatform.v7.service.Source;
@@ -12,6 +13,8 @@ public class ExtractArchiveRequest extends MediaPlatformRequest<ExtractArchiveJo
     private Destination destination;
 
     private ExtractedFilesReport extractedFilesReport;
+
+    private Callback jobCallback;
 
     ExtractArchiveRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
         super(authenticatedHTTPClient, "POST", baseUrl + "/archive/extract", ExtractArchiveJob.class);
@@ -32,6 +35,11 @@ public class ExtractArchiveRequest extends MediaPlatformRequest<ExtractArchiveJo
         return this;
     }
 
+    public ExtractArchiveRequest setJobCallback(Callback jobCallback) {
+        this.jobCallback = jobCallback;
+        return this;
+    }
+
     public Source getSource() {
         return source;
     }
@@ -42,5 +50,9 @@ public class ExtractArchiveRequest extends MediaPlatformRequest<ExtractArchiveJo
 
     public ExtractedFilesReport getExtractedFilesReport() {
         return extractedFilesReport;
+    }
+
+    public Callback getJobCallback() {
+        return jobCallback;
     }
 }
