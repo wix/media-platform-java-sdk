@@ -137,6 +137,7 @@ public class AuthenticatedHTTPClient {
         String authHeader = authenticator.getHeader();
 
         return new Request.Builder()
+                .cacheControl(CacheControl.FORCE_NETWORK)
                 .header("User-Agent", USER_AGENT)
                 .addHeader("Accept", APPLICATION_JSON)
                 .addHeader("Authorization", authHeader);
