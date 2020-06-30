@@ -55,7 +55,7 @@
         <java.source.version>${maven.compiler.source}</java.source.version>
         <java.target.version>${maven.compiler.source}</java.target.version>
 
-        <io.jsonwebtoken.version>0.11.1</io.jsonwebtoken.version>
+        <io.jsonwebtoken.version>0.11.2</io.jsonwebtoken.version>
 
         <junit.jupiter.version>5.6.1</junit.jupiter.version>
         <org.mockito.version>3.3.3</org.mockito.version>
@@ -67,12 +67,12 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>28.2-jre</version>
+            <version>29.0-jre</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.4.1</version>
+            <version>4.7.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.hamcrest</groupId>
