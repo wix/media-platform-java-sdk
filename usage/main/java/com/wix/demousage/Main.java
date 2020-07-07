@@ -1,6 +1,6 @@
 package com.wix.demousage;
 
-import com.wix.mediaplatform.v7.MediaPlatform;
+import com.wix.mediaplatform.v8.MediaPlatform;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
