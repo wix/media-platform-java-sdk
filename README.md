@@ -17,7 +17,7 @@ In Maven, place the following within your \<dependencies> tag in your pom.xml fi
 <dependency>
     <groupId>com.wix</groupId>
     <artifactId>media-platform-java-sdk</artifactId>
-    <version>7.18.0</version>
+    <version>8.0.0</version>
 </dependency>
 ```
 

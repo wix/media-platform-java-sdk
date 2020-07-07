@@ -1,7 +1,0 @@
-{
-  "code": 0,
-  "message": "OK",
-  "payload": {
-    "uploadUrl": "http://localhost:8443/_api/upload/file"
-  }
-}
