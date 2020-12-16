@@ -1,6 +1,7 @@
 package com.wix.mediaplatform.v8.service.file;
 
 import com.wix.mediaplatform.v8.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.v8.service.Callback;
 import com.wix.mediaplatform.v8.service.Destination;
 import com.wix.mediaplatform.v8.service.MediaPlatformRequest;
 
@@ -11,6 +12,8 @@ public class ImportFileRequest extends MediaPlatformRequest<ImportFileJob> {
     private ExternalAuthorization externalAuthorization;
 
     private Destination destination;
+
+    private Callback callback;
 
     ImportFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl) {
         super(authenticatedHTTPClient, "POST", baseUrl + "/import/file", ImportFileJob.class);
@@ -41,5 +44,14 @@ public class ImportFileRequest extends MediaPlatformRequest<ImportFileJob> {
 
     public Destination getDestination() {
         return destination;
+    }
+
+    public Callback getCallback() {
+        return callback;
+    }
+
+    public ImportFileRequest setCallback(Callback callback) {
+        this.callback = callback;
+        return this;
     }
 }

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -251,6 +252,32 @@ public class FileServiceTest extends BaseTest {
     }
 
     @Test
+    public void uploadFileWithCallback() throws Exception {
+        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-configuration-response.json")));
+        stubFor(post(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-with-callback-response.json")));
+
+        Callback callback = new Callback()
+                .setUrl("http://callback.url")
+                .addAttachment("attachmentKey", "attachmentValue")
+                .addHeader("headerKey", "headerValue");
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getBytes())
+                .setCallback(callback)
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
     public void uploadFileError500OneRetry() throws Exception {
         stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
                 .willReturn(aResponse()
@@ -401,13 +428,26 @@ public class FileServiceTest extends BaseTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("import-file-success-response.json")));
 
+        Callback callback = new Callback()
+                .setUrl("http://callback.url")
+                .addAttachment("attachmentKey", "attachmentValue")
+                .addHeader("headerKey", "headerValue");
+
         ImportFileJob job = fileService.importFileRequest()
                 .setSourceUrl("http://source.url/filename.ext")
                 .setDestination(new Destination()
                         .setAcl(FileDescriptor.Acl.PUBLIC)
                         .setDirectory("/fish"))
+                .setCallback(callback)
                 .execute();
         ImportFileSpecification specification = job.getSpecification();
+
+        Callback jobCallback = job.getCallback();
+        assertThat(jobCallback.getUrl(), is(callback.getUrl()));
+        assertThat(jobCallback.getAttachment(), is(callback.getAttachment()));
+        assertThat(jobCallback.getHeaders(), is(callback.getHeaders()));
+        assertThat(jobCallback.isPassthrough(), is(callback.isPassthrough()));
+
         RestResponse<FileDescriptor> result = job.getResult();
 
         assertThat(job.getId(), is("71f0d3fde7f348ea89aa1173299146f8_19e137e8221b4a709220280b432f947f"));
