@@ -6,11 +6,11 @@ import com.wix.mediaplatform.v8.exception.MediaPlatformException;
 import com.wix.mediaplatform.v8.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.v8.metadata.FileMetadata;
 import com.wix.mediaplatform.v8.service.*;
+import com.wix.mediaplatform.v8.service.FileDescriptor;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.Objects;
 
@@ -222,6 +222,27 @@ public class FileServiceTest extends BaseTest {
                 .setPath("/a/new.txt")
                 .setMimeType("text/plain")
                 .setContent(getLocalFile())
+                .execute();
+
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void uploadFileFromInputStream() throws MediaPlatformException, FileNotFoundException {
+        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-configuration-response.json")));
+
+        stubFor(put(urlEqualTo("/_api/upload/file"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getInputStream())
                 .execute();
 
         assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
@@ -458,6 +479,12 @@ public class FileServiceTest extends BaseTest {
 
     private File getLocalFile() {
         return new File(Objects.requireNonNull(this.getClass().getClassLoader()
+                .getResource("source/image.jpg"))
+                .getFile());
+    }
+
+    private InputStream getInputStream() throws FileNotFoundException {
+        return new FileInputStream(Objects.requireNonNull(this.getClass().getClassLoader()
                 .getResource("source/image.jpg"))
                 .getFile());
     }
