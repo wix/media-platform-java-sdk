@@ -10,6 +10,7 @@ import com.wix.mediaplatform.v8.service.FileLifecycle;
 import com.wix.mediaplatform.v8.service.MediaPlatformRequest;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -29,7 +30,11 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
     protected FileLifecycle lifecycle;
 
     @JsonIgnore
+    private InputStream stream;
+
+    @JsonIgnore
     protected ObjectMapper objectMapper;
+
 
     UploadFileRequest(AuthenticatedHTTPClient authenticatedHTTPClient, String baseUrl, ObjectMapper objectMapper) {
         super(authenticatedHTTPClient, "POST", baseUrl, FileDescriptor.class);
@@ -64,6 +69,8 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
                     content,
                     params,
                     FileDescriptor.class);
+        } else if (stream != null) {
+            return authenticatedHTTPClient.putStream(uploadConfiguration.getUploadUrl(), stream, mimeType, params, FileDescriptor.class);
         } else {
             return authenticatedHTTPClient.postForm(
                     uploadConfiguration.getUploadUrl(),
@@ -80,7 +87,15 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
 
     public UploadFileRequest setContent(byte[] content) {
         this.file = null;
+        this.stream = null;
         this.content = content;
+        return this;
+    }
+
+    public UploadFileRequest setContent(InputStream content) {
+        this.file = null;
+        this.content = null;
+        this.stream = content;
         return this;
     }
 
@@ -94,7 +109,17 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
 
     public UploadFileRequest setFile(File file) {
         this.content = null;
+        this.stream = null;
         this.file = file;
+        return this;
+    }
+
+    public InputStream getStream() {
+        return stream;
+    }
+
+    public UploadFileRequest setStream(InputStream stream) {
+        this.stream = stream;
         return this;
     }
 

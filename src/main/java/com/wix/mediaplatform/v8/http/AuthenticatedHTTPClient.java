@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 
@@ -118,6 +119,22 @@ public class AuthenticatedHTTPClient {
         } catch (JsonProcessingException e) {
             throw new MediaPlatformException(e.getMessage());
         }
+
+        return doRequest(request, clazz);
+    }
+
+    public <P> P putStream(String url, InputStream payload, String mimeType, @Nullable Map<String, String> params, Class<P> clazz) throws MediaPlatformException {
+        HttpUrl withQuery = appendQuery(params, url);
+
+        Request request;
+        RequestBody body = InputStreamRequestBody.create(
+                MediaType.parse(mimeType),
+                payload
+        );
+        request = defaultBuilder()
+                .put(body)
+                .url(withQuery)
+                .build();
 
         return doRequest(request, clazz);
     }
