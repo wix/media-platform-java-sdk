@@ -288,7 +288,7 @@ public class FileServiceTest extends BaseTest {
         stubFor(post(urlEqualTo("/_api/upload/file"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("file-upload-with-callback-response.json")));
+                        .withBodyFile("file-upload-response.json")));
 
         Callback callback = new Callback()
                 .setUrl("http://callback.url")
