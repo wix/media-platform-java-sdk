@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wix.mediaplatform.v8.exception.MediaPlatformException;
 import com.wix.mediaplatform.v8.http.AuthenticatedHTTPClient;
+import com.wix.mediaplatform.v8.service.Callback;
 import com.wix.mediaplatform.v8.service.FileDescriptor;
 import com.wix.mediaplatform.v8.service.FileLifecycle;
 import com.wix.mediaplatform.v8.service.MediaPlatformRequest;
@@ -28,6 +29,8 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
     protected FileDescriptor.Acl acl = FileDescriptor.Acl.PUBLIC;
 
     protected FileLifecycle lifecycle;
+
+    protected Callback callback;
 
     @JsonIgnore
     private InputStream stream;
@@ -156,6 +159,15 @@ public class UploadFileRequest extends MediaPlatformRequest<FileDescriptor> {
 
     public UploadFileRequest setAcl(FileDescriptor.Acl acl) {
         this.acl = acl;
+        return this;
+    }
+
+    public Callback getCallback() {
+        return callback;
+    }
+
+    public UploadFileRequest setCallback(Callback callback) {
+        this.callback = callback;
         return this;
     }
 }
