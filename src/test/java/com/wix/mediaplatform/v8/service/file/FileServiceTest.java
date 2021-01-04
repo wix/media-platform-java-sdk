@@ -1,18 +1,22 @@
 package com.wix.mediaplatform.v8.service.file;
 
+import com.github.tomakehurst.wiremock.admin.NotFoundException;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.verification.NearMiss;
 import com.wix.mediaplatform.v8.BaseTest;
 import com.wix.mediaplatform.v8.MediaPlatform;
 import com.wix.mediaplatform.v8.exception.MediaPlatformException;
 import com.wix.mediaplatform.v8.exception.ResourceNotFoundException;
 import com.wix.mediaplatform.v8.metadata.FileMetadata;
 import com.wix.mediaplatform.v8.service.*;
+import com.wix.mediaplatform.v8.service.FileDescriptor;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -226,6 +230,30 @@ public class FileServiceTest extends BaseTest {
                 .execute();
 
         assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+    }
+
+    @Test
+    public void uploadFileFromInputStream() throws MediaPlatformException, ResourceNotFoundException, FileNotFoundException {
+        stubFor(post(urlEqualTo("/_api/v3/upload/configuration"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("get-upload-configuration-response.json")));
+
+        stubFor(put(urlEqualTo("/_api/upload/file"))
+                .withHeader("Content-Length", absent())
+                .withHeader("Transfer-Encoding", equalTo("chunked"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("file-upload-response.json")));
+
+        FileDescriptor fileDescriptor = fileService.uploadFileRequest()
+                .setPath("/a/new.txt")
+                .setMimeType("text/plain")
+                .setContent(getInputStream())
+                .execute();
+        assertThat(fileDescriptor.getId(), is("c4516b12744b4ef08625f016a80aed3a"));
+
+
     }
 
     @Test
@@ -498,6 +526,12 @@ public class FileServiceTest extends BaseTest {
 
     private File getLocalFile() {
         return new File(Objects.requireNonNull(this.getClass().getClassLoader()
+                .getResource("source/image.jpg"))
+                .getFile());
+    }
+
+    private InputStream getInputStream() throws FileNotFoundException {
+        return new FileInputStream(Objects.requireNonNull(this.getClass().getClassLoader()
                 .getResource("source/image.jpg"))
                 .getFile());
     }
