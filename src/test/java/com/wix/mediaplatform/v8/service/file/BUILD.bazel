@@ -1,0 +1,22 @@
+package(default_visibility = ["//visibility:public"])
+java_junit5_test(
+    
+     
+    name = "file",
+    srcs = [
+        "//src/test/java/com/wix/mediaplatform/v8/service/file:sources"
+    ],
+    deps = [
+        "//:tests_dependencies" , 
+        "//:media-platform-java-sdk" , 
+        "//src/test/java/com/wix/mediaplatform/v8:v8"
+    ],
+    runtime_deps = [
+        
+    ],
+    
+    test_package = "com.wix.mediaplatform.v8.service.file",
+     
+)
+
+sources()

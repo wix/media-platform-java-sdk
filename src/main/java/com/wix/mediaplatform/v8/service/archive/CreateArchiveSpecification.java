@@ -4,6 +4,7 @@ package com.wix.mediaplatform.v8.service.archive;
 import com.wix.mediaplatform.v8.service.Destination;
 import com.wix.mediaplatform.v8.service.Source;
 import com.wix.mediaplatform.v8.service.Specification;
+import java.util.*; 
 
 public class CreateArchiveSpecification implements Specification {
 
@@ -28,7 +29,7 @@ public class CreateArchiveSpecification implements Specification {
     @Override
     public String toString() {
         return "CreateArchiveSpecification{" +
-                "source=" + sources +
+                "source=" + Arrays.toString(sources) +
                 ", destination=" + destination +
                 ", archiveType=" + archiveType +
                 '}';

@@ -1,0 +1,43 @@
+package(default_visibility = ["//visibility:public"])
+
+
+java_library(
+    name = "media-platform-java-sdk",
+    srcs = glob(["src/main/**/*.java"]),
+    deps = [
+        "@com_fasterxml_jackson_core_jackson_databind",
+        "@com_google_guava_guava",
+        "@com_squareup_okhttp3_okhttp",
+        "@io_jsonwebtoken_jjwt_api",
+        "@org_apache_commons_commons_lang3",
+        "@org_awaitility_awaitility",
+        "@org_hamcrest_hamcrest",
+        "@org_jetbrains_annotations_java5"
+    ],
+    runtime_deps = [
+        "@io_jsonwebtoken_jjwt_impl",
+        "@io_jsonwebtoken_jjwt_jackson"
+    ],
+)
+     
+java_library(
+    name = "tests_dependencies",
+    testonly = 1,
+    exports = [
+        "@com_github_tomakehurst_wiremock",
+        "@org_junit_jupiter_junit_jupiter_api",
+        "@org_junit_jupiter_junit_jupiter_engine",
+        "@org_junit_jupiter_junit_jupiter_params",
+        "@org_mockito_mockito_core",
+        "@org_mockito_mockito_junit_jupiter",
+    ],
+    runtime_deps = [
+        "//src/test/resources:resources"
+    ],
+)
+     
+
+filegroup(
+    name = "coordinates",
+    srcs = ["MANIFEST.MF"],
+)
