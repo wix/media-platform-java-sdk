@@ -41,6 +41,12 @@ public class ImageToken extends Token {
         return this;
     }
 
+    public ImageToken cacheableUntil(Long expiration) {
+        this.setTokenId(expiration.toString());
+        this.setExpiration(expiration);
+        return (ImageToken) this.setIssuedAt(null);
+    }
+
     @Override
     public Map<String, Object> toClaims() {
         Map<String, Object> claims = super.toClaims();

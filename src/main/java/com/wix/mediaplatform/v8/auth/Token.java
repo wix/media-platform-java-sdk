@@ -53,6 +53,16 @@ public class Token {
         this.object = claims.get(Constants.OBJECT);
     }
 
+    public Token setIssuedAt(Long issuedAt) {
+        this.issuedAt = issuedAt;
+        return this;
+    }
+
+    public Token setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+        return this;
+    }
+
     public Token setIssuer(String issuer) {
         this.issuer = issuer;
         return this;
